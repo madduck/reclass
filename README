@@ -14,6 +14,14 @@ of the automation tool. Usually, the external node classifier completely
 replaces the tool-specific inventory (such as site.pp for Puppet, or
 /etc/ansible/hosts).
 
+reclass allows you to define your nodes through class inheritance, while
+always able to override details of classes further up the tree. Think of
+classes as feature sets, as commonalities between nodes, or as tags. Add to
+that the ability to nest classes (multiple inheritance is allowed,
+well-defined, and encouraged), and piece together your infrastructure from
+smaller bits, eliminating redundancy and exposing all important parameters to
+a single location, logically organised.
+
 In general, the ENC fulfills two jobs:
 
   - it provides information about groups of nodes and group memberships
