@@ -3,7 +3,7 @@
 =============================================================
 reclass is © 2007–2013 martin f. krafft <madduck@madduck.net>
 and available under the terms of the Artistic Licence 2.0
-=============================================================
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 reclass is an "external node classifier" (ENC) as can be used with automation
 tools, such as Puppet, Salt, and Ansible.
@@ -361,4 +361,4 @@ your changes with appropriate changes to the tests. To run tests, invoke
 
 If you have larger ideas, I'll be looking forward to discuss them with you.
 
- -- martin f. krafft <madduck@madduck.net>  Fri, 14 Jun 2013 19:30:19 +0200
+ -- martin f. krafft <madduck@madduck.net>  Fri, 14 Jun 2013 22:12:05 +0200
