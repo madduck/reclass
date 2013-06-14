@@ -225,6 +225,11 @@ classes, then reads the files corresponding to these classes, recursively
 reading parent classes, and finally merges the applications list (append
 unless
 
+Version control
+~~~~~~~~~~~~~~~
+I recommend you maintain your reclass inventory database in Git, right from
+the start.
+
 Usage
 ~~~~~
 For information on how to use reclass directly, invoke reclass.py with --help
