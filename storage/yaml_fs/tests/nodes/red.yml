@@ -1,0 +1,8 @@
+classes:
+- debiannode@sid
+- hosted@zurich
+- webserver
+parameters:
+  motd:
+    greeting: This node is $nodename
+  colour: red

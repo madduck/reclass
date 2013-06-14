@@ -1,0 +1,5 @@
+applications:
+- motd
+- firewall
+parameters:
+  realm: madduck.net

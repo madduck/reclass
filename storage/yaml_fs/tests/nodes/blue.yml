@@ -1,0 +1,9 @@
+classes:
+- debiannode@squeeze
+- hosted@munich
+- mailserver
+- webserver
+parameters:
+  motd:
+    greeting: This node is $nodename
+  colour: blue

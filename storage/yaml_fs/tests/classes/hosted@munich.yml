@@ -1,0 +1,4 @@
+parameters:
+  location: munich
+  apt:
+    mirror_base: uni-erlangen

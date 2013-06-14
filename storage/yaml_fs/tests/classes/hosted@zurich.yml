@@ -1,0 +1,4 @@
+parameters:
+  location: zurich
+  apt:
+    mirror_base: switch
