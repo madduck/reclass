@@ -17,6 +17,7 @@ import sys, os, posix, time
 import config
 from output import OutputLoader
 from storage import StorageBackendLoader
+import errors
 
 def get_options(config_file=None):
     return config.get_options(__name__, __version__, __description__, config_file)
@@ -38,6 +39,10 @@ def output(data, fmt, pretty_print=False):
     outputter = output_class()
     return outputter.dump(data, pretty_print=pretty_print)
 
+def _error(msg, rc):
+    print >>sys.stderr, msg
+    sys.exit(rc)
+
 if __name__ == '__main__':
     __name__ = __prog__
     config_file = None
@@ -46,8 +51,12 @@ if __name__ == '__main__':
         if os.access(f, os.R_OK):
             config_file = f
             break
-    options = get_options(config_file)
-    data = get_data(options.storage_type, options.nodes_uri,
-                    options.classes_uri, options.node)
-    print output(data, options.output, options.pretty_print)
-    sys.exit(posix.EX_OK)
+    try:
+        options = get_options(config_file)
+        data = get_data(options.storage_type, options.nodes_uri,
+                        options.classes_uri, options.node)
+        print output(data, options.output, options.pretty_print)
+        sys.exit(posix.EX_OK)
+
+    except errors.ReclassException, e:
+        _error(e.message, e.rc)

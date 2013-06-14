@@ -8,12 +8,12 @@
 #
 import os, sys, posix, stat
 
-def usage_error(msg):
+def exit_error(msg, rc):
     print >>sys.stderr, msg
-    sys.exit(posix.EX_USAGE)
+    sys.exit(rc)
 
 if len(sys.argv) == 1:
-    usage_error('Need to specify --list or --host.')
+    exit_error('Need to specify --list or --host.', posix.EX_USAGE)
 
 ansible_dir = os.path.dirname(sys.argv[0])
 
@@ -22,7 +22,7 @@ ansible_dir = os.path.dirname(sys.argv[0])
 # symlinks are resolved.
 realpath = os.path.realpath(sys.argv[0] + '/../../')
 sys.path.insert(0, realpath)
-import reclass, config
+import reclass, config, errors
 
 # The adapter resides in the Ansible directory, so let's look there for an
 # optional configuration file called reclass-config.yml.
@@ -40,7 +40,7 @@ if 'nodes_uri' not in options:
     if stat.S_ISDIR(os.stat(nodes_uri).st_mode):
         options['nodes_uri'] = nodes_uri
     else:
-        usage_error('nodes_uri not specified')
+        exit_error('nodes_uri not specified', posix.EX_USAGE)
 
 if 'classes_uri' not in options:
     classes_uri = os.path.join(ansible_dir, 'classes')
@@ -53,29 +53,35 @@ if 'classes_uri' not in options:
 # False instead, we print the inventory. Yeah for option abuse!
 if sys.argv[1] == '--list':
     if len(sys.argv) > 2:
-        usage_error('Unknown arguments: ' + ' '.join(sys.argv[2:]))
+        exit_error('Unknown arguments: ' + ' '.join(sys.argv[2:]),
+                    posix.EX_USAGE)
     options['node'] = False
 
 elif sys.argv[1] == '--host':
     if len(sys.argv) < 3:
-        usage_error('Missing hostname.')
+        exit_error('Missing hostname.', posix.EX_USAGE)
     elif len(sys.argv) > 3:
-        usage_error('Unknown arguments: ' + ' '.join(sys.argv[3:]))
+        exit_error('Unknown arguments: ' + ' '.join(sys.argv[3:]),
+                    posix.EX_USAGE)
     options['node'] = sys.argv[2]
 
 else:
-    usage_error('Unknown mode (--list or --host required).')
+    exit_error('Unknown mode (--list or --host required).', posix.EX_USAGE)
 
-data = reclass.get_data(options['storage_type'], options['nodes_uri'],
-                        options['classes_uri'], options['node'])
+try:
+    data = reclass.get_data(options['storage_type'], options['nodes_uri'],
+                            options['classes_uri'], options['node'])
 
-if options['node']:
-    # Massage and shift the data like Ansible wants it
-    data['parameters']['RECLASS'] = data['RECLASS']
-    for i in ('classes', 'applications'):
-        data['parameters']['RECLASS'][i] = data[i]
-    data = data['parameters']
+    if options['node']:
+        # Massage and shift the data like Ansible wants it
+        data['parameters']['RECLASS'] = data['RECLASS']
+        for i in ('classes', 'applications'):
+            data['parameters']['RECLASS'][i] = data[i]
+        data = data['parameters']
 
-print reclass.output(data, options['output'], options['pretty_print'])
+    print reclass.output(data, options['output'], options['pretty_print'])
 
-sys.exit(posix.EX_OK)
+    sys.exit(posix.EX_OK)
+
+except errors.ReclassException, e:
+    exit_error(e.message, e.rc)

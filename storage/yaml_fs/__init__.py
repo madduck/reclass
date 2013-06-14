@@ -10,6 +10,7 @@ import os
 from storage import NodeStorageBase
 from yamlfile import YamlFile
 from directory import Directory
+import errors
 
 FILE_EXTENSION = '.yml'
 
@@ -18,16 +19,23 @@ class ExternalNodeStorage(NodeStorageBase):
     def __init__(self, nodes_uri, classes_uri):
         super(ExternalNodeStorage, self).__init__(nodes_uri, classes_uri)
 
-    def _read_nodeinfo(self, name, base_uri, seen):
+    def _read_nodeinfo(self, name, base_uri, seen, nodename=None):
         path = os.path.join(base_uri, name + FILE_EXTENSION)
-        entity = YamlFile(path).entity
-        seen[name] = True
-        for klass in entity.classes:
-            if klass not in seen:
-                ret = self._read_nodeinfo(klass, self.classes_uri, seen)[0]
-                ret.merge(entity)
-                entity = ret
-        return entity, path
+        try:
+            entity = YamlFile(path).entity
+            seen[name] = True
+            for klass in entity.classes:
+                if klass not in seen:
+                    ret = self._read_nodeinfo(klass, self.classes_uri, seen,
+                                              name if nodename is None else nodename)[0]
+                    ret.merge(entity)
+                    entity = ret
+            return entity, path
+        except IOError:
+            if base_uri == self.classes_uri:
+                raise errors.ClassNotFound('yaml_fs', name, base_uri, nodename)
+            else:
+                raise errors.NodeNotFound('yaml_fs', name, base_uri)
 
     def _list_inventory(self):
         d = Directory(self.nodes_uri)
