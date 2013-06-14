@@ -1,0 +1,5 @@
+classes:
+  - unixnode
+  - mysite
+parameters:
+  colour: yellow

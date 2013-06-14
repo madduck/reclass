@@ -1,0 +1,343 @@
+=============================================================
+      reclass — recursive external node classification
+=============================================================
+reclass is © 2007–2013 martin f. krafft <madduck@madduck.net>
+and available under the terms of the Artistic Licence 2.0
+=============================================================
+
+reclass is an "external node classifier" (ENC) as can be used with automation
+tools, such as Puppet, Salt, and Ansible.
+
+The purpose of an ENC is to allow a system administrator to maintain an
+inventory of nodes to be managed, completely separately from the configuration
+of the automation tool. Usually, the external node classifier completely
+replaces the tool-specific inventory (such as site.pp for Puppet, or
+/etc/ansible/hosts).
+
+In general, the ENC fulfills two jobs:
+
+  - it provides information about groups of nodes and group memberships
+  - it gives access to node-specific information, such as variables
+
+While reclass was born into a Puppet environment and has also been used with
+Salt, the version you have in front of you is a rewrite from scratch, which
+was targetted at Ansible. However, care was taken to make the code flexible
+enough to allow it to be used from Salt, Puppet, and maybe even other tools as
+well.
+
+In this document, you will find an overview of the concepts of reclass, the
+way it works, and how it can be tied in with Ansible.
+
+Quick start — Ansible
+~~~~~~~~~~~~~~~~~~~~~
+The following steps should get you up and running quickly. Generally, we will
+be working in /etc/ansible. However, if you are using a source-code checkout
+of Ansible, you might also want to work inside the ./hacking directory
+instead.
+
+Or you can also just look into ./examples/ansible of your reclass checkout,
+where the following steps have already been prepared.
+
+/…/reclass refers to the location of your reclass checkout.
+
+  1. Symlink /…/reclass/adapters/ansible to /etc/ansible/hosts (or
+     ./hacking/hosts)
+
+  2. Copy the two directories 'nodes' and 'classes' from the example
+     subdirectory in the reclass checkout to /etc/ansible
+
+     If you prefer to put those directories elsewhere, you can create
+     /etc/ansible/reclass-config.yml with contents such as
+
+       storage_type: yaml_fs
+       nodes_uri: /srv/reclass/nodes
+       classes_uri: /srv/reclass/classes
+
+     Note that yaml_fs is currently the only supported storage_type, and it's
+     the default if you don't set it.
+
+  3. Check out your inventory by invoking
+
+       ./hosts --list
+
+     which should return 5 groups in JSON-format, and each group has exactly
+     one member 'localhost'.
+
+  4. See the node information for 'localhost':
+
+       ./hosts --host localhost
+
+     This should print a set of keys and values, including a greeting,
+     a colour, and a sub-class called 'RECLASS'.
+
+  5. Execute some ansible commands, e.g.
+
+       ansible -i hosts \* --list-hosts
+       ansible -i hosts \* -m ping
+       ansible -i hosts \* -m debug -a 'msg="${greeting}"'
+       ansible -i hosts \* -m setup
+       ansible-playbook -i hosts test.yml
+
+  6. You can also invoke reclass directly, which gives a slightly different
+     view onto the same data, i.e. before it has been adapted for Ansible:
+
+       /…/reclass.py --pretty-print --inventory
+       /…/reclass.py --pretty-print --nodeinfo localhost
+
+reclass concepts
+~~~~~~~~~~~~~~~~
+reclass assumes a node-centric perspective into your inventory. This is
+obvious when you query reclass for node-specific information, but it might not
+be clear when you ask reclass to provide you with a list of groups. In that
+case, reclass loops over all nodes it can find in its database, reads all
+information it can find about the nodes, and finally reorders the result to
+provide a list of groups with the nodes they contain.
+
+Since the term 'groups' is somewhat ambiguous, it helps to start off with
+a short glossary of reclass-specific terminology:
+
+  node:         A node, usually a computer in your infrastructure
+  class:        A category, tag, feature, or role that applies to a node
+                Classes may be nested, i.e. there can be a class hierarchy
+  application:  A specific set of behaviour to apply to members of a class
+  parameter:    Node-specific variables, with inheritance throughout the class
+                hierarchy.
+
+A class consists of zero or more parent classes, zero or more applications,
+and any number of parameters.
+
+A node is almost equivalent to a class, except that it usually does not (but
+can) specify applications.
+
+When reclass parses a node (or class) definition and encounters a parent
+class, it recurses to this parent class first before reading any data of the
+node (or class). When reclass returns from the recursive, depth first walk, it
+then merges all information of the current node (or class) into the
+information it obtained during the recursion.
+
+Information in this context is essentially one of a list of applications or
+a list of parameters.
+
+The interaction between the depth-first walk and the delayed merging of data
+means that the node (and any class) may override any of the data defined by
+any of the parent classes (ancestors). This is in line with the assumption
+that more specific definitions ("this specific host") should have a higher
+precedence than more general definitions ("all webservers", which includes all
+webservers in Munich, which includes "this specific host", for example).
+
+Here's a quick example, showing how parameters accumulate and can get
+replaced.
+
+  All unixnodes (i.e. nodes who have the 'unixnodes' class in their ancestry)
+  have /etc/motd centrally-managed (through the 'motd' application), and the
+  unixnodes class definition provides a generic message-of-the-day to be put
+  into this file.
+
+  All debiannodes, which are descendants of unixnodes, should include the
+  Debian codename in this message, so the message-of-the-day is overwritten in
+  the debiannodes class.
+
+  The node 'quantum.example.org' will have a scheduled downtime this weekend,
+  so until Monday, an appropriate message-of-the-day is added to the node
+  definition.
+
+  When the 'motd' application runs, it retrieves the appropriate
+  message-of-the-day and writes it into /etc/motd.
+
+At this point it should be noted that parameters whose values are lists or
+key-value pairs don't get overwritten by children classes or node definitions,
+but the information gets merged (recursively) instead.
+
+Similarly to parameters, applications also accumulate during the recursive
+walk through the class ancestry. It is possible for a node or child class to
+_remove_ an application added by a parent class, by prefixing the application
+with '~'.
+
+Finally, reclass happily lets you use multiple inheritance, and ensures that
+the resolution of parameters is still well-defined. Here's another example
+building upon the one about /etc/motd above:
+
+  'quantum.example.org' (which is back up and therefore its node definition no
+  longer contains a message-of-the-day) is at a site in Munich. Therefore, it
+  is a child of the class 'hosted@munich'. This class is independent of the
+  'unixnode' hierarchy, 'quantum.example.org' derives from both.
+
+  In this example infrastructure, 'hosted@munich' is more specific than
+  'debiannodes' because there are plenty of Debian nodes at other sites (and
+  some non-Debian nodes in Munich). Therefore, 'quantum.example.org' derives
+  from 'hosted@munich' _after_ 'debiannodes'.
+
+  When an electricity outage is expected over the weekend in Munich, the admin
+  can change the message-of-the-day in the 'hosted@munich' class, and it will
+  apply to all hosts in Munich.
+
+  However, not all hosts in Munich have /etc/motd, because some of them are
+  'windowsnodes'. Since the 'windowsnodes' ancestry does not specify the
+  'motd' application, those hosts have access to the message-of-the-day in the
+  node variables, but the message won't get used…
+
+  … unless, of course, 'windowsnodes' specified a Windows-specific application
+  to bring such notices to the attention of the user.
+
+reclass operations
+~~~~~~~~~~~~~~~~~~
+While reclass has been built to support different storage backends through
+plugins, currently only the 'yaml_fs' storage backend exists. This is a very
+simple, yet powerful, YAML-based backend, using flat files on the filesystem
+(as suggested by the _fs postfix).
+
+yaml_fs works with two directories, one for node definitions, and another for
+class definitions. It is possible to use a single directory for both, but that
+could get messy and is therefore not recommended.
+
+Files in those directories are YAML-files, specifying key-value pairs. The
+following three keys are read by reclass:
+
+  classes:     a list of parent classes
+  appliations: a list of applications to append to the applications defined by
+               ancestors. If an application name starts with '~', it would
+               remove this application from the list, if it had already been
+               added — but it does not prevent a future addition.
+               E.g. '~firewalled'
+  parameters:  key-value pairs to set defaults in class definitions, override
+               existing data, or provide node-specific information in node
+               specifications.
+               By convention, parameters corresponding to an application
+               should be provided as subkey-value pairs, keyed by the name of
+               the application, e.g.
+
+                 applications:
+                   - ssh.server
+                 parameters:
+                   ssh.server:
+                     permit_root_login: no
+
+reclass starts out reading a node definition file, obtains the list of
+classes, then reads the files corresponding to these classes, recursively
+reading parent classes, and finally merges the applications list (append
+unless
+
+Usage
+~~~~~
+For information on how to use reclass directly, invoke reclass.py with --help
+and study the output.
+
+More commonly, however, use of reclass will happen indirectly, and through
+so-called adapters, e.g. /…/reclass/adapters/ansible. The job of an adapter is
+to translate between different invocation paradigms, provide a sane set of
+default options, and massage the data from reclass into the format expected by
+the automation tool in use.
+
+Configuration file
+~~~~~~~~~~~~~~~~~~
+reclass can read some of its configuration from a file. The file is
+a YAML-file and simply defines key-value pairs.
+
+The configuration file can be used to set defaults for all the options that
+are otherwise configurable via the command-line interface, so please use the
+--help output of reclass for reference. The command-line option '--nodes-uri'
+corresponds to the key 'nodes_uri' in the configuration file. For example:
+
+  storage_type: yaml_fs
+  pretty_print: True
+  output: json
+  nodes_uri: ../nodes
+
+reclass first looks in the current directory for the file called
+'reclass-config.yml' and if no such file is found, it looks "next to" the
+reclass script itself. Adapters implement their own lookup logic.
+
+Integration with Ansible
+~~~~~~~~~~~~~~~~~~~~~~~~
+The integration between reclass and Ansible is performed through an adapter,
+and needs not be of our concern too much.
+
+However, Ansible has no concept of "nodes", "applications", "parameters", and
+"classes". Therefore it is necessary to explain how those correspond to
+Ansible. Crudely, the following mapping exists:
+
+  nodes         hosts
+  classes       groups
+  applications  playbooks
+  parameters    host_vars
+
+reclass does not provide any group_vars because of its node-centric
+perspective. While class definitions include parameters, those are inherited
+by the node definitions and hence become node_vars.
+
+reclass also does not provide playbooks, nor does it deal with any of the
+related Ansible concepts, i.e. vars_files, vars, tasks, handlers, roles, etc..
+
+  Let it be said at this point that you'll probably want to stop using
+  host_vars, group_vars and vars_files altogether, and if only because you
+  should no longer need them, but also because the variable precedence rules
+  of Ansible are full of surprises, at least to me.
+
+reclass' Ansible adapter massage the reclass output into Ansible-usable data,
+namely:
+
+  - Every class in the ancestry of a node becomes a group to Ansible. This is
+    mainly useful to be able to target nodes during interactive use of
+    Ansible, e.g.
+
+      ansible debiannode@wheezy -m command -a 'apt-get upgrade'
+        → upgrade all Debian nodes running wheezy
+
+      ansible ssh.server -m command -a 'invoke-rc.d ssh restart'
+        → restart all SSH server processes
+
+      ansible mailserver -m command -a 'tail -n1000 /var/log/mail.err'
+        → obtain the last 1,000 lines of all mailserver error log files
+
+    The attentive reader might stumble over the use of singular words, whereas
+    it might make more sense to address all 'mailserver*s*' with this tool.
+    This is convention and up to you. I prefer to think of my node as
+    a (singular) mailserver when I add 'mailserver' to its parent classes.
+
+  - Every entry in the list of a host's applications might well correspond to
+    an Ansible playbook. Therefore, reclass creates a (Ansible-)group for
+    every application, and adds '_hosts' to the name.
+
+    For instance, the ssh.server class adds the ssh.server application to
+    a node's application list. Now the admin might create an Ansible playbook
+    like so:
+
+      - name: SSH server management
+        hosts: ssh.server_hosts              ← SEE HERE
+        tasks:
+          - name: install SSH package
+            action: …
+        …
+
+    There's a bit of redundancy in this, but unfortunately Ansible playbooks
+    hardcode the nodes to which a playbook applies.
+
+    The suggested way to use Ansible site-wide is then to create a 'site'
+    playbook that includes all the other playbooks (which shall hopefully be
+    based on Ansible roles), and then to invoke Ansible like this:
+
+      ansible-playbook site.yml
+
+    or, if you prefer only to reconfigure a subset of nodes, e.g. all
+    webservers:
+
+      ansible-playbook site.yml --limit webserver
+
+    Again, if the singular word 'webserver' puts you off, change the
+    convention as you wish.
+
+  - Parameters corresponding to a node become host_vars for that host.
+
+Contributing to reclass
+~~~~~~~~~~~~~~~~~~~~~~~
+Conttributions to reclass are very welcome. Since I prefer to keep a somewhat
+clean history, I will not merge pull requests. Please send your patches using
+git-format-patch and git-send-e-mail to reclass@pobox.madduck.net.
+
+I have added rudimentary unit tests, and it would be nice if you could submit
+your changes with appropriate changes to the tests. To run tests, invoke
+./run_tests.py in the top-level checkout directory.
+
+If you have larger ideas, I'll be looking forward to discuss them with you.
+
+ -- martin f. krafft <madduck@madduck.net>  Fri, 14 Jun 2013 19:30:19 +0200

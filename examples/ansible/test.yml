@@ -1,0 +1,5 @@
+- name: Test playbook against all test hosts
+  hosts: test_hosts
+  tasks:
+    - name: Greet the world
+      debug: msg='$greeting'
