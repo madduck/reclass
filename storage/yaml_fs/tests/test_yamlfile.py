@@ -16,6 +16,9 @@ class TestYamlFile:
     def setUp(self):
         self._file = yamlfile.YamlFile(TESTFILE)
 
+    def test_path_property(self):
+        assert self._file.path == TESTFILE
+
     def test_data(self):
         e = self._file.entity
         c = e.classes
