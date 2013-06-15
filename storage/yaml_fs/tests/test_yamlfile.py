@@ -10,6 +10,7 @@ import storage.yaml_fs.yamlfile as yamlfile
 import os, sys
 
 TESTFILE = os.path.join(sys.path[0], 'nodes', 'blue.yml')
+EMPTYFILE = os.path.join(sys.path[0], 'nodes', 'empty.yml')
 
 class TestYamlFile:
 
@@ -29,3 +30,9 @@ class TestYamlFile:
         assert 'motd' in p
         assert 'colour' in p
         assert hasattr(p, 'merge')
+
+    def test_empty_file(self):
+        e = yamlfile.YamlFile(EMPTYFILE).entity
+        assert len(e.classes) == 0
+        assert len(e.parameters) == 0
+        assert len(e.applications) == 0

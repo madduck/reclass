@@ -20,7 +20,9 @@ class YamlFile(object):
 
     def _read(self):
         fp = file(self._path)
-        self._data = yaml.safe_load(fp)
+        data = yaml.safe_load(fp)
+        if data is not None:
+            self._data = data
         fp.close()
 
     def _get_entity(self):
