@@ -3,6 +3,8 @@ classes:
 - hosted@munich
 - mailserver
 - webserver
+applications:
+- blues
 parameters:
   motd:
     greeting: This node is $nodename

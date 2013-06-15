@@ -30,6 +30,10 @@ class TestYamlFile:
         assert 'motd' in p
         assert 'colour' in p
         assert hasattr(p, 'merge')
+        a = e.applications
+        assert len(a) == 1
+        assert 'blues' in a
+        assert hasattr(a, 'merge')
 
     def test_empty_file(self):
         e = yamlfile.YamlFile(EMPTYFILE).entity
