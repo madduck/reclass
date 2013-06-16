@@ -26,9 +26,21 @@ class YamlFile(object):
         fp.close()
 
     def _get_entity(self):
-        classes = datatypes.Classes(self._data.get('classes', []))
-        applications = datatypes.Applications(self._data.get('applications', []))
-        parameters = datatypes.Parameters(self._data.get('parameters', {}))
+        classes = self._data.get('classes')
+        if classes is None:
+            classes = []
+        classes = datatypes.Classes(classes)
+
+        applications = self._data.get('applications')
+        if applications is None:
+            applications = []
+        applications = datatypes.Applications(applications)
+
+        parameters = self._data.get('parameters')
+        if parameters is None:
+            parameters = {}
+        parameters = datatypes.Parameters(parameters)
+
         return datatypes.Entity(classes, applications, parameters)
     entity = property(lambda self: self._get_entity())
 
