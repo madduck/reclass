@@ -349,6 +349,18 @@ namely:
 
   - Parameters corresponding to a node become host_vars for that host.
 
+It is possible to include Jinja2-style variables like you would in Ansible,
+in parameter values. This is especially powerful in combination with the
+recursive merging, e.g.
+
+  parameters:
+    motd:
+      greeting: Welcome to {{ ansible_fqdn }}!
+      closing: This system is part of {{ realm }}
+
+Now you just need to specify realm somewhere. The reference can reside in
+a parent class, while the variable is defined e.g. in the node.
+
 Contributing to reclass
 ~~~~~~~~~~~~~~~~~~~~~~~
 Conttributions to reclass are very welcome. Since I prefer to keep a somewhat
