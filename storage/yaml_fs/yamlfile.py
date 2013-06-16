@@ -27,9 +27,9 @@ class YamlFile(object):
 
     def _get_entity(self):
         classes = datatypes.Classes(self._data.get('classes', []))
-        parameters = datatypes.Parameters(self._data.get('parameters', {}))
         applications = datatypes.Applications(self._data.get('applications', []))
-        return datatypes.Entity(classes, parameters, applications)
+        parameters = datatypes.Parameters(self._data.get('parameters', {}))
+        return datatypes.Entity(classes, applications, parameters)
     entity = property(lambda self: self._get_entity())
 
     def __repr__(self):

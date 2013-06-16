@@ -23,7 +23,7 @@ class TestEntity:
         c = Classes(['one', 'two'])
         p = Parameters({'blue':'white', 'black':'yellow'})
         a = Applications(['three', 'four'])
-        e = Entity(c, p, a)
+        e = Entity(c, a, p)
         assert e.classes == c
         assert e.parameters == p
         assert e.applications == a

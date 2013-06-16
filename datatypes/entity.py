@@ -12,8 +12,8 @@ from applications import Applications
 
 class Entity(object):
 
-    def __init__(self, classes=Classes(), parameters=Parameters(),
-                 applications=Applications()):
+    def __init__(self, classes=Classes(), applications=Applications(),
+                 parameters=Parameters()):
         self._applications = applications
         self._classes = classes
         self._parameters = parameters
@@ -28,5 +28,5 @@ class Entity(object):
         self.parameters.merge(other.parameters)
 
     def __repr__(self):
-        return '<Entity classes:{0} parameters:{1} applications:{2}>'.format(
-            len(self.classes), len(self.parameters), len(self.applications))
+        return '<Entity classes:{0} applications:{1}, parameters:{2}>'.format(
+            len(self.classes), len(self.applications), len(self.parameters))
