@@ -11,7 +11,8 @@ from extend import BaseListMerger
 class SetExtend(BaseListMerger):
 
     def _combine(self, first, second):
-        for i in second:
-            if i not in first:
-                first.append(i)
+        if second is not None:
+            for i in second:
+                if i not in first:
+                    first.append(i)
         return first

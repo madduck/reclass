@@ -20,3 +20,8 @@ class TestDictUpdate:
         assert len(ret) == 4
         for k,v in ret.iteritems():
             assert k == v
+
+    def test_merge_with_none(self):
+        first = {1:2,3:4}
+        ret = self.merger.merge(first, None)
+        assert ret == first

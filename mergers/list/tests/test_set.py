@@ -25,3 +25,8 @@ class TestSetExtend(TestListExtend):
         l2 = [3,2,1]
         target = l1
         assert self._test_merge(l1, l2, target)
+
+    def test_merge_with_none(self):
+        first = [1,2,3]
+        ret = self.merger.merge(first, None)
+        assert ret == first

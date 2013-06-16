@@ -24,3 +24,8 @@ class TestDictRecursivePolicyUpdate(TestDictRecursiveUpdate):
         assert ret['one'][2] == 3
         assert len(ret['two']['one']) == 4
         assert ret['two']['one'][3] == 4
+
+    def test_merge_with_none(self):
+        first = {1:2,3:4}
+        ret = self.merger.merge(first, None)
+        assert ret == first

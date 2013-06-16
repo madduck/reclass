@@ -11,8 +11,9 @@ from base import BaseListMerger
 class ListExtend(BaseListMerger):
 
     def _combine(self, first, second):
-        if isinstance(second, list):
-            first.extend(second)
-        else:
-            first.append(second)
+        if second is not None:
+            if isinstance(second, list):
+                first.extend(second)
+            else:
+                first.append(second)
         return first

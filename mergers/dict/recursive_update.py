@@ -11,6 +11,9 @@ from base import BaseDictMerger
 class DictRecursiveUpdate(BaseDictMerger):
 
     def merge(self, first, second):
+        if second is None:
+            return first
+
         ret = first.copy()
         for k,v in second.iteritems():
             if k in ret:

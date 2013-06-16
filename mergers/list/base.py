@@ -12,5 +12,7 @@ class BaseListMerger(BaseMerger):
 
     def merge(self, first, second):
         first = [first] if not isinstance(first, list) else first[:]
+        if second is None:
+            return first
         second = [second] if not isinstance(second, list) else second[:]
         return self._combine(first, second)

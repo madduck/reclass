@@ -43,3 +43,8 @@ class TestDictRecursiveUpdate(TestDictUpdate):
             assert len(ret['four'][i]) == 1
             for k,v in ret['four'][i].iteritems():
                 assert k == v
+
+    def test_merge_with_none(self):
+        first = {1:2,3:4}
+        ret = self.merger.merge(first, None)
+        assert ret == first

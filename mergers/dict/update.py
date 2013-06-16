@@ -11,6 +11,9 @@ from base import BaseDictMerger
 class DictUpdate(BaseDictMerger):
 
     def merge(self, first, second):
+        if second is None:
+            return first
+
         ret = first.copy()
         ret.update(second)
         return ret
