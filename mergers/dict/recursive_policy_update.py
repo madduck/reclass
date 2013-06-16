@@ -13,10 +13,15 @@ class DictRecursivePolicyUpdate(BaseDictMerger):
     def __init__(self, policy=None):
         super(DictRecursivePolicyUpdate, self).__init__()
         if policy is None:
-            policy = {(dict,dict) : self.merge,
-                      (list,list) : lambda x,y: x+y,
-                      (dict,list) : lambda x,y: self.merge(x, dict(y)),
-                      None        : lambda x,y: y
+            first = lambda first, second: first
+            second = lambda first, second: second
+
+            policy = {(dict,dict)       : self.merge,
+                      (list,list)       : lambda x,y: x+y,
+                      (dict,list)       : lambda x,y: self.merge(x, dict(y)),
+                      (dict,type(None)) : first,
+                      (list,type(None)) : first,
+                      None              : second
                      }
         self._policy = policy
 
@@ -27,8 +32,8 @@ class DictRecursivePolicyUpdate(BaseDictMerger):
         ret = first.copy()
         for k,v in second.iteritems():
             if k in ret:
-                pfn = self._policy.get((type(ret[k]), type(v)),
-                                       self._policy.get(None))
+                lookup = (type(ret[k]), type(v))
+                pfn = self._policy.get(lookup, self._policy.get(None))
                 ret[k] = pfn(ret[k], v)
             else:
                 ret[k] = v

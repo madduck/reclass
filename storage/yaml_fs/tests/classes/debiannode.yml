@@ -2,3 +2,6 @@ classes:
 - basenode
 applications:
 - apt
+parameters:
+  apt:
+    mirror_base: http://http.debian.net

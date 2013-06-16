@@ -63,3 +63,7 @@ class TestYamlFs:
             assert 'applications' in node
             assert 'classes' in node
             assert 'parameters' in node
+
+    def test_merge_empty_dict(self):
+        node = self._storage.nodeinfo(HOSTS[0])
+        assert node['parameters'].get('apt') is not None
