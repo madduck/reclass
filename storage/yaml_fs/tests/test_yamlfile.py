@@ -8,6 +8,7 @@
 #
 import storage.yaml_fs.yamlfile as yamlfile
 import os, sys
+from datatypes import Entity, Classes, Parameters, Applications
 
 TESTFILE = os.path.join(sys.path[0], 'nodes', 'blue.yml')
 EMPTYFILE = os.path.join(sys.path[0], 'nodes', 'empty.yml')
@@ -37,6 +38,10 @@ class TestYamlFile:
 
     def test_empty_file(self):
         e = yamlfile.YamlFile(EMPTYFILE).entity
+        assert isinstance(e, Entity)
+        assert isinstance(e.classes, Classes)
         assert len(e.classes) == 0
+        assert isinstance(e.parameters, Parameters)
         assert len(e.parameters) == 0
+        assert isinstance(e.applications, Applications)
         assert len(e.applications) == 0
