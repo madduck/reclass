@@ -154,7 +154,7 @@ replaced.
   definition.
 
   When the 'motd' application runs, it receives the appropriate
-  message-of-the-day (from 'quantum.example.org' when run on that host) and
+  message-of-the-day (from 'quantum.example.org' when run on that node) and
   writes it into /etc/motd.
 
 At this point it should be noted that parameters whose values are lists or
@@ -208,12 +208,12 @@ another example:
 
   Theoretically, this would mean 'permit_root_login' gets set to 'no'.
 
-  However, since all 'backuppc.client' need 'ssh.server' (at least in most
-  setups), the class 'backuppc.client' itself derives from 'ssh.server',
+  However, since all 'backuppc.client' nodes need 'ssh.server' (at least in
+  most setups), the class 'backuppc.client' itself derives from 'ssh.server',
   ensuring that it gets parsed before 'backuppc.client'.
 
   When reclass returns to the node and encounters the 'ssh.server' class
-  defined there, it simply skips over it.
+  defined there, it simply skips it, as it's already been processed.
 
 reclass operations
 ~~~~~~~~~~~~~~~~~~
