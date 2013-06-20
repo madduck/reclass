@@ -123,6 +123,10 @@ node (or class). When reclass returns from the recursive, depth first walk, it
 then merges all information of the current node (or class) into the
 information it obtained during the recursion.
 
+Furthermore, a node (or class) may define a list of classes it derives from,
+in which case classes defined further down the list will be able to override
+classes further up the list.
+
 Information in this context is essentially one of a list of applications or
 a list of parameters.
 
@@ -149,8 +153,9 @@ replaced.
   so until Monday, an appropriate message-of-the-day is added to the node
   definition.
 
-  When the 'motd' application runs, it retrieves the appropriate
-  message-of-the-day and writes it into /etc/motd.
+  When the 'motd' application runs, it receives the appropriate
+  message-of-the-day (from 'quantum.example.org' when run on that host) and
+  writes it into /etc/motd.
 
 At this point it should be noted that parameters whose values are lists or
 key-value pairs don't get overwritten by children classes or node definitions,
@@ -186,6 +191,29 @@ building upon the one about /etc/motd above:
 
   … unless, of course, 'windowsnodes' specified a Windows-specific application
   to bring such notices to the attention of the user.
+
+It's also trivial to ensure a certain order of class evaluation. Here's
+another example:
+
+  The 'ssh.server' class defines the 'permit_root_login' parameter to 'no'.
+
+  The 'backuppc.client' class defines the parameter to 'without-password',
+  because the BackupPC server might need to log in to the host as root.
+
+  Now, what happens if the admin accidentally provides the following two
+  classes?
+
+    - backuppc.client
+    - ssh.server
+
+  Theoretically, this would mean 'permit_root_login' gets set to 'no'.
+
+  However, since all 'backuppc.client' need 'ssh.server' (at least in most
+  setups), the class 'backuppc.client' itself derives from 'ssh.server',
+  ensuring that it gets parsed before 'backuppc.client'.
+
+  When reclass returns to the node and encounters the 'ssh.server' class
+  defined there, it simply skips over it.
 
 reclass operations
 ~~~~~~~~~~~~~~~~~~
