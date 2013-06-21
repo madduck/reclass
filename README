@@ -337,7 +337,9 @@ namely:
 
   - Every entry in the list of a host's applications might well correspond to
     an Ansible playbook. Therefore, reclass creates a (Ansible-)group for
-    every application, and adds '_hosts' to the name.
+    every application, and adds '_hosts' to the name. This postfix can be
+    configured with a CLI option (--applications-postfix) or in the
+    configuration file (applications_postfix).
 
     For instance, the ssh.server class adds the ssh.server application to
     a node's application list. Now the admin might create an Ansible playbook

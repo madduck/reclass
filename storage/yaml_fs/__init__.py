@@ -16,8 +16,9 @@ FILE_EXTENSION = '.yml'
 
 class ExternalNodeStorage(NodeStorageBase):
 
-    def __init__(self, nodes_uri, classes_uri):
-        super(ExternalNodeStorage, self).__init__(nodes_uri, classes_uri)
+    def __init__(self, nodes_uri, classes_uri, applications_postfix):
+        super(ExternalNodeStorage, self).__init__(nodes_uri, classes_uri,
+                                                  applications_postfix)
 
     def _read_nodeinfo(self, name, base_uri, seen, nodename=None):
         path = os.path.join(base_uri, name + FILE_EXTENSION)

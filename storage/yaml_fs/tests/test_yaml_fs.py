@@ -10,14 +10,15 @@ from storage.yaml_fs import ExternalNodeStorage
 
 import os
 
+POSTFIX = '_hosts'
 PWD = os.path.dirname(__file__)
 HOSTS = ['red', 'blue', 'green']
-MEMBERSHIPS = {'apt_hosts': HOSTS,
-               'motd_hosts': HOSTS,
-               'firewall_hosts': HOSTS[:2],
-               'lighttpd_hosts': HOSTS[:2],
-               'postfix_hosts': HOSTS[1:],
-               'blues_hosts': HOSTS[1:2],
+MEMBERSHIPS = {'apt%s' % POSTFIX: HOSTS,
+               'motd%s' % POSTFIX: HOSTS,
+               'firewall%s' % POSTFIX: HOSTS[:2],
+               'lighttpd%s' % POSTFIX: HOSTS[:2],
+               'postfix%s' % POSTFIX: HOSTS[1:],
+               'blues%s' % POSTFIX: HOSTS[1:2],
                'basenode': HOSTS,
                'debiannode': HOSTS,
                'debiannode@sid': HOSTS[0:1],
@@ -33,7 +34,8 @@ class TestYamlFs:
 
     def setUp(self):
         self._storage = ExternalNodeStorage(os.path.join(PWD, 'nodes'),
-                                            os.path.join(PWD, 'classes'))
+                                            os.path.join(PWD, 'classes'),
+                                            POSTFIX)
         self._inventory = self._storage.inventory()
 
     def test_inventory_setup(self):

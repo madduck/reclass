@@ -22,10 +22,12 @@ import errors
 def get_options(config_file=None):
     return config.get_options(__name__, __version__, __description__, config_file)
 
-def get_data(storage_type, nodes_uri, classes_uri, node):
+def get_data(storage_type, nodes_uri, classes_uri, applications_postfix, node):
     storage_class = StorageBackendLoader(storage_type).load()
     storage = storage_class(os.path.abspath(os.path.expanduser(nodes_uri)),
-                            os.path.abspath(os.path.expanduser(classes_uri)))
+                            os.path.abspath(os.path.expanduser(classes_uri)),
+                            applications_postfix
+                           )
     if node is False:
         ret = storage.inventory()
     else:
@@ -54,7 +56,8 @@ if __name__ == '__main__':
     try:
         options = get_options(config_file)
         data = get_data(options.storage_type, options.nodes_uri,
-                        options.classes_uri, options.node)
+                        options.classes_uri, options.applications_postfix,
+                        options.node)
         print output(data, options.output, options.pretty_print)
         sys.exit(posix.EX_OK)
 

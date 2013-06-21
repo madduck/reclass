@@ -8,9 +8,10 @@
 #
 class NodeStorageBase(object):
 
-    def __init__(self, nodes_uri, classes_uri):
+    def __init__(self, nodes_uri, classes_uri, applications_postfix):
         self._nodes_uri = nodes_uri
         self._classes_uri = classes_uri
+        self._applications_postfix = applications_postfix
 
     nodes_uri = property(lambda self: self._nodes_uri)
     classes_uri = property(lambda self: self._classes_uri)
@@ -32,7 +33,7 @@ class NodeStorageBase(object):
     def inventory(self):
         entity, applications, classes = self._list_inventory()
         ret = classes
-        ret.update([(k + '_hosts',v) for k,v in applications.iteritems()])
+        ret.update([(k + self._applications_postfix,v) for k,v in applications.iteritems()])
         return ret
 
 class StorageBackendLoader(object):

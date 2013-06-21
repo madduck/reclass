@@ -48,6 +48,9 @@ if 'classes_uri' not in options:
         classes_uri = options['nodes_uri']
     options['classes_uri'] = classes_uri
 
+if 'applications_postfix' not in options:
+    options['applications_postfix'] = '_hosts'
+
 # Invoke reclass according to what Ansible wants.
 # If the 'node' option is set, we want node information. If the option is
 # False instead, we print the inventory. Yeah for option abuse!
@@ -70,7 +73,8 @@ else:
 
 try:
     data = reclass.get_data(options['storage_type'], options['nodes_uri'],
-                            options['classes_uri'], options['node'])
+                            options['classes_uri'],
+                            options['applications_postfix'], options['node'])
 
     if options['node']:
         # Massage and shift the data like Ansible wants it
