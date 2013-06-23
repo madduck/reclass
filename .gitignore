@@ -1,2 +1,3 @@
 *.pyc
 /reclass-config.yml
+/reclass.py

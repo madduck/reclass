@@ -36,6 +36,19 @@ well.
 In this document, you will find an overview of the concepts of reclass, the
 way it works, and how it can be tied in with Ansible.
 
+Installation
+~~~~~~~~~~~~
+Before you can use reclass, you need to run make to configure the scripts to
+your system. Right now, this only involves setting the full path to the
+Python interpreter.
+
+  make
+
+If your Python interpreter is not /usr/bin/python and is also not in your
+$PATH, then you need to pass that to make, e.g.
+
+  make PYTHON=/opt/local/bin/python
+
 Quick start — Ansible
 ~~~~~~~~~~~~~~~~~~~~~
 The following steps should get you up and running quickly. Generally, we will
