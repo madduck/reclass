@@ -66,4 +66,9 @@ class TestYamlFs:
 
     def test_merge_empty_dict(self):
         node = self._storage.nodeinfo(HOSTS[0])
-        assert node['parameters'].get('apt') is not None
+        assert 'apt' in node['parameters']
+        assert node['parameters']['apt'] is not None
+
+    def test_merge_parameters(self):
+        node = self._storage.nodeinfo(HOSTS[1])
+        assert node['parameters']['apt']['mirror_base'] == 'uni-erlangen'

@@ -25,8 +25,8 @@ class Entity(object):
     name = property(lambda self: self._name)
 
     def merge(self, other):
-        self.applications.merge(other.applications)
         self.classes.merge(other.classes)
+        self.applications.merge(other.applications)
         self.parameters.merge(other.parameters)
         self._name = other.name
 
