@@ -8,6 +8,7 @@
 #
 import datatypes
 import yaml
+import os
 
 class YamlFile(object):
 
@@ -41,7 +42,8 @@ class YamlFile(object):
             parameters = {}
         parameters = datatypes.Parameters(parameters)
 
-        return datatypes.Entity(classes, applications, parameters)
+        return datatypes.Entity(classes, applications, parameters,
+                                name=os.path.basename(self._path))
     entity = property(lambda self: self._get_entity())
 
     def __repr__(self):

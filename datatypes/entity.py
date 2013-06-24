@@ -13,20 +13,24 @@ from applications import Applications
 class Entity(object):
 
     def __init__(self, classes=Classes(), applications=Applications(),
-                 parameters=Parameters()):
+                 parameters=Parameters(), name=None):
         self._applications = applications
         self._classes = classes
         self._parameters = parameters
+        self._name = name
 
     applications = property(lambda self: self._applications)
     classes = property(lambda self: self._classes)
     parameters = property(lambda self: self._parameters)
+    name = property(lambda self: self._name)
 
     def merge(self, other):
         self.applications.merge(other.applications)
         self.classes.merge(other.classes)
         self.parameters.merge(other.parameters)
+        self._name = other.name
 
     def __repr__(self):
-        return '<Entity classes:{0} applications:{1}, parameters:{2}>'.format(
+        return '<Entity{0} classes:{1} applications:{2}, parameters:{3}>'.format(
+            '' if not self.name else " '%s'" % self.name,
             len(self.classes), len(self.applications), len(self.parameters))
