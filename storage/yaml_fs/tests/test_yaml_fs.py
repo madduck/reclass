@@ -47,11 +47,9 @@ class TestYamlFs:
     def test_inventory_memberships(self):
         for app, members in self._inventory.iteritems():
             for i in MEMBERSHIPS[app]:
-                print i
                 assert i in members
         for app, members in MEMBERSHIPS.iteritems():
             for i in self._inventory[app]:
-                print i
                 assert i in members
 
     def test_host_meta(self):
