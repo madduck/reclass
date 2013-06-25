@@ -6,21 +6,21 @@
 # Copyright © 2007–13 martin f. krafft <madduck@madduck.net>
 # Released under the terms of the Artistic Licence 2.0
 #
-__prog__ = 'reclass'
+__name__ = 'reclass'
 __description__ = 'classify nodes based on an external data source'
 __version__ = '1.0'
 __author__ = 'martin f. krafft <madduck@madduck.net>'
 __copyright__ = 'Copyright © 2007–13 ' + __author__
 __licence__ = 'Artistic Licence 2.0'
 
-import sys, os, posix, time
-import config
-from output import OutputLoader
-from storage import StorageBackendLoader
-import errors
+import sys, os, posix
+import reclass.config
+from reclass.output import OutputLoader
+from reclass.storage import StorageBackendLoader
+import reclass.errors
 
 def get_options(config_file=None):
-    return config.get_options(__name__, __version__, __description__, config_file)
+    return reclass.config.get_options(__name__, __version__, __description__, config_file)
 
 def get_data(storage_type, nodes_uri, classes_uri, applications_postfix, node):
     storage_class = StorageBackendLoader(storage_type).load()
@@ -52,13 +52,13 @@ if __name__ == '__main__':
             break
     try:
         options = get_options(config_file)
-        nodes_uri, classes_uri = config.path_mangler(options.inventory_base_uri,
-                                                     options.nodes_uri,
-                                                     options.classes_uri)
+        nodes_uri, classes_uri = reclass.config.path_mangler(options.inventory_base_uri,
+                                                             options.nodes_uri,
+                                                             options.classes_uri)
         data = get_data(options.storage_type, nodes_uri, classes_uri,
                         options.applications_postfix, options.node)
         print output(data, options.output, options.pretty_print)
         sys.exit(posix.EX_OK)
 
-    except errors.ReclassException, e:
+    except reclass.errors.ReclassException, e:
         _error(e.message, e.rc)
