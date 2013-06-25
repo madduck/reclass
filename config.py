@@ -20,11 +20,14 @@ def _make_parser(name, version, description, defaults={}):
     options_group.add_option('-t', '--storage-type', dest='storage_type',
                              default=defaults.get('storage_type', 'yaml_fs'),
                              help='the type of storage backend to use [%default]')
+    options_group.add_option('-b', '--inventory-base-uri', dest='inventory_base_uri',
+                             default=defaults.get('inventory_base_uri', None),
+                             help='the base URI to append to nodes and classes [%default]'),
     options_group.add_option('-u', '--nodes-uri', dest='nodes_uri',
-                             default=defaults.get('nodes_uri', None),
+                             default=defaults.get('nodes_uri', './nodes'),
                              help='the URI to the nodes storage [%default]'),
     options_group.add_option('-c', '--classes-uri', dest='classes_uri',
-                             default=defaults.get('classes_uri', None),
+                             default=defaults.get('classes_uri', './classes'),
                              help='the URI to the classes storage [%default]')
     options_group.add_option('-o', '--output', dest='output',
                              default=defaults.get('output', 'yaml'),
@@ -63,10 +66,10 @@ def _parse_and_check_options(parser):
         usage_error('You need to either pass --inventory or --nodeinfo <nodename>')
     elif options.output not in ('json', 'yaml'):
         usage_error('Unknown output format: {0}'.format(options.output))
-    elif options.nodes_uri is None:
-        usage_error('Must specify at least --nodes-uri')
-
-    options.classes_uri = options.classes_uri or options.nodes_uri
+    elif options.inventory_base_uri is None and options.nodes_uri is None:
+        usage_error('Must specify --inventory-base-uri or --nodes-uri')
+    elif options.inventory_base_uri is None and options.classes_uri is None:
+        usage_error('Must specify --inventory-base-uri or --classes-uri')
 
     return options
 
@@ -82,3 +85,19 @@ def get_options(name, version, description, config_file=None):
         config_data.update(read_config_file(config_file))
     parser = _make_parser(name, version, description, config_data)
     return _parse_and_check_options(parser)
+
+def path_mangler(inventory_base_uri, nodes_uri, classes_uri):
+
+    if inventory_base_uri is not None:
+        # if inventory_base is given, default to subdirectories
+        nodes_uri = nodes_uri or 'nodes'
+        classes_uri = classes_uri or 'classes'
+        # and prepend the inventory_base_uri
+        def _path_mangler_inner(path):
+            ret = os.path.join(inventory_base_uri, path)
+            ret = os.path.expanduser(ret)
+            return os.path.abspath(ret)
+
+        return map(_path_mangler_inner, (nodes_uri, classes_uri))
+
+    return nodes_uri, classes_uri

@@ -12,7 +12,7 @@ The purpose of an ENC is to allow a system administrator to maintain an
 inventory of nodes to be managed, completely separately from the configuration
 of the automation tool. Usually, the external node classifier completely
 replaces the tool-specific inventory (such as site.pp for Puppet,
-ext_pillar/ext_nodes for Salt, or /etc/ansible/hosts).
+ext_pillar/master_tops for Salt, or /etc/ansible/hosts).
 
 reclass allows you to define your nodes through class inheritance, while
 always able to override details of classes further up the tree. Think of
@@ -215,6 +215,14 @@ Usage
 For information on how to use reclass directly, invoke reclass.py with --help
 and study the output.
 
+The three options --inventory-base-uri, --nodes-uri, and --classes-uri
+together specify the location of the inventory. If the base URI is specified,
+then it is prepended to the other two URIs, unless they are absolute URIs. If
+these two URIs are not specified, they default to 'nodes' and 'classes'.
+Therefore, if your inventory is in '/etc/reclass/nodes' and
+'/etc/reclass/classes', all you need to specify is the base URI as
+'/etc/reclass'.
+
 More commonly, however, use of reclass will happen indirectly, and through
 so-called adapters, e.g. /…/reclass/adapters/salt. The job of an adapter is to
 translate between different invocation paradigms, provide a sane set of
@@ -234,6 +242,7 @@ corresponds to the key 'nodes_uri' in the configuration file. For example:
   storage_type: yaml_fs
   pretty_print: True
   output: json
+  inventory_base_uri: /etc/reclass
   nodes_uri: ../nodes
 
 reclass first looks in the current directory for the file called
