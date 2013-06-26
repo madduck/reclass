@@ -1,7 +1,7 @@
 reclass TODO
 ============
 
-- Salt and Puppet adapters, whoever might want them.
+- Puppet adapter, whoever might want that…???
 - Tests for outputters
 - Improve testing of yaml_fs, maybe with more realistic examples
 - Configurable file extension (.yaml/.yml, or support both)

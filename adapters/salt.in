@@ -1,0 +1,98 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# salt-adapter — adapter between Salt and reclass
+#
+# Note that this file is not really necessary and exists mostly for debugging
+# purposes and admin joys. Have a look at README.Salt for proper integration
+# between Salt and reclass.
+#
+# Copyright © 2007–13 martin f. krafft <madduck@madduck.net>
+# Released under the terms of the Artistic Licence 2.0
+#
+__name__ = 'salt-reclass'
+__description__ = 'reclass adapter for Salt'
+__version__ = '1.0'
+__author__ = 'martin f. krafft <madduck@madduck.net>'
+__copyright__ = 'Copyright © 2007–13 ' + __author__
+__licence__ = 'Artistic Licence 2.0'
+
+import sys, os, posix
+
+# In order to be able to use reclass as modules, manipulate the search
+# path, starting from the location of the adapter. Realpath will make
+# sure that symlinks are resolved.
+realpath = os.path.realpath(sys.argv[0] + '/../../')
+sys.path.insert(0, realpath)
+
+import os, sys, posix
+import reclass.config
+from reclass.output import OutputLoader
+from reclass.storage import StorageBackendLoader
+from reclass.errors import ReclassException, InvocationError
+from reclass import output
+from reclass.adapters.salt import ext_pillar, top
+
+def _error(msg, rc):
+    print >>sys.stderr, msg
+    sys.exit(rc)
+
+try:
+    if len(sys.argv) == 1:
+        raise InvocationError('Need to specify --top or --pillar.',
+                                posix.EX_USAGE)
+
+    # initialise options and try to read ./reclass-config.yml, which is
+    # expected to sit next to the salt-reclass CLI
+    options = {'storage_type': 'yaml_fs',
+               'pretty_print' : True,
+               'output' : 'yaml'
+              }
+    basedir = os.path.dirname(sys.argv[0])
+    config_path = os.path.join(basedir, 'reclass-config.yml')
+    if os.path.exists(config_path) and os.access(config_path, os.R_OK):
+        options.update(reclass.config.read_config_file(config_path))
+
+    nodes_uri, classes_uri = reclass.config.path_mangler(options.get('inventory_base_uri'),
+                                                         options.get('nodes_uri'),
+                                                         options.get('classes_uri'))
+    options['nodes_uri'] = nodes_uri
+    options['classes_uri'] = classes_uri
+
+    if sys.argv[1] in ('--top', '-t'):
+        if len(sys.argv) > 2:
+            raise InvocationError('Unknown arguments: ' + \
+                                ' '.join(sys.argv[2:]), posix.EX_USAGE)
+        node = False
+
+    elif sys.argv[1] in ('--pillar', '-p'):
+        if len(sys.argv) < 3:
+            raise InvocationError('Missing hostname.', posix.EX_USAGE)
+        elif len(sys.argv) > 3:
+            raise InvocationError('Unknown arguments: ' + \
+                                ' '.join(sys.argv[3:]), posix.EX_USAGE)
+        node = sys.argv[2]
+
+    else:
+        raise InvocationError('Unknown mode (--top or --pillar required).',
+                              posix.EX_USAGE)
+
+    if not node:
+        # we want master_tops behaviour
+        # so we first hack:
+        opts = {'master_tops': {'reclass': options}}
+        data = top(salt={}, opts=opts, grains={})
+
+    else:
+        opts={}; salt={}; grains={}; pillar={}
+        data = ext_pillar(opts, salt, grains, pillar,
+                          options.get('storage_type'),
+                          options.get('inventory_base_uri'),
+                          options.get('nodes_uri'),
+                          options.get('classes_uri'))
+
+    print output(data, options.get('output'), options.get('pretty_print'))
+    sys.exit(posix.EX_OK)
+
+except ReclassException, e:
+    _error(e.message, e.rc)
