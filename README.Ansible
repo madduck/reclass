@@ -20,6 +20,9 @@ where the following steps have already been prepared.
 
 /…/reclass refers to the location of your reclass checkout.
 
+  0. Run 'make' in the root of the reclass checkout (see the section
+     'Installation' in the README file for the reason).
+
   1. Symlink /…/reclass/adapters/ansible to /etc/ansible/hosts (or
      ./hacking/hosts)
 
