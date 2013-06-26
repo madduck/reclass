@@ -55,7 +55,7 @@ class TestYamlFs:
     def test_host_meta(self):
         for n in HOSTS:
             node = self._storage.nodeinfo(n)
-            assert 'RECLASS' in node
+            assert '__reclass__' in node
 
     def test_host_entity(self):
         for n in HOSTS:

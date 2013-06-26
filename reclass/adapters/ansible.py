@@ -73,9 +73,9 @@ def ansible_adapter(ansible_dir, exc_handler):
 
         if options['node']:
             # Massage and shift the data like Ansible wants it
-            data['parameters']['RECLASS'] = data['RECLASS']
+            data['parameters']['__reclass__'] = data['__reclass__']
             for i in ('classes', 'applications'):
-                data['parameters']['RECLASS'][i] = data[i]
+                data['parameters']['__reclass__'][i] = data[i]
             data = data['parameters']
 
         else:

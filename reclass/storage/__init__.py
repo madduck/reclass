@@ -27,7 +27,7 @@ class NodeStorageBase(object):
 
     def nodeinfo(self, node):
         entity, uri = self._read_nodeinfo(node, self.nodes_uri, {})
-        return {'RECLASS' : {'node': node, 'node_uri': uri,
+        return {'__reclass__' : {'node': node, 'node_uri': uri,
                                  'timestamp': _get_timestamp()
                                 },
                 'classes': list(entity.classes),
@@ -42,8 +42,8 @@ class NodeStorageBase(object):
         entities, applications, classes = self._list_inventory()
         groups = classes.copy()
         groups.update([(k + self._applications_postfix,v) for k,v in applications.iteritems()])
-        return {'RECLASS' : {'timestamp': _get_timestamp(),
-                             'application_postfix': self._applications_postfix},
+        return {'__reclass__' : {'timestamp': _get_timestamp(),
+                                 'application_postfix': self._applications_postfix},
                 'nodes': entities,
                 'classes': classes,
                 'applications': applications,

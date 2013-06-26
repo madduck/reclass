@@ -51,7 +51,7 @@ where the following steps have already been prepared.
        ./hosts --host localhost
 
      This should print a set of keys and values, including a greeting,
-     a colour, and a sub-class called 'RECLASS'.
+     a colour, and a sub-class called '__reclas__'.
 
   5. Execute some ansible commands, e.g.
 
