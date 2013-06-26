@@ -21,6 +21,12 @@ class ReclassException(Exception):
     rc = property(lambda self: self._rc)
 
 
+class InvocationError(ReclassException):
+
+    def __init__(self, msg, rc=posix.EX_USAGE):
+        super(InvocationError, self).__init__(msg, rc)
+
+
 class NotFoundError(ReclassException):
 
     def __init__(self, msg, rc=posix.EX_IOERR):
