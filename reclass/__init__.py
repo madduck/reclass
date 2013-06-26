@@ -13,7 +13,7 @@ from storage import StorageBackendLoader
 def get_data(storage_type, nodes_uri, classes_uri, applications_postfix, node):
     storage_class = StorageBackendLoader(storage_type).load()
     storage = storage_class(nodes_uri, classes_uri, applications_postfix)
-    if node is False:
+    if not node:
         ret = storage.inventory()
     else:
         ret = storage.nodeinfo(node)
