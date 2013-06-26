@@ -20,14 +20,18 @@ where the following steps have already been prepared.
 
 /…/reclass refers to the location of your reclass checkout.
 
-  1. Symlink /…/reclass/adapters/ansible to /etc/ansible/hosts (or
-     ./hacking/hosts)
+  0. Run 'make' in the root of the reclass checkout (see the section
+     'Installation' in the README file for the reason).
+
+  1. Symlink /…/reclass/adapters/salt to /srv/salt/states/reclass. This is not
+     at all required, because Salt interfaces with reclass as a Python module,
+     but it's handy to have the inventory within reach.
 
   2. Copy the two directories 'nodes' and 'classes' from the example
-     subdirectory in the reclass checkout to /etc/ansible
+     subdirectory in the reclass checkout to /srv/salt/states
 
      If you prefer to put those directories elsewhere, you can create
-     /etc/ansible/reclass-config.yml with contents such as
+     /srv/salt/states/reclass-config.yml with contents such as
 
        storage_type: yaml_fs
        nodes_uri: /srv/reclass/nodes
@@ -36,133 +40,113 @@ where the following steps have already been prepared.
      Note that yaml_fs is currently the only supported storage_type, and it's
      the default if you don't set it.
 
+     Again, this isn't really required, but it's good to get you started. If
+     you really put your inventory into /srv/reclass or /etc/reclass, you'll
+     tell the Salt master later.
+
   3. Check out your inventory by invoking
 
-       ./hosts --list
+       ./reclass --top
 
-     which should return 5 groups in JSON-format, and each group has exactly
-     one member 'localhost'.
+     which should return all the information about all defined nodes, which is
+     only 'localhost' in the example. This is essentially the same information
+     that you would keep in your top.sls file.
 
-  4. See the node information for 'localhost':
+  4. See the pillar information for 'localhost':
 
-       ./hosts --host localhost
+       ./reclass --pillar localhost
 
-     This should print a set of keys and values, including a greeting,
-     a colour, and a sub-class called 'RECLASS'.
+     This is the so-called pillar-data for the named host.
 
-  5. Execute some ansible commands, e.g.
+  5. Now add reclass to /etc/salt/master, like so:
 
-       ansible -i hosts \* --list-hosts
-       ansible -i hosts \* -m ping
-       ansible -i hosts \* -m debug -a 'msg="${greeting}"'
-       ansible -i hosts \* -m setup
-       ansible-playbook -i hosts test.yml
+     master_tops:
+       […]
+       reclass:
+         inventory_base_uri: /srv/salt
 
-  6. You can also invoke reclass directly, which gives a slightly different
-     view onto the same data, i.e. before it has been adapted for Ansible:
+     ext_pillar:
+       reclass:
+         inventory_base_uri: /srv/salt
+
+     Currently, there is no way to unify these configuration data, but it's
+     hardly much to duplicate. In the future, I may provide for a global
+     'reclass' key, but for now you will have to add the data twice.
+
+     Now restart your Salt master and make sure that reclass is in the
+     PYTHONPATH, so if it's not properly installed (but you are running it
+     from source), do this:
+
+       PYTHONPATH=/…/reclass /etc/init.d/salt-master restart
+
+  6. Provided that you have set up 'localhost' as a Salt minion, the following
+     commands should now return the same data as above, but processed through
+     salt:
+
+       salt localhost pillar.items     # shows just the parameters
+       salt localhost state.show_top   # shows only the states (applications)
+
+     Alternatively, if you don't have the Salt minion running yet:
+
+       salt-call pillar.items     # shows just the parameters
+       salt-call state.show_top   # shows only the states (applications)
+
+  7. You can also invoke reclass directly, which gives a slightly different
+     view onto the same data, i.e. before it has been adapted for Salt:
 
        /…/reclass.py --pretty-print --inventory
        /…/reclass.py --pretty-print --nodeinfo localhost
 
 Integration with Salt
 ~~~~~~~~~~~~~~~~~~~~~
-The integration between reclass and Ansible is performed through an adapter,
-and needs not be of our concern too much.
+reclass hooks into Salt at two different points: master_tops and ext_pillar.
+For both, Salt provides plugins. These plugins need to know where to find
+reclass, so if reclass is not properly installed (but you are running it
+from source), make sure to export PYTHONPATH accordingly before you start your
+Salt master.
 
-However, Ansible has no concept of "nodes", "applications", "parameters", and
-"classes". Therefore it is necessary to explain how those correspond to
-Ansible. Crudely, the following mapping exists:
+Salt has no concept of "nodes", "applications", "parameters", and "classes".
+Therefore it is necessary to explain how those correspond to Salt. Crudely,
+the following mapping exists:
 
   nodes         hosts
-  classes       groups
-  applications  playbooks
-  parameters    host_vars
+  classes       - [*]
+  applications  states
+  parameters    pillar
 
-reclass does not provide any group_vars because of its node-centric
-perspective. While class definitions include parameters, those are inherited
-by the node definitions and hence become node_vars.
+[*] See Salt issue #5787 for steps into the direction of letting reclass
+provide nodegroup information.
 
-reclass also does not provide playbooks, nor does it deal with any of the
-related Ansible concepts, i.e. vars_files, vars, tasks, handlers, roles, etc..
+Whatever applications you define for a node will become states applicable to
+a host. If those applications are added via ancestor classes, then that's
+fine, but currently, Salt does not do anything with the classes ancestry.
 
-  Let it be said at this point that you'll probably want to stop using
-  host_vars, group_vars and vars_files altogether, and if only because you
-  should no longer need them, but also because the variable precedence rules
-  of Ansible are full of surprises, at least to me.
+Similarly, all parameters that are collected and merged eventually end up in
+the pillar data of a specific node.
 
-reclass' Ansible adapter massage the reclass output into Ansible-usable data,
-namely:
+However, the pillar data of a node include all the information about classes
+and applications, so you can use them to target your Salt calls at groups of
+nodes defined in the reclass inventory, e.g.
 
-  - Every class in the ancestry of a node becomes a group to Ansible. This is
-    mainly useful to be able to target nodes during interactive use of
-    Ansible, e.g.
+  salt -I __reclass__:classes:salt_minion test.ping
 
-      ansible debiannode@wheezy -m command -a 'apt-get upgrade'
-        → upgrade all Debian nodes running wheezy
+Unfortunately, this does not work yet, please stay tuned, and let me know
+if you figure out a way. Salt issue #5787 is also of relevance.
 
-      ansible ssh.server -m command -a 'invoke-rc.d ssh restart'
-        → restart all SSH server processes
-
-      ansible mailserver -m command -a 'tail -n1000 /var/log/mail.err'
-        → obtain the last 1,000 lines of all mailserver error log files
-
-    The attentive reader might stumble over the use of singular words, whereas
-    it might make more sense to address all 'mailserver*s*' with this tool.
-    This is convention and up to you. I prefer to think of my node as
-    a (singular) mailserver when I add 'mailserver' to its parent classes.
-
-  - Every entry in the list of a host's applications might well correspond to
-    an Ansible playbook. Therefore, reclass creates a (Ansible-)group for
-    every application, and adds '_hosts' to the name. This postfix can be
-    configured with a CLI option (--applications-postfix) or in the
-    configuration file (applications_postfix).
-
-    For instance, the ssh.server class adds the ssh.server application to
-    a node's application list. Now the admin might create an Ansible playbook
-    like so:
-
-      - name: SSH server management
-        hosts: ssh.server_hosts              ← SEE HERE
-        tasks:
-          - name: install SSH package
-            action: …
-        …
-
-    There's a bit of redundancy in this, but unfortunately Ansible playbooks
-    hardcode the nodes to which a playbook applies.
-
-    It's now trivial to apply this playbook across your infrastructure:
-
-      ansible-playbook ssh.server.yml
-
-    My suggested way to use Ansible site-wide is then to create a 'site'
-    playbook that includes all the other playbooks (which shall hopefully be
-    based on Ansible roles), and then to invoke Ansible like this:
-
-      ansible-playbook site.yml
-
-    or, if you prefer only to reconfigure a subset of nodes, e.g. all
-    webservers:
-
-      ansible-playbook site.yml --limit webserver
-
-    Again, if the singular word 'webserver' puts you off, change the
-    convention as you wish.
-
-    And if anyone comes up with a way to directly connect groups in the
-    inventory with roles, thereby making it unnecessary to write playbook
-    files (containing redundant information), please tell me!
-
-  - Parameters corresponding to a node become host_vars for that host.
-
-It is possible to include Jinja2-style variables like you would in Ansible,
-in parameter values. This is especially powerful in combination with the
-recursive merging, e.g.
+It will also be possible to include Jinja2-style variables in parameter
+values. This is especially powerful in combination with the recursive merging,
+e.g.
 
   parameters:
     motd:
-      greeting: Welcome to {{ ansible_fqdn }}!
+      greeting: Welcome to {{ grains.fqdn }}!
       closing: This system is part of {{ realm }}
 
 Now you just need to specify realm somewhere. The reference can reside in
 a parent class, while the variable is defined e.g. in the node.
+
+This is also not yet working. The main reason is that the expansion cannot
+happen at the YAML-file level, because that would cast most types to strings.
+Instead, the interpolation needs to happen at the data structure level inside
+reclass, or maybe at the adapter level, reusing the templating of Salt. This
+will require some more thought, but it's on the horizon…
