@@ -78,6 +78,10 @@ def ansible_adapter(ansible_dir, exc_handler):
                 data['parameters']['RECLASS'][i] = data[i]
             data = data['parameters']
 
+        else:
+            # Ansible inventory is only the list of groups
+            data = data['groups']
+
         print output(data, options['output'], options['pretty_print'])
 
     except ReclassException, e:

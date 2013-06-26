@@ -10,9 +10,6 @@
 from output import OutputLoader
 from storage import StorageBackendLoader
 
-def get_options(config_file=None):
-    return config.get_options(__name__, __version__, __description__, config_file)
-
 def get_data(storage_type, nodes_uri, classes_uri, applications_postfix, node):
     storage_class = StorageBackendLoader(storage_type).load()
     storage = storage_class(nodes_uri, classes_uri, applications_postfix)

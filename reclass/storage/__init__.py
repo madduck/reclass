@@ -39,10 +39,17 @@ class NodeStorageBase(object):
         raise NotImplementedError, "Storage class does not implement inventory listing"
 
     def inventory(self):
-        entity, applications, classes = self._list_inventory()
-        ret = classes
-        ret.update([(k + self._applications_postfix,v) for k,v in applications.iteritems()])
-        return ret
+        entities, applications, classes = self._list_inventory()
+        groups = classes.copy()
+        groups.update([(k + self._applications_postfix,v) for k,v in applications.iteritems()])
+        return {'RECLASS' : {'timestamp': _get_timestamp(),
+                             'application_postfix': self._applications_postfix},
+                'nodes': entities,
+                'classes': classes,
+                'applications': applications,
+                'groups': groups
+               }
+
 
 class StorageBackendLoader(object):
 

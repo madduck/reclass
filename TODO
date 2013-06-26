@@ -5,3 +5,6 @@ reclass TODO
 - Tests for outputters
 - Improve testing of yaml_fs, maybe with more realistic examples
 - Configurable file extension (.yaml/.yml, or support both)
+- Remove applications_hosts, or factor it out to the Ansible adapter, as it's
+  not really relevant to Salt or reclass in general. And remove 'groups' from
+  the inventory return.

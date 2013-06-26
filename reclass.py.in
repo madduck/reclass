@@ -18,47 +18,28 @@ import reclass.config
 from reclass.output import OutputLoader
 from reclass.storage import StorageBackendLoader
 import reclass.errors
-
-def get_options(config_file=None):
-    return reclass.config.get_options(__name__, __version__, __description__, config_file)
-
-def get_data(storage_type, nodes_uri, classes_uri, applications_postfix, node):
-    storage_class = StorageBackendLoader(storage_type).load()
-    storage = storage_class(nodes_uri, classes_uri, applications_postfix)
-    if node is False:
-        ret = storage.inventory()
-    else:
-        ret = storage.nodeinfo(node)
-        ret['RECLASS']['timestamp'] = time.strftime('%c')
-
-    return ret
-
-def output(data, fmt, pretty_print=False):
-    output_class = OutputLoader(fmt).load()
-    outputter = output_class()
-    return outputter.dump(data, pretty_print=pretty_print)
+from reclass import get_data, output
 
 def _error(msg, rc):
     print >>sys.stderr, msg
     sys.exit(rc)
 
-if __name__ == '__main__':
-    __name__ = __prog__
-    config_file = None
-    for d in (os.getcwd(), os.path.dirname(sys.argv[0])):
-        f = os.path.join(d, __name__ + '-config.yml')
-        if os.access(f, os.R_OK):
-            config_file = f
-            break
-    try:
-        options = get_options(config_file)
-        nodes_uri, classes_uri = reclass.config.path_mangler(options.inventory_base_uri,
-                                                             options.nodes_uri,
-                                                             options.classes_uri)
-        data = get_data(options.storage_type, nodes_uri, classes_uri,
-                        options.applications_postfix, options.node)
-        print output(data, options.output, options.pretty_print)
-        sys.exit(posix.EX_OK)
+config_file = None
+for d in (os.getcwd(), os.path.dirname(sys.argv[0])):
+    f = os.path.join(d, __name__ + '-config.yml')
+    if os.access(f, os.R_OK):
+        config_file = f
+        break
+try:
+    options = reclass.config.get_options(__name__, __version__,
+                                         __description__, config_file)
+    nodes_uri, classes_uri = reclass.config.path_mangler(options.inventory_base_uri,
+                                                            options.nodes_uri,
+                                                            options.classes_uri)
+    data = get_data(options.storage_type, nodes_uri, classes_uri,
+                    options.applications_postfix, options.node)
+    print output(data, options.output, options.pretty_print)
+    sys.exit(posix.EX_OK)
 
-    except reclass.errors.ReclassException, e:
-        _error(e.message, e.rc)
+except reclass.errors.ReclassException, e:
+    _error(e.message, e.rc)
