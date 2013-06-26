@@ -79,11 +79,10 @@ def read_config_file(path):
     else:
         return {}
 
-def get_options(name, version, description, config_file=None):
-    config_data = {}
+def get_options(name, version, description, config_file=None, defaults={}):
     if config_file is not None:
-        config_data.update(read_config_file(config_file))
-    parser = _make_parser(name, version, description, config_data)
+        defaults.update(read_config_file(config_file))
+    parser = _make_parser(name, version, description, defaults)
     return _parse_and_check_options(parser)
 
 def path_mangler(inventory_base_uri, nodes_uri, classes_uri):

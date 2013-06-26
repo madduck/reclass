@@ -31,8 +31,10 @@ for d in (os.getcwd(), os.path.dirname(sys.argv[0])):
         config_file = f
         break
 try:
+    defaults = { 'pretty_print' : True, 'output' : 'yaml' }
     options = reclass.config.get_options(__name__, __version__,
-                                         __description__, config_file)
+                                         __description__, config_file,
+                                         defaults)
     nodes_uri, classes_uri = reclass.config.path_mangler(options.inventory_base_uri,
                                                             options.nodes_uri,
                                                             options.classes_uri)
