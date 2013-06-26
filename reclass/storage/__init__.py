@@ -6,6 +6,12 @@
 # Copyright © 2007–13 martin f. krafft <madduck@madduck.net>
 # Released under the terms of the Artistic Licence 2.0
 #
+
+import time
+
+def _get_timestamp():
+    return time.strftime('%c')
+
 class NodeStorageBase(object):
 
     def __init__(self, nodes_uri, classes_uri, applications_postfix):
@@ -21,7 +27,9 @@ class NodeStorageBase(object):
 
     def nodeinfo(self, node):
         entity, uri = self._read_nodeinfo(node, self.nodes_uri, {})
-        return {'RECLASS' : {'node': node, 'node_uri': uri},
+        return {'RECLASS' : {'node': node, 'node_uri': uri,
+                                 'timestamp': _get_timestamp()
+                                },
                 'classes': list(entity.classes),
                 'applications': list(entity.applications),
                 'parameters': dict(entity.parameters)

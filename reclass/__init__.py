@@ -7,8 +7,6 @@
 # Released under the terms of the Artistic Licence 2.0
 #
 
-import time
-import config
 from output import OutputLoader
 from storage import StorageBackendLoader
 
@@ -22,7 +20,6 @@ def get_data(storage_type, nodes_uri, classes_uri, applications_postfix, node):
         ret = storage.inventory()
     else:
         ret = storage.nodeinfo(node)
-        ret['RECLASS']['timestamp'] = time.strftime('%c')
 
     return ret
 
