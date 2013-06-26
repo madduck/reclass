@@ -8,6 +8,7 @@
 #
 import os
 import sys
+from reclass.errors import NotFoundError
 
 SKIPDIRS = ( '.git' , '.svn' , 'CVS', 'SCCS', '.hg', '_darcs' )
 FILE_EXTENSION = '.yml'
@@ -20,6 +21,10 @@ class Directory(object):
 
     def __init__(self, path, fileclass=None):
         ''' Initialise a directory object '''
+        if not os.path.isdir(path):
+            raise NotFoundError('no such directory: %s' % path)
+        if not os.access(path, os.R_OK|os.X_OK):
+            raise NotFoundError('cannot change to or read directory: %s' % path)
         self._path = path
         self._fileclass = fileclass
         self._files = {}
@@ -34,12 +39,9 @@ class Directory(object):
     files = property(lambda self: self._files)
 
     def walk(self, register_fn=None):
-        def _error(error):
-            raise Exception('{0}: {1} ({2})'.format(error.filename, error.strerror, error.errno))
         if not callable(register_fn): register_fn = self._register_files
         for dirpath, dirnames, filenames in os.walk(self._path,
                                                       topdown=True,
-                                                      onerror=_error,
                                                       followlinks=True):
             vvv('RECURSE {0}, {1} files, {2} subdirectories'.format(
                 dirpath.replace(os.getcwd(), '.'), len(filenames), len(dirnames)))
