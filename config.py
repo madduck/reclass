@@ -92,12 +92,15 @@ def path_mangler(inventory_base_uri, nodes_uri, classes_uri):
         # if inventory_base is given, default to subdirectories
         nodes_uri = nodes_uri or 'nodes'
         classes_uri = classes_uri or 'classes'
-        # and prepend the inventory_base_uri
-        def _path_mangler_inner(path):
-            ret = os.path.join(inventory_base_uri, path)
-            ret = os.path.expanduser(ret)
-            return os.path.abspath(ret)
 
-        return map(_path_mangler_inner, (nodes_uri, classes_uri))
+    else:
+        inventory_base_uri = os.getcwd()
+
+    def _path_mangler_inner(path):
+        ret = os.path.join(inventory_base_uri, path)
+        ret = os.path.expanduser(ret)
+        return os.path.abspath(ret)
+
+    return map(_path_mangler_inner, (nodes_uri, classes_uri))
 
     return nodes_uri, classes_uri
