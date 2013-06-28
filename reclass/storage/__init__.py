@@ -41,7 +41,9 @@ class NodeStorageBase(object):
     def inventory(self):
         entities, applications, classes = self._list_inventory()
         groups = classes.copy()
-        groups.update([(k + self._applications_postfix,v) for k,v in applications.iteritems()])
+        if self._applications_postfix:
+            groups.update([(k + self._applications_postfix,v) for k,v in
+                           applications.iteritems()])
         return {'__reclass__' : {'timestamp': _get_timestamp(),
                                  'application_postfix': self._applications_postfix},
                 'nodes': entities,
