@@ -87,13 +87,12 @@ def get_options(name, version, description, config_file=None, defaults={}):
 
 def path_mangler(inventory_base_uri, nodes_uri, classes_uri):
 
-    if inventory_base_uri is not None:
-        # if inventory_base is given, default to subdirectories
-        nodes_uri = nodes_uri or 'nodes'
-        classes_uri = classes_uri or 'classes'
-
-    else:
+    if inventory_base_uri is None:
+        # if inventory_base is not given, default to current directory
         inventory_base_uri = os.getcwd()
+
+    nodes_uri = nodes_uri or 'nodes'
+    classes_uri = classes_uri or 'classes'
 
     def _path_mangler_inner(path):
         ret = os.path.join(inventory_base_uri, path)
