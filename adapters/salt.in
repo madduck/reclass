@@ -78,15 +78,14 @@ try:
                               posix.EX_USAGE)
 
     if not node:
-        # we want master_tops behaviour
-        # so we first hack:
-        opts = {'master_tops': {'reclass': options}}
-        data = top(salt={}, opts=opts, grains={})
+        reclass_opts = options.copy()
+        del reclass_opts['output']
+        del reclass_opts['pretty_print']
+        data = top(**reclass_opts)
 
     else:
-        opts={}; salt={}; grains={}; pillar={}
-        data = ext_pillar(opts, salt, grains, pillar,
-                          options.get('storage_type'),
+        pillar={}
+        data = ext_pillar(node, pillar, options.get('storage_type'),
                           options.get('inventory_base_uri'),
                           options.get('nodes_uri'),
                           options.get('classes_uri'))

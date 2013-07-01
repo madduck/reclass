@@ -35,15 +35,11 @@ def _get_data(storage_type, inventory_base_uri, nodes_uri, classes_uri, node):
     return get_data(storage_type, nodes_uri, classes_uri, node)
 
 
-def ext_pillar(pillar, storage_type=None, inventory_base_uri=None,
+def ext_pillar(minion_id, pillar, storage_type=None, inventory_base_uri=None,
                nodes_uri=None, classes_uri=None):
 
-    node = opts.get('id')
-    if node is None:
-        raise InvocationError('no node ID provided')
-
     data = _get_data(storage_type, inventory_base_uri, nodes_uri, classes_uri,
-                     node)
+                     minion_id)
     params = data.get('parameters', {})
     params['__reclass__'] = {}
     params['__reclass__']['applications'] = data['applications']
@@ -53,15 +49,8 @@ def ext_pillar(pillar, storage_type=None, inventory_base_uri=None,
     return params
 
 
-def top(salt, opts, grains):
-    reclass_opts = opts.get('master_tops', {}).get('reclass')
-    if reclass_opts is None:
-         raise InvocationError('no configuration provided')
-
-    storage_type = reclass_opts.get('storage_type')
-    inventory_base_uri = reclass_opts.get('inventory_base_uri')
-    nodes_uri = reclass_opts.get('nodes_uri')
-    classes_uri = reclass_opts.get('classes_uri')
+def top(storage_type=None, inventory_base_uri=None, nodes_uri=None,
+        classes_uri=None):
 
     data = _get_data(storage_type, inventory_base_uri, nodes_uri, classes_uri,
                      node=None)
