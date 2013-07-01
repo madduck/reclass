@@ -40,16 +40,17 @@ class TestYamlFs:
 
     def test_inventory_setup(self):
         assert isinstance(self._inventory, dict)
-        assert len(self._inventory) == len(MEMBERSHIPS)
+        print self._inventory
+        assert len(self._inventory['groups']) == len(MEMBERSHIPS)
         for i in MEMBERSHIPS.iterkeys():
-            assert i in self._inventory
+            assert i in self._inventory['groups']
 
     def test_inventory_memberships(self):
-        for app, members in self._inventory.iteritems():
+        for app, members in self._inventory['groups'].iteritems():
             for i in MEMBERSHIPS[app]:
                 assert i in members
         for app, members in MEMBERSHIPS.iteritems():
-            for i in self._inventory[app]:
+            for i in self._inventory['groups'][app]:
                 assert i in members
 
     def test_host_meta(self):
