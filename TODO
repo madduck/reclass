@@ -8,3 +8,6 @@ reclass TODO
 - Remove applications_hosts, or factor it out to the Ansible adapter, as it's
   not really relevant to Salt or reclass in general. And remove 'groups' from
   the inventory return.
+- Improve the adapters, either by just letting them build their own
+  OptionParsers, or through setuptools entrypoints (probably best…). The
+  reclass API would need a bit of generalisation for that to happen…
