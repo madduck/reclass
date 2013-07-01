@@ -8,6 +8,11 @@ and available under the terms of the Artistic Licence 2.0
 Please make sure to read the generic information in the README file first, or
 alongside this document.
 
+IMPORTANT NOTICE: I was kicked out of the Ansible community, and therefore
+I have no interest in developing this adapter anymore. If you use it and want
+to turn it into a setuptools entrypoints compatible adapter, I will take your
+patch.
+
 Quick start with Ansible
 ~~~~~~~~~~~~~~~~~~~~~~~~
 The following steps should get you up and running quickly. Generally, we will
