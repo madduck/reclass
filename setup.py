@@ -1,7 +1,8 @@
 from setuptools import setup, find_packages
+from reclass.version import __name__, __version__
 setup(
-    name = "Reclass",
-    version = "1.0",
+    name = __name__,
+    version = __version__,
     packages = find_packages(), 
     entry_points = {
       'console_scripts': ['reclass = reclass.main:run' ],
