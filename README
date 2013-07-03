@@ -275,19 +275,4 @@ reclass first looks in the current directory for the file called
 'reclass-config.yml' and if no such file is found, it looks "next to" the
 reclass script itself. Adapters implement their own lookup logic.
 
-Contributing to reclass
-~~~~~~~~~~~~~~~~~~~~~~~
-Conttributions to reclass are very welcome. Since I prefer to keep a somewhat
-clean history, I will not just merge pull request.
-
-You can submit pull requests, of course, and I'll rebase them onto HEAD before
-merging. Or send your patches using git-format-patch and git-send-e-mail to
-reclass@pobox.madduck.net.
-
-I have added rudimentary unit tests, and it would be nice if you could submit
-your changes with appropriate changes to the tests. To run tests, invoke
-./run_tests.py in the top-level checkout directory.
-
-If you have larger ideas, I'll be looking forward to discuss them with you.
-
- -- martin f. krafft <madduck@madduck.net>  Fri, 14 Jun 2013 22:12:05 +0200
+ -- martin f. krafft <madduck@madduck.net>  Fri, 03 Jul 2013 19:57:05 +0200

@@ -1,0 +1,40 @@
+=============================================================
+      reclass — recursive external node classification
+=============================================================
+reclass is © 2007–2013 martin f. krafft <madduck@madduck.net>
+and available under the terms of the Artistic Licence 2.0
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Installation
+~~~~~~~~~~~~
+If you just want to run reclass from source, e.g. because you are going to be
+making and testing changes, install it in "development mode":
+
+  python setup.py develop
+
+To uninstall:
+
+  python setup.py develop --uninstall
+
+Discussing reclass
+~~~~~~~~~~~~~~~~~~
+If you want to talk about reclass, the best way right now is to use the
+salt-users mailing list (please put 'reclass' into the subject), or to find me
+on IRC, either 'madduck' in the #salt/freenode channel, or in #reclass/oftc.
+
+Contributing to reclass
+~~~~~~~~~~~~~~~~~~~~~~~
+Conttributions to reclass are very welcome. Since I prefer to keep a somewhat
+clean history, I will not just merge pull request.
+
+You can submit pull requests, of course, and I'll rebase them onto HEAD before
+merging. Or send your patches using git-format-patch and git-send-e-mail to
+reclass@pobox.madduck.net.
+
+I have added rudimentary unit tests, and it would be nice if you could submit
+your changes with appropriate changes to the tests. To run tests, invoke
+./run_tests.py in the top-level checkout directory.
+
+If you have larger ideas, I'll be looking forward to discuss them with you.
+
+ -- martin f. krafft <madduck@madduck.net>  Wed, 03 Jul 2013 20:02:39 +0200
