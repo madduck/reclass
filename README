@@ -33,16 +33,42 @@ about integration of reclass with these tools.
 
 Installation
 ~~~~~~~~~~~~
-Before you can use reclass, you need to run make to configure the scripts to
-your system. Right now, this only involves setting the full path to the
-Python interpreter.
+Before you can use reclass, you need to install it into a place where Python
+can find it. Unless you installed a package from your distribution, the
+following step:
 
-  make
+  python setup.py install
 
-If your Python interpreter is not /usr/bin/python and is also not in your
-$PATH, then you need to pass that to make, e.g.
+This will install the package to /usr/local, which is likely in your Python
+path. You can check this using
 
-  make PYTHON=/opt/local/bin/python
+  python -c 'import sys; print sys.path'
+
+If you want to install to a different location, use --prefix like so:
+
+  python setup.py install --prefix=/opt/local
+
+More options can be found in the output of
+
+  python setup.py install --help
+  python setup.py --help
+  python setup.py --help-commands
+  python setup.py --help [cmd]
+
+If you just want to run reclass from source, e.g. because you are going to be
+making and testing changes, install it in "development mode":
+
+  python setup.py develop
+
+To uninstall:
+
+  python setup.py develop --uninstall
+
+Uninstallation currently isn't possible for packages installed to /usr/local
+as per the above method, unfortunately: http://bugs.python.org/issue4673.
+The following should do:
+
+  rm -r /usr/local/lib/python*/dist-packages/reclass* /usr/local/bin/reclass
 
 reclass concepts
 ~~~~~~~~~~~~~~~~

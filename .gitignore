@@ -1,4 +1,6 @@
-*.pyc
+*.py[co]
 .*.sw?
 /reclass-config.yml
-/reclass.py
+/reclass.egg-info
+/build
+/dist
