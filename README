@@ -249,6 +249,15 @@ Therefore, if your inventory is in '/etc/reclass/nodes' and
 '/etc/reclass/classes', all you need to specify is the base URI as
 '/etc/reclass'.
 
+If you've installed reclass as per the above instructions, try to run it from
+the source directory like this:
+
+  reclass -b examples/ --inventory
+  reclass -b examples/ --node localhost
+
+Those data come from examples/nodes and examples/classes, and you can surely
+make your own way from here.
+
 More commonly, however, use of reclass will happen indirectly, and through
 so-called adapters, e.g. /…/reclass/adapters/salt. The job of an adapter is to
 translate between different invocation paradigms, provide a sane set of
