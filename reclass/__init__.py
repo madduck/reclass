@@ -10,9 +10,9 @@
 from output import OutputLoader
 from storage import StorageBackendLoader
 
-def get_data(storage_type, nodes_uri, classes_uri, applications_postfix, node):
+def get_data(storage_type, nodes_uri, classes_uri, node):
     storage_class = StorageBackendLoader(storage_type).load()
-    storage = storage_class(nodes_uri, classes_uri, applications_postfix)
+    storage = storage_class(nodes_uri, classes_uri)
     if not node:
         ret = storage.inventory()
     else:

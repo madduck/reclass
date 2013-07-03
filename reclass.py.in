@@ -39,7 +39,7 @@ try:
                                                             options.nodes_uri,
                                                             options.classes_uri)
     data = get_data(options.storage_type, nodes_uri, classes_uri,
-                    options.applications_postfix, options.node)
+                    options.node)
     print output(data, options.output, options.pretty_print)
     sys.exit(posix.EX_OK)
 

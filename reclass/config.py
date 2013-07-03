@@ -36,9 +36,6 @@ def _make_parser(name, version, description, defaults={}):
                              default=defaults.get('pretty_print', False),
                              action="store_true",
                              help='try to make the output prettier [%default]')
-    options_group.add_option('--applications-postfix', dest='applications_postfix',
-                             default=defaults.get('applications_postfix', '_hosts'),
-                             help="the postfix to apply to groups made from applications ['%default']")
     parser.add_option_group(options_group)
 
     run_modes = optparse.OptionGroup(parser, 'Modes',

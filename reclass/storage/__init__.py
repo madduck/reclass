@@ -14,10 +14,9 @@ def _get_timestamp():
 
 class NodeStorageBase(object):
 
-    def __init__(self, nodes_uri, classes_uri, applications_postfix):
+    def __init__(self, nodes_uri, classes_uri):
         self._nodes_uri = nodes_uri
         self._classes_uri = classes_uri
-        self._applications_postfix = applications_postfix
 
     nodes_uri = property(lambda self: self._nodes_uri)
     classes_uri = property(lambda self: self._classes_uri)
@@ -40,16 +39,10 @@ class NodeStorageBase(object):
 
     def inventory(self):
         entities, applications, classes = self._list_inventory()
-        groups = classes.copy()
-        if self._applications_postfix:
-            groups.update([(k + self._applications_postfix,v) for k,v in
-                           applications.iteritems()])
-        return {'__reclass__' : {'timestamp': _get_timestamp(),
-                                 'application_postfix': self._applications_postfix},
+        return {'__reclass__' : {'timestamp': _get_timestamp()},
                 'nodes': entities,
                 'classes': classes,
-                'applications': applications,
-                'groups': groups
+                'applications': applications
                }
 
 

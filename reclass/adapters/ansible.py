@@ -20,7 +20,10 @@ def ansible_adapter(ansible_dir, exc_handler):
 
         # The adapter resides in the Ansible directory, so let's look there
         # for an optional configuration file called reclass-config.yml.
-        options = {'output':'json', 'pretty_print':True}
+        options = {'output': 'json',
+                   'pretty_print': True,
+                   'applications_postfix': '_hosts'
+                  }
         config_path = os.path.join(ansible_dir, 'reclass-config.yml')
         if os.path.exists(config_path) and os.access(config_path, os.R_OK):
             options.update(reclass.config.read_config_file(config_path))
@@ -42,9 +45,6 @@ def ansible_adapter(ansible_dir, exc_handler):
             if not stat.S_ISDIR(os.stat(classes_uri).st_mode):
                 classes_uri = options['nodes_uri']
             options['classes_uri'] = classes_uri
-
-        if 'applications_postfix' not in options:
-            options['applications_postfix'] = '_hosts'
 
         # Invoke reclass according to what Ansible wants.
         # If the 'node' option is set, we want node information. If the option
@@ -68,8 +68,7 @@ def ansible_adapter(ansible_dir, exc_handler):
                                   posix.EX_USAGE)
 
         data = get_data(options['storage_type'], options['nodes_uri'],
-                        options['classes_uri'],
-                        options['applications_postfix'], options['node'])
+                        options['classes_uri'], options['node'])
 
         if options['node']:
             # Massage and shift the data like Ansible wants it
@@ -79,8 +78,17 @@ def ansible_adapter(ansible_dir, exc_handler):
             data = data['parameters']
 
         else:
-            # Ansible inventory is only the list of groups
-            data = data['groups']
+            # Ansible inventory is only the list of groups. Groups are the set
+            # of classes plus the set of applications with the postfix added:
+            groups = data['classes']
+            apps = data['applications']
+            if 'applications_postfix' in options:
+                postfix = options['applications_postfix']
+                groups.update([(k + postfix, v) for k,v in apps.iteritems()])
+            else:
+                groups.update(apps)
+
+            data = groups
 
         print output(data, options['output'], options['pretty_print'])
 
