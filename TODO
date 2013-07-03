@@ -8,3 +8,4 @@ reclass TODO
 - Improve the adapters, either by just letting them build their own
   OptionParsers, or through setuptools entrypoints (probably best…). The
   reclass API would need a bit of generalisation for that to happen…
+- Variable interpolation
