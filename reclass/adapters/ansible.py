@@ -3,6 +3,11 @@
 #
 # This file is part of reclass (http://github.com/madduck/reclass)
 #
+# IMPORTANT NOTICE: I was kicked out of the Ansible community, and therefore
+# I have no interest in developing this adapter anymore. If you use it and
+# want to turn it into a setuptools entrypoints compatible adapter, I will
+# take your patch.
+#
 # Copyright © 2007–13 martin f. krafft <madduck@madduck.net>
 # Released under the terms of the Artistic Licence 2.0
 #
