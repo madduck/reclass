@@ -16,9 +16,9 @@ class YamlFile(object):
     def __init__(self, path):
         ''' Initialise a yamlfile object '''
         if not os.path.isfile(path):
-            raise NotFoundError('no such file: %s' % path)
+            raise NotFoundError('No such file: %s' % path)
         if not os.access(path, os.R_OK):
-            raise NotFoundError('cannot open: %s' % path)
+            raise NotFoundError('Cannot open: %s' % path)
         self._path = path
         self._data = dict()
         self._read()

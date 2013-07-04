@@ -22,9 +22,9 @@ class Directory(object):
     def __init__(self, path, fileclass=None):
         ''' Initialise a directory object '''
         if not os.path.isdir(path):
-            raise NotFoundError('no such directory: %s' % path)
+            raise NotFoundError('No such directory: %s' % path)
         if not os.access(path, os.R_OK|os.X_OK):
-            raise NotFoundError('cannot change to or read directory: %s' % path)
+            raise NotFoundError('Cannot change to or read directory: %s' % path)
         self._path = path
         self._fileclass = fileclass
         self._files = {}
