@@ -6,81 +6,164 @@
 # Copyright © 2007–13 martin f. krafft <madduck@madduck.net>
 # Released under the terms of the Artistic Licence 2.0
 #
+
 import yaml, os, optparse, posix, sys
 
-def _make_parser(name, version, description, defaults={}):
+import errors
+from defaults import *
+from constants import MODE_NODEINFO, MODE_INVENTORY
+
+def make_db_options_group(parser, defaults={}):
+    ret = optparse.OptionGroup(parser, 'Database options',
+                               'Configure from where {0} collects data'.format(parser.prog))
+    ret.add_option('-s', '--storage-type', dest='storage_type',
+                   default=defaults.get('storage_type', OPT_STORAGE_TYPE),
+                   help='the type of storage backend to use [%default]')
+    ret.add_option('-b', '--inventory-base-uri', dest='inventory_base_uri',
+                   default=defaults.get('inventory_base_uri',
+                                        OPT_INVENTORY_BASE_URI),
+                   help='the base URI to prepend to nodes and classes [%default]'),
+    ret.add_option('-u', '--nodes-uri', dest='nodes_uri',
+                   default=defaults.get('nodes_uri', OPT_NODES_URI),
+                   help='the URI to the nodes storage [%default]'),
+    ret.add_option('-c', '--classes-uri', dest='classes_uri',
+                   default=defaults.get('classes_uri', OPT_CLASSES_URI),
+                   help='the URI to the classes storage [%default]')
+    return ret
+
+
+def make_output_options_group(parser, defaults={}):
+    ret = optparse.OptionGroup(parser, 'Output options',
+                               'Configure the way {0} prints data'.format(parser.prog))
+    ret.add_option('-o', '--output', dest='output',
+                   default=defaults.get('output', OPT_OUTPUT),
+                   help='output format (yaml or json) [%default]')
+    ret.add_option('-y', '--pretty-print', dest='pretty_print',
+                   action="store_true",
+                   default=defaults.get('pretty_print', OPT_PRETTY_PRINT),
+                   help='try to make the output prettier [%default]')
+    return ret
+
+
+def make_modes_options_group(parser, inventory_shortopt, inventory_longopt,
+                             inventory_help, nodeinfo_shortopt,
+                             nodeinfo_longopt, nodeinfo_dest, nodeinfo_help):
+
+    def _mode_checker_cb(option, opt_str, value, parser):
+        if hasattr(parser.values, 'mode'):
+            raise optparse.OptionValueError('Cannot specify multiple modes')
+
+        if option == parser.get_option(nodeinfo_longopt):
+            setattr(parser.values, 'mode', MODE_NODEINFO)
+            setattr(parser.values, nodeinfo_dest, value)
+        else:
+            setattr(parser.values, 'mode', MODE_INVENTORY)
+            setattr(parser.values, nodeinfo_dest, None)
+
+    ret = optparse.OptionGroup(parser, 'Modes',
+                               'Specify one of these to determine what to do.')
+    ret.add_option(inventory_shortopt, inventory_longopt,
+                   action='callback', callback=_mode_checker_cb,
+                   help=inventory_help)
+    ret.add_option(nodeinfo_shortopt, nodeinfo_longopt,
+                   default=None, dest=nodeinfo_dest, type='string',
+                   action='callback', callback=_mode_checker_cb,
+                   help=nodeinfo_help)
+    return ret
+
+
+def make_parser_and_checker(name, version, description,
+                            inventory_shortopt='-i',
+                            inventory_longopt='--inventory',
+                            inventory_help='output the entire inventory',
+                            nodeinfo_shortopt='-n',
+                            nodeinfo_longopt='--nodeinfo',
+                            nodeinfo_dest='nodename',
+                            nodeinfo_help='output information for a specific node',
+                            add_options_cb=None,
+                            defaults={}):
+
     parser = optparse.OptionParser(version=version)
     parser.prog = name
     parser.version = version
-    parser.description = description
-    parser.usage = '%prog [options] ( --inventory | --nodeinfo <nodename> )'
+    parser.description = description.capitalize()
+    parser.usage = '%prog [options] ( {0} | {1} {2} )'.format(inventory_longopt,
+                                                             nodeinfo_longopt,
+                                                             nodeinfo_dest.upper())
+    parser.epilog = 'Exactly one mode has to be specified.'
 
-    options_group = optparse.OptionGroup(parser, 'Options',
-                                         'Configure the way {0} works'.format(name))
-    options_group.add_option('-t', '--storage-type', dest='storage_type',
-                             default=defaults.get('storage_type', 'yaml_fs'),
-                             help='the type of storage backend to use [%default]')
-    options_group.add_option('-b', '--inventory-base-uri', dest='inventory_base_uri',
-                             default=defaults.get('inventory_base_uri', None),
-                             help='the base URI to append to nodes and classes [%default]'),
-    options_group.add_option('-u', '--nodes-uri', dest='nodes_uri',
-                             default=defaults.get('nodes_uri', './nodes'),
-                             help='the URI to the nodes storage [%default]'),
-    options_group.add_option('-c', '--classes-uri', dest='classes_uri',
-                             default=defaults.get('classes_uri', './classes'),
-                             help='the URI to the classes storage [%default]')
-    options_group.add_option('-o', '--output', dest='output',
-                             default=defaults.get('output', 'yaml'),
-                             help='output format (yaml or json) [%default]')
-    options_group.add_option('-p', '--pretty-print', dest='pretty_print',
-                             default=defaults.get('pretty_print', False),
-                             action="store_true",
-                             help='try to make the output prettier [%default]')
-    parser.add_option_group(options_group)
+    db_group = make_db_options_group(parser, defaults)
+    parser.add_option_group(db_group)
 
-    run_modes = optparse.OptionGroup(parser, 'Modes',
-                                     'Specify one of these to determine what to do.')
-    run_modes.add_option('-i', '--inventory', action='store_false', dest='node',
-                         help='output the entire inventory')
-    run_modes.add_option('-n', '--nodeinfo', action='store', dest='node',
-                         default=None,
-                         help='output information for a specific node')
-    parser.add_option_group(run_modes)
+    output_group = make_output_options_group(parser, defaults)
+    parser.add_option_group(output_group)
 
-    return parser
+    if callable(add_options_cb):
+        add_options_cb(parser, defaults)
 
-def _parse_and_check_options(parser):
+    modes_group = make_modes_options_group(parser, inventory_shortopt,
+                                           inventory_longopt, inventory_help,
+                                           nodeinfo_shortopt,
+                                           nodeinfo_longopt, nodeinfo_dest,
+                                           nodeinfo_help)
+    parser.add_option_group(modes_group)
+
+    def option_checker(options, args):
+        if len(args) > 0:
+            parser.error('No arguments allowed')
+        elif not hasattr(options, 'mode') \
+                or options.mode not in (MODE_NODEINFO, MODE_INVENTORY):
+            parser.error('You need to specify exactly one mode '\
+                         '({0} or {1})'.format(inventory_longopt,
+                                               nodeinfo_longopt))
+        elif options.mode == MODE_NODEINFO \
+                and not getattr(options, nodeinfo_dest, None):
+            parser.error('Mode {0} needs {1}'.format(nodeinfo_longopt,
+                                                     nodeinfo_dest.upper()))
+        elif options.inventory_base_uri is None and options.nodes_uri is None:
+            parser.error('Must specify --inventory-base-uri or --nodes-uri')
+        elif options.inventory_base_uri is None and options.classes_uri is None:
+            parser.error('Must specify --inventory-base-uri or --classes-uri')
+
+    return parser, option_checker
+
+
+def get_options(name, version, description,
+                            inventory_shortopt='-i',
+                            inventory_longopt='--inventory',
+                            inventory_help='output the entire inventory',
+                            nodeinfo_shortopt='-n',
+                            nodeinfo_longopt='--nodeinfo',
+                            nodeinfo_dest='nodename',
+                            nodeinfo_help='output information for a specific node',
+                            add_options_cb=None,
+                            defaults={}):
+
+    parser, checker = make_parser_and_checker(name, version, description,
+                                              inventory_shortopt,
+                                              inventory_longopt,
+                                              inventory_help,
+                                              nodeinfo_shortopt,
+                                              nodeinfo_longopt, nodeinfo_dest,
+                                              nodeinfo_help,
+                                              add_options_cb,
+                                              defaults=defaults)
     options, args = parser.parse_args()
-
-    def usage_error(msg):
-        sys.stderr.write(msg + '\n\n')
-        parser.print_help(sys.stderr)
-        sys.exit(posix.EX_USAGE)
-
-    if len(args) > 0:
-        usage_error('No arguments allowed')
-    elif options.node is None:
-        usage_error('You need to either pass --inventory or --nodeinfo <nodename>')
-    elif options.output not in ('json', 'yaml'):
-        usage_error('Unknown output format: {0}'.format(options.output))
-    elif options.inventory_base_uri is None and options.nodes_uri is None:
-        usage_error('Must specify --inventory-base-uri or --nodes-uri')
-    elif options.inventory_base_uri is None and options.classes_uri is None:
-        usage_error('Must specify --inventory-base-uri or --classes-uri')
+    checker(options, args)
 
     return options
 
-def read_config_file(path):
-    if os.path.exists(path):
-        return yaml.safe_load(file(path))
-    else:
-        return {}
 
-def get_options(name, version, description, config_file=None, defaults={}):
-    if config_file is not None:
-        defaults.update(read_config_file(config_file))
-    parser = _make_parser(name, version, description, defaults)
-    return _parse_and_check_options(parser)
+def find_and_read_configfile(filename=CONFIG_FILE_NAME,
+                             dirs=CONFIG_FILE_SEARCH_PATH):
+    for d in dirs:
+        f = os.path.join(d, filename)
+        if os.access(f, os.R_OK):
+            return yaml.safe_load(file(f))
+        elif os.path.isfile(f):
+            raise PermissionsError('cannot read %s' % f)
+    return {}
+
 
 def path_mangler(inventory_base_uri, nodes_uri, classes_uri):
 

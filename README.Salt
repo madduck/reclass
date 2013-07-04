@@ -12,98 +12,106 @@ Quick start with Salt
 ~~~~~~~~~~~~~~~~~~~~~
 The following steps should get you up and running quickly. You will need to
 decide for yourself where to put your reclass inventory. This can be
-/etc/reclass, or it could be /srv/salt, for instance if /srv/salt/states is
-where your Salt file_roots live. The following shall assume the latter.
+your first base file_root (the default), or it could be /etc/reclass, or
+/srv/salt. The following shall assume the latter.
 
 Or you can also just look into ./examples/salt of your reclass checkout,
 where the following steps have already been prepared.
 
 /…/reclass refers to the location of your reclass checkout.
 
-  0. Run 'make' in the root of the reclass checkout (see the section
-     'Installation' in the README file for the reason).
+  0. Complete the installation steps described in the section 'Installation'
+     in the main README file.
 
-  1. Symlink /…/reclass/adapters/salt to /srv/salt/states/reclass. This is not
-     at all required, because Salt interfaces with reclass as a Python module,
-     but it's handy to have the inventory within reach.
+     Alternatively, you can also tell Salt via the master config file where to
+     look for reclass, but then you won't be able to interact with reclass
+     through the command line.
 
-  2. Copy the two directories 'nodes' and 'classes' from the example
-     subdirectory in the reclass checkout to /srv/salt/states
+  1. Copy the two directories 'nodes' and 'classes' from the example
+     subdirectory in the reclass checkout to e.g. /srv/salt.
 
-     If you prefer to put those directories elsewhere, you can create
-     /srv/salt/states/reclass-config.yml with contents such as
+     It's handy to symlink reclass' Salt adapter itself to that directory.
+
+       $ ln -s $(which salt-reclass) /srv/salt/states/reclass
+
+     As you can now just inspect the data right there from the command line:
+
+       $ ./reclass --top
+
+     If you don't want to do this, you can also let reclass know where to look
+     for the inventory with the following contents in
+     $HOME/reclass-config.yml:
 
        storage_type: yaml_fs
        nodes_uri: /srv/reclass/nodes
        classes_uri: /srv/reclass/classes
 
+     Or you can reuse the first entry of 'file_roots' under 'base' in the Salt
+     master config.
+
      Note that yaml_fs is currently the only supported storage_type, and it's
      the default if you don't set it.
 
-     Again, this isn't really required, but it's good to get you started. If
-     you really put your inventory into /srv/reclass or /etc/reclass, you'll
-     tell the Salt master later.
+  2. Check out your inventory by invoking
 
-  3. Check out your inventory by invoking
-
-       ./reclass --top
+       $ salt-reclass --top
 
      which should return all the information about all defined nodes, which is
      only 'localhost' in the example. This is essentially the same information
      that you would keep in your top.sls file.
 
-  4. See the pillar information for 'localhost':
+     If you symlinked the script to your inventory base directory, use
 
-       ./reclass --pillar localhost
+       $ ./reclass --top
 
-     This is the so-called pillar-data for the named host.
+  3. See the pillar information for 'localhost':
 
-  5. Now add reclass to /etc/salt/master, like so:
+       $ salt-reclass --pillar localhost
+
+  4. Now add reclass to /etc/salt/master, like so:
+
+     reclass: &reclass
+         inventory_base_uri: /srv/salt
+         reclass_source_path: ~/code/reclass
 
      master_tops:
-       […]
-       reclass:
-         inventory_base_uri: /srv/salt
+         […]
+         reclass: *reclass
 
      ext_pillar:
-       - reclass:
-           inventory_base_uri: /srv/salt
+         - reclass: *reclass
 
-     Currently, there is no way to unify these configuration data, but it's
-     hardly much to duplicate. In the future, I may provide for a global
-     'reclass' key, but for now you will have to add the data twice.
-
-     Now restart your Salt master and make sure that reclass is in the
-     PYTHONPATH, so if it's not properly installed (but you are running it
-     from source), do this:
+     If you did not install reclass, you can either specify the source path
+     like above, or you can add it to PYTHONPATH before invoking the Salt
+     master, to ensure that Python can find it:
 
        PYTHONPATH=/…/reclass /etc/init.d/salt-master restart
 
-  6. Provided that you have set up 'localhost' as a Salt minion, the following
+  5. Provided that you have set up 'localhost' as a Salt minion, the following
      commands should now return the same data as above, but processed through
      salt:
 
-       salt localhost pillar.items     # shows just the parameters
-       salt localhost state.show_top   # shows only the states (applications)
+       $ salt localhost pillar.items     # shows just the parameters
+       $ salt localhost state.show_top   # shows only the states (applications)
 
      Alternatively, if you don't have the Salt minion running yet:
 
-       salt-call pillar.items     # shows just the parameters
-       salt-call state.show_top   # shows only the states (applications)
+       # salt-call pillar.items     # shows just the parameters
+       # salt-call state.show_top   # shows only the states (applications)
 
-  7. You can also invoke reclass directly, which gives a slightly different
+  6. You can also invoke reclass directly, which gives a slightly different
      view onto the same data, i.e. before it has been adapted for Salt:
 
-       /…/reclass.py --pretty-print --inventory
-       /…/reclass.py --pretty-print --nodeinfo localhost
+       $ reclass --inventory
+       $ reclass --nodeinfo localhost
 
 Integration with Salt
 ~~~~~~~~~~~~~~~~~~~~~
 reclass hooks into Salt at two different points: master_tops and ext_pillar.
 For both, Salt provides plugins. These plugins need to know where to find
-reclass, so if reclass is not properly installed (but you are running it
-from source), make sure to export PYTHONPATH accordingly before you start your
-Salt master.
+reclass, so if reclass is not properly installed (but you are running it from
+source), make sure to export PYTHONPATH accordingly before you start your Salt
+master, or specify the path in the master configuration file, as show above.
 
 Salt has no concept of "nodes", "applications", "parameters", and "classes".
 Therefore it is necessary to explain how those correspond to Salt. Crudely,
@@ -150,3 +158,5 @@ happen at the YAML-file level, because that would cast most types to strings.
 Instead, the interpolation needs to happen at the data structure level inside
 reclass, or maybe at the adapter level, reusing the templating of Salt. This
 will require some more thought, but it's on the horizon…
+
+ -- martin f. krafft <madduck@madduck.net>  Thu, 04 Jul 2013 22:20:20 +0200

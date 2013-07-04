@@ -1,1 +1,3 @@
-../../adapters/ansible
+#!/bin/sh
+cd ../../
+PYTHONPATH="`pwd`:$PYTHONPATH" exec python reclass/adapters/ansible.py "$@"

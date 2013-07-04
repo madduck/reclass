@@ -1,4 +1,4 @@
-#
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # This file is part of reclass (http://github.com/madduck/reclass)
@@ -6,54 +6,37 @@
 # Copyright © 2007–13 martin f. krafft <madduck@madduck.net>
 # Released under the terms of the Artistic Licence 2.0
 #
-from reclass import config, get_data
-from reclass.errors import InvocationError
 
-def _check_storage_params(storage_type, inventory_base_uri, nodes_uri,
-                          classes_uri):
-    nodes_uri, classes_uri = config.path_mangler(inventory_base_uri,
-                                                 nodes_uri, classes_uri)
+import os, sys, posix
 
-    if nodes_uri is None:
-        raise InvocationError('missing nodes_uri or inventory_base_uri parameters')
+from reclass import get_nodeinfo, get_inventory, output
+from reclass.errors import ReclassException
+from reclass.config import find_and_read_configfile, get_options
+from reclass.constants import MODE_NODEINFO
+from reclass.defaults import *
+from reclass.version import *
 
-    if classes_uri is None:
-        raise InvocationError('missing classes_uri or inventory_base_uri parameters')
+def ext_pillar(minion_id, pillar,
+               storage_type=OPT_STORAGE_TYPE,
+               inventory_base_uri=OPT_INVENTORY_BASE_URI,
+               nodes_uri=OPT_NODES_URI,
+               classes_uri=OPT_CLASSES_URI):
 
-    if storage_type is None:
-        storage_type = 'yaml_fs'   # TODO: should be obtained from config
-
-    return storage_type, nodes_uri, classes_uri
-
-
-def _get_data(storage_type, inventory_base_uri, nodes_uri, classes_uri, node):
-
-    storage_type, nodes_uri, classes_uri = _check_storage_params(storage_type,
-                                                                 inventory_base_uri,
-                                                                 nodes_uri,
-                                                                 classes_uri)
-    return get_data(storage_type, nodes_uri, classes_uri, node)
-
-
-def ext_pillar(minion_id, pillar, storage_type=None, inventory_base_uri=None,
-               nodes_uri=None, classes_uri=None):
-
-    data = _get_data(storage_type, inventory_base_uri, nodes_uri, classes_uri,
-                     minion_id)
+    data = get_nodeinfo(storage_type, inventory_base_uri, nodes_uri,
+                        classes_uri, minion_id)
     params = data.get('parameters', {})
     params['__reclass__'] = {}
     params['__reclass__']['applications'] = data['applications']
     params['__reclass__']['classes'] = data['classes']
-
-    # TODO: template interpolation?
     return params
 
 
-def top(storage_type=None, inventory_base_uri=None, nodes_uri=None,
-        classes_uri=None):
+def top(storage_type=OPT_STORAGE_TYPE,
+        inventory_base_uri=OPT_INVENTORY_BASE_URI, nodes_uri=OPT_NODES_URI,
+        classes_uri=OPT_CLASSES_URI):
 
-    data = _get_data(storage_type, inventory_base_uri, nodes_uri, classes_uri,
-                     node=None)
+    data = get_inventory(storage_type, inventory_base_uri, nodes_uri,
+                         classes_uri)
     env = 'base'
     top = {env: {}}
     # TODO: node environments
@@ -64,3 +47,42 @@ def top(storage_type=None, inventory_base_uri=None, nodes_uri=None,
         top[env][node_id] = node_data['applications']
 
     return top
+
+
+def cli():
+    try:
+        defaults = {'pretty_print' : True,
+                    'output' : 'yaml'
+                   }
+        defaults.update(find_and_read_configfile())
+        options = get_options(RECLASS_NAME, VERSION, DESCRIPTION,
+                              inventory_shortopt='-t',
+                              inventory_longopt='--top',
+                              inventory_help='output the state tops (inventory)',
+                              nodeinfo_shortopt='-p',
+                              nodeinfo_longopt='--pillar',
+                              nodeinfo_dest='nodename',
+                              nodeinfo_help='output pillar data for a specific node',
+                              defaults=defaults)
+
+        if options.mode == MODE_NODEINFO:
+            data = ext_pillar(options.nodename, {},
+                              storage_type=options.storage_type,
+                              inventory_base_uri=options.inventory_base_uri,
+                              nodes_uri=options.nodes_uri,
+                              classes_uri=options.classes_uri)
+        else:
+            data = top(storage_type=options.storage_type,
+                       inventory_base_uri=options.inventory_base_uri,
+                       nodes_uri=options.nodes_uri,
+                       classes_uri=options.classes_uri)
+
+        print output(data, options.output, options.pretty_print)
+
+    except ReclassException, e:
+        e.exit_with_message(sys.stderr)
+
+    sys.exit(posix.EX_OK)
+
+if __name__ == '__main__':
+    cli()

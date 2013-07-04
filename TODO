@@ -5,8 +5,5 @@ reclass TODO
 - Tests for outputters
 - Improve testing of yaml_fs, maybe with more realistic examples
 - Configurable file extension (.yaml/.yml, or support both)
-- Improve the adapters, either by just letting them build their own
-  OptionParsers, or through setuptools entrypoints (probably best…). The
-  reclass API would need a bit of generalisation for that to happen…
 - Variable interpolation
 - Verbosity options, debugging

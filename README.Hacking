@@ -12,6 +12,9 @@ making and testing changes, install it in "development mode":
 
   python setup.py develop
 
+Now the reclass script, as well as the adapters, will be available in
+/usr/local/bin, and you can also invoke them directly from the source tree.
+
 To uninstall:
 
   python setup.py develop --uninstall
@@ -37,4 +40,4 @@ your changes with appropriate changes to the tests. To run tests, invoke
 
 If you have larger ideas, I'll be looking forward to discuss them with you.
 
- -- martin f. krafft <madduck@madduck.net>  Wed, 03 Jul 2013 20:02:39 +0200
+ -- martin f. krafft <madduck@madduck.net>  Thu, 04 Jul 2013 22:20:20 +0200

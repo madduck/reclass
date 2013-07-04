@@ -9,9 +9,8 @@ Please make sure to read the generic information in the README file first, or
 alongside this document.
 
 IMPORTANT NOTICE: I was kicked out of the Ansible community, and therefore
-I have no interest in developing this adapter anymore. If you use it and want
-to turn it into a setuptools entrypoints compatible adapter, I will take your
-patch.
+I have no interest in developing this adapter anymore. If you use it and have
+changes, I will take your patch.
 
 Quick start with Ansible
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -25,11 +24,12 @@ where the following steps have already been prepared.
 
 /…/reclass refers to the location of your reclass checkout.
 
-  0. Run 'make' in the root of the reclass checkout (see the section
-     'Installation' in the README file for the reason).
+  0. You can optionally install reclass from source as per the section
+     'Installation' in the README file, or just run from source.
 
-  1. Symlink /…/reclass/adapters/ansible to /etc/ansible/hosts (or
-     ./hacking/hosts)
+  1. Symlink /usr/local/bin/reclass-ansible (or wherever your distro put that
+     file), or /…/reclass/reclass/adapters/ansible.py (if running from source)
+     to /etc/ansible/hosts (or ./hacking/hosts)
 
   2. Copy the two directories 'nodes' and 'classes' from the example
      subdirectory in the reclass checkout to /etc/ansible
@@ -46,31 +46,33 @@ where the following steps have already been prepared.
 
   3. Check out your inventory by invoking
 
-       ./hosts --list
+       $ ./hosts --list
 
      which should return 5 groups in JSON-format, and each group has exactly
      one member 'localhost'.
 
   4. See the node information for 'localhost':
 
-       ./hosts --host localhost
+       $ ./hosts --host localhost
 
      This should print a set of keys and values, including a greeting,
      a colour, and a sub-class called '__reclas__'.
 
   5. Execute some ansible commands, e.g.
 
-       ansible -i hosts \* --list-hosts
-       ansible -i hosts \* -m ping
-       ansible -i hosts \* -m debug -a 'msg="${greeting}"'
-       ansible -i hosts \* -m setup
-       ansible-playbook -i hosts test.yml
+       $ ansible -i hosts \* --list-hosts
+       $ ansible -i hosts \* -m ping
+       $ ansible -i hosts \* -m debug -a 'msg="${greeting}"'
+       $ ansible -i hosts \* -m setup
+       $ ansible-playbook -i hosts test.yml
 
   6. You can also invoke reclass directly, which gives a slightly different
      view onto the same data, i.e. before it has been adapted for Ansible:
 
-       /…/reclass.py --pretty-print --inventory
-       /…/reclass.py --pretty-print --nodeinfo localhost
+       $ /…/reclass/reclass.py --pretty-print --inventory
+       $ /…/reclass/reclass.py --pretty-print --nodeinfo localhost
+
+     Or, if reclass is properly installed, just use the reclass command.
 
 Integration with Ansible
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -174,3 +176,5 @@ recursive merging, e.g.
 
 Now you just need to specify realm somewhere. The reference can reside in
 a parent class, while the variable is defined e.g. in the node.
+
+ -- martin f. krafft <madduck@madduck.net>  Thu, 04 Jul 2013 22:20:20 +0200

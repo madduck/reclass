@@ -1,1 +1,3 @@
-../../adapters/salt
+#!/bin/sh
+cd ../../
+PYTHONPATH="`pwd`:$PYTHONPATH" exec python reclass/adapters/salt.py "$@"

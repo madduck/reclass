@@ -20,7 +20,11 @@ setup(
     url = URL,
     packages = find_packages(),
     entry_points = {
-      'console_scripts': ['reclass = reclass.main:run' ],
+        'console_scripts': [
+            'reclass = reclass.cli:main',
+            'reclass-salt = reclass.adapters.salt:cli',
+            'reclass-ansible = reclass.adapters.ansible:cli'
+        ]
     },
     install_requires = ['pyyaml'],
     setup_requires = ['nose'],
