@@ -7,7 +7,7 @@
 # Released under the terms of the Artistic Licence 2.0
 #
 RECLASS_NAME = 'reclass'
-DESCRIPTION = 'classify nodes based on an external data source'
+DESCRIPTION = 'merge data by recursive descent down an ancestry hierarchy'
 VERSION = '1.0'
 AUTHOR = 'martin f. krafft'
 AUTHOR_EMAIL = 'reclass@pobox.madduck.net'

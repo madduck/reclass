@@ -6,7 +6,8 @@ and available under the terms of the Artistic Licence 2.0
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 reclass is an "external node classifier" (ENC) as can be used with automation
-tools, such as Puppet, Salt, and Ansible.
+tools, such as Puppet, Salt, and Ansible. It is also a stand-alone tool for
+merging data sources recursively.
 
 The purpose of an ENC is to allow a system administrator to maintain an
 inventory of nodes to be managed, completely separately from the configuration
