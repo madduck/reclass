@@ -25,6 +25,12 @@ class ReclassException(Exception):
         sys.exit(self.rc)
 
 
+class PermissionError(ReclassException):
+
+    def __init__(self, msg, rc=posix.EX_NOPERM):
+        super(PermissionError, self).__init__(msg, rc)
+
+
 class InvocationError(ReclassException):
 
     def __init__(self, msg, rc=posix.EX_USAGE):
