@@ -7,7 +7,7 @@
 # Released under the terms of the Artistic Licence 2.0
 #
 
-import posix
+import posix, sys
 
 class ReclassException(Exception):
 
@@ -19,6 +19,10 @@ class ReclassException(Exception):
         return self.message
 
     rc = property(lambda self: self._rc)
+
+    def exit_with_message(self, out=sys.stderr):
+        print >>out, self.message
+        sys.exit(self.rc)
 
 
 class InvocationError(ReclassException):
