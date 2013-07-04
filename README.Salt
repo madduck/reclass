@@ -66,8 +66,8 @@ where the following steps have already been prepared.
          inventory_base_uri: /srv/salt
 
      ext_pillar:
-       reclass:
-         inventory_base_uri: /srv/salt
+       - reclass:
+           inventory_base_uri: /srv/salt
 
      Currently, there is no way to unify these configuration data, but it's
      hardly much to duplicate. In the future, I may provide for a global
