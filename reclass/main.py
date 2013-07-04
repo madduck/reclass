@@ -6,8 +6,7 @@
 # Copyright © 2007–13 martin f. krafft <madduck@madduck.net>
 # Released under the terms of the Artistic Licence 2.0
 #
-from version import __name__, __description__ , __version__, \
-        __author__, __copyright__, __licence__
+from version import *
 
 import sys, os, posix
 import reclass.config
@@ -23,15 +22,14 @@ def _error(msg, rc):
 def run():
     config_file = None
     for d in (os.getcwd(), os.path.dirname(sys.argv[0])):
-        f = os.path.join(d, __name__ + '-config.yml')
+        f = os.path.join(d, RECLASS_NAME + '-config.yml')
         if os.access(f, os.R_OK):
             config_file = f
             break
     try:
         defaults = { 'pretty_print' : True, 'output' : 'yaml' }
-        options = reclass.config.get_options(__name__, __version__,
-                                             __description__, config_file,
-                                             defaults)
+        options = reclass.config.get_options(RECLASS_NAME, VERSION, DESCRIPTION,
+                                             config_file, defaults)
         nodes_uri, classes_uri = reclass.config.path_mangler(options.inventory_base_uri,
                                                                 options.nodes_uri,
                                                                 options.classes_uri)
