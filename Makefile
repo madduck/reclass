@@ -18,3 +18,9 @@ lint-errors: lint
 lint-report: ARGS=--report=y
 lint-report: lint
 .PHONY: lint-report
+
+coverage: .coverage
+	python-coverage -r -m
+.PHONY: coverage
+.coverage: $(PYFILES)
+	python-coverage -x setup.py nosetests
