@@ -4,6 +4,7 @@ reclass TODO
 - Puppet adapter, whoever might want that…???
 - Tests for outputters
 - Improve testing of yaml_fs, maybe with more realistic examples
+- Tests for CLI and adapters
 - Configurable file extension (.yaml/.yml, or support both)
 - Variable interpolation
 - Verbosity options, debugging
