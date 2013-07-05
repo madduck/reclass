@@ -36,7 +36,15 @@ reclass@pobox.madduck.net.
 
 I have added rudimentary unit tests, and it would be nice if you could submit
 your changes with appropriate changes to the tests. To run tests, invoke
-./run_tests.py in the top-level checkout directory.
+
+  $ python setup.py nosetests
+
+in the top-level checkout directory.
+
+Also, there is a Makefile giving access to PyLint and coverage.py (running
+tests). If you run that, you can see there is a lot of work to be done
+cleaning up the code. If this is the sort of stuff you want to do — by all
+means — be my guest! ;)
 
 If you have larger ideas, I'll be looking forward to discuss them with you.
 
