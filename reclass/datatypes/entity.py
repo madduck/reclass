@@ -30,6 +30,15 @@ class Entity(object):
         self.parameters.merge(other.parameters)
         self._name = other.name
 
+    def __eq__(self, other):
+        return self.applications == other.applications \
+                and self.classes == other.classes \
+                and self.parameters == other.parameters \
+                and self.name == other.name
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def __repr__(self):
         return '<Entity{0} classes:{1} applications:{2}, parameters:{3}>'.format(
             '' if not self.name else " '%s'" % self.name,

@@ -27,3 +27,14 @@ class TestEntity:
         assert e.classes == c
         assert e.parameters == p
         assert e.applications == a
+
+    def test_merge_to_empty(self):
+        e1 = Entity()
+        c = Classes(['one', 'two'])
+        p = Parameters({'blue':'white', 'black':'yellow'})
+        a = Applications(['three', 'four'])
+        e2 = Entity(c, a, p)
+        e1.merge(e2)
+        assert e1.classes == e2.classes
+        assert e1.applications == e2.applications
+        assert e1.parameters == e2.parameters
