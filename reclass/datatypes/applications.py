@@ -16,8 +16,8 @@ class ApplicationsMerger(SetExtend):
     def _combine(self, first, second):
         for i in second:
             remove = False
-            if i.startswith('~'):
-                i = i[1:]
+            if i.startswith(self._negater):
+                i = i[len(self._negater):]
                 remove = True
             if i not in first:
                 if not remove:
