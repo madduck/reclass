@@ -10,6 +10,7 @@ import os
 from reclass.storage import NodeStorageBase
 from yamlfile import YamlFile
 from directory import Directory
+from reclass.datatypes import Entity
 import reclass.errors
 
 FILE_EXTENSION = '.yml'
@@ -25,23 +26,14 @@ class ExternalNodeStorage(NodeStorageBase):
             entity = YamlFile(path).entity
             seen[name] = True
 
-            merge_base = None
+            merge_base = Entity()
             for klass in entity.classes:
                 if klass not in seen:
                     ret = self._read_nodeinfo(klass, self.classes_uri, seen,
                                               name if nodename is None else nodename)[0]
-                    if merge_base is None:
-                        # first iteration, initialise the merge base
-                        merge_base = ret
-                    else:
-                        # on every iteration, we merge the result of the
-                        # recursive descend into what we have so far…
-                        merge_base.merge(ret)
-
-            if merge_base is None:
-                # there are no parent classes, at least none we haven't
-                # already seen, so we can just return the entity
-                return entity, path
+                    # on every iteration, we merge the result of the
+                    # recursive descend into what we have so far…
+                    merge_base.merge(ret)
 
             # … and finally, we merge what we have at this level into the
             # result of the iteration, so that elements at the current level
