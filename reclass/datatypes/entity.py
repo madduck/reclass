@@ -12,10 +12,13 @@ from applications import Applications
 
 class Entity(object):
 
-    def __init__(self, classes=Classes(), applications=Applications(),
-                 parameters=Parameters(), name=None):
+    def __init__(self, classes=None, applications=None, parameters=None,
+                 name=None):
+        if applications is None: applications = Applications()
         self._applications = applications
+        if classes is None: classes = Classes()
         self._classes = classes
+        if parameters is None: parameters = Parameters()
         self._parameters = parameters
         self._name = name
 
