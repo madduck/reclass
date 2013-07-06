@@ -13,44 +13,56 @@ import os
 POSTFIX = '_hosts'
 PWD = os.path.dirname(__file__)
 HOSTS = ['red', 'blue', 'green']
-MEMBERSHIPS = {'apt%s' % POSTFIX: HOSTS,
-               'motd%s' % POSTFIX: HOSTS,
-               'firewall%s' % POSTFIX: HOSTS[:2],
-               'lighttpd%s' % POSTFIX: HOSTS[:2],
-               'postfix%s' % POSTFIX: HOSTS[1:],
-               'blues%s' % POSTFIX: HOSTS[1:2],
-               'basenode': HOSTS,
-               'debiannode': HOSTS,
-               'debiannode@sid': HOSTS[0:1],
-               'debiannode@wheezy': HOSTS[2:3],
-               'debiannode@squeeze': HOSTS[1:2],
-               'hosted@munich': HOSTS[1:2],
-               'hosted@zurich': [HOSTS[0], HOSTS[2]],
-               'mailserver': HOSTS[1:],
-               'webserver': HOSTS[:2]
-              }
+APPLICATIONS = {'apt': HOSTS,
+                'motd': HOSTS,
+                'firewall': HOSTS[:2],
+                'lighttpd': HOSTS[:2],
+                'postfix': HOSTS[1:],
+                'blues': HOSTS[1:2]
+               }
+CLASSES = {'basenode': HOSTS,
+           'debiannode': HOSTS,
+           'debiannode@sid': HOSTS[0:1],
+           'debiannode@wheezy': HOSTS[2:3],
+           'debiannode@squeeze': HOSTS[1:2],
+           'hosted@munich': HOSTS[1:2],
+           'hosted@zurich': [HOSTS[0], HOSTS[2]],
+           'mailserver': HOSTS[1:],
+           'webserver': HOSTS[:2]
+          }
 
 class TestYamlFs:
 
     def setUp(self):
         self._storage = ExternalNodeStorage(os.path.join(PWD, 'nodes'),
-                                            os.path.join(PWD, 'classes'),
-                                            POSTFIX)
+                                            os.path.join(PWD, 'classes'))
         self._inventory = self._storage.inventory()
 
     def test_inventory_setup(self):
         assert isinstance(self._inventory, dict)
-        print self._inventory
-        assert len(self._inventory['groups']) == len(MEMBERSHIPS)
-        for i in MEMBERSHIPS.iterkeys():
-            assert i in self._inventory['groups']
+        assert 'applications' in self._inventory
+        assert 'classes' in self._inventory
 
-    def test_inventory_memberships(self):
-        for app, members in self._inventory['groups'].iteritems():
-            for i in MEMBERSHIPS[app]:
+    def test_inventory_applications(self):
+        assert len(self._inventory['applications']) == len(APPLICATIONS)
+        for i in APPLICATIONS.iterkeys():
+            assert i in self._inventory['applications']
+        for app, members in self._inventory['applications'].iteritems():
+            for i in APPLICATIONS[app]:
                 assert i in members
-        for app, members in MEMBERSHIPS.iteritems():
-            for i in self._inventory['groups'][app]:
+        for app, members in APPLICATIONS.iteritems():
+            for i in self._inventory['applications'][app]:
+                assert i in members
+
+    def test_inventory_classes(self):
+        assert len(self._inventory['classes']) == len(CLASSES)
+        for i in CLASSES.iterkeys():
+            assert i in self._inventory['classes']
+        for klass, members in self._inventory['classes'].iteritems():
+            for i in CLASSES[klass]:
+                assert i in members
+        for klass, members in CLASSES.iteritems():
+            for i in self._inventory['classes'][klass]:
                 assert i in members
 
     def test_host_meta(self):
@@ -58,7 +70,7 @@ class TestYamlFs:
             node = self._storage.nodeinfo(n)
             assert '__reclass__' in node
 
-    def test_host_entity(self):
+    def test_host_entities(self):
         for n in HOSTS:
             node = self._storage.nodeinfo(n)
             assert 'applications' in node
