@@ -6,6 +6,10 @@
 #
 PYFILES = $(shell find -name .git -o -name dist -o -name build -prune -o -name '*.py' -print)
 
+tests:
+	python setup.py nosetests
+.PHONY: tests
+
 lint:
 	@echo pylint --rcfile=.pylintrc $(ARGS) …
 	@pylint --rcfile=.pylintrc $(ARGS) $(PYFILES)
