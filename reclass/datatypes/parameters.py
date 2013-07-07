@@ -6,6 +6,8 @@
 # Copyright © 2007–13 martin f. krafft <madduck@madduck.net>
 # Released under the terms of the Artistic Licence 2.0
 #
+from reclass.defaults import PARAMETER_INTERPOLATION_DELIMITER
+
 class Parameters(object):
     '''
     A class to hold nested dictionaries with the following speciality:
@@ -21,7 +23,7 @@ class Parameters(object):
     To support this speciality, this class only exposes very limited
     functionality and does not try to be a really mapping object.
     '''
-    DEFAULT_PATH_DELIMITER = ':'  # useful default for YAML
+    DEFAULT_PATH_DELIMITER = PARAMETER_INTERPOLATION_DELIMITER
 
     def __init__(self, mapping=None, delimiter=None):
         if delimiter is None:

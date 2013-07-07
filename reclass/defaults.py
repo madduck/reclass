@@ -23,3 +23,6 @@ CONFIG_FILE_SEARCH_PATH = [os.getcwd(),
                            os.path.dirname(sys.argv[0])
                           ]
 CONFIG_FILE_NAME = RECLASS_NAME + '-config.yml'
+
+PARAMETER_INTERPOLATION_SENTINELS = ('${', '}')
+PARAMETER_INTERPOLATION_DELIMITER = ':'
