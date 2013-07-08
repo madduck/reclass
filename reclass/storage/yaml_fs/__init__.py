@@ -27,7 +27,7 @@ class ExternalNodeStorage(NodeStorageBase):
             seen[name] = True
 
             merge_base = Entity()
-            for klass in entity.classes:
+            for klass in entity.classes.as_list():
                 if klass not in seen:
                     ret = self._read_nodeinfo(klass, self.classes_uri, seen,
                                               name if nodename is None else nodename)[0]

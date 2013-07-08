@@ -29,7 +29,7 @@ class NodeStorageBase(object):
         return {'__reclass__' : {'node': node, 'node_uri': uri,
                                  'timestamp': _get_timestamp()
                                 },
-                'classes': entity.classes,
+                'classes': entity.classes.as_list(),
                 'applications': entity.applications,
                 'parameters': entity.parameters
                }
