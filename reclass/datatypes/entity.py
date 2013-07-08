@@ -51,7 +51,7 @@ class Entity(object):
 
     def merge(self, other):
         self._classes.merge_unique(other._classes)
-        self._applications.merge(other._applications)
+        self._applications.merge_unique(other._applications)
         self._parameters.merge(other._parameters)
         self._name = other.name
 

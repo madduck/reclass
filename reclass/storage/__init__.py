@@ -30,7 +30,7 @@ class NodeStorageBase(object):
                                  'timestamp': _get_timestamp()
                                 },
                 'classes': entity.classes.as_list(),
-                'applications': entity.applications,
+                'applications': entity.applications.as_list(),
                 'parameters': entity.parameters
                }
 
