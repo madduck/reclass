@@ -43,6 +43,9 @@ class Entity(object):
         return not self.__eq__(other)
 
     def __repr__(self):
+        if self.name:
+            name = " '%s'" % self.name
+        else:
+            name = ''
         return '<Entity{0} classes:{1} applications:{2}, parameters:{3}>'.format(
-            '' if not self.name else " '%s'" % self.name,
-            len(self.classes), len(self.applications), len(self.parameters))
+            name, len(self.classes), len(self.applications), len(self.parameters))
