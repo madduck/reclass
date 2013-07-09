@@ -7,45 +7,64 @@
 # Released under the terms of the Artistic Licence 2.0
 #
 from classes import Classes
-from parameters import Parameters
 from applications import Applications
+from parameters import Parameters
 
 class Entity(object):
-
+    '''
+    A collection of Classes, Parameters, and Applications, mainly as a wrapper
+    for merging. The name of an Entity will be updated to the name of the
+    Entity that is being merged.
+    '''
     def __init__(self, classes=None, applications=None, parameters=None,
                  name=None):
-        if applications is None: applications = Applications()
-        self._applications = applications
         if classes is None: classes = Classes()
-        self._classes = classes
+        self._set_classes(classes)
+        if applications is None: applications = Applications()
+        self._set_applications(applications)
         if parameters is None: parameters = Parameters()
-        self._parameters = parameters
-        self._name = name
+        self._set_parameters(parameters)
+        self._name = name or ''
 
-    applications = property(lambda self: self._applications)
-    classes = property(lambda self: self._classes)
-    parameters = property(lambda self: self._parameters)
-    name = property(lambda self: self._name)
+    name = property(lambda s: s._name)
+    classes = property(lambda s: s._classes)
+    applications = property(lambda s: s._applications)
+    parameters = property(lambda s: s._parameters)
+
+    def _set_classes(self, classes):
+        if not isinstance(classes, Classes):
+            raise TypeError('Entity.classes cannot be set to '\
+                            'instance of type %s' % type(classes))
+        self._classes = classes
+
+    def _set_applications(self, applications):
+        if not isinstance(applications, Applications):
+            raise TypeError('Entity.applications cannot be set to '\
+                            'instance of type %s' % type(applications))
+        self._applications = applications
+
+    def _set_parameters(self, parameters):
+        if not isinstance(parameters, Parameters):
+            raise TypeError('Entity.parameters cannot be set to '\
+                            'instance of type %s' % type(parameters))
+        self._parameters = parameters
 
     def merge(self, other):
-        self.classes.merge(other.classes)
-        self.applications.merge(other.applications)
-        self.parameters.merge(other.parameters)
+        self._classes.merge(other._classes)
+        self._applications.merge(other._applications)
+        self._parameters.merge(other._parameters)
         self._name = other.name
 
     def __eq__(self, other):
-        return self.applications == other.applications \
-                and self.classes == other.classes \
-                and self.parameters == other.parameters \
-                and self.name == other.name
+        return self._applications == other._applications \
+                and self._classes == other._classes \
+                and self._parameters == other._parameters \
+                and self._name == other._name
 
     def __ne__(self, other):
         return not self.__eq__(other)
 
     def __repr__(self):
-        if self.name:
-            name = " '%s'" % self.name
-        else:
-            name = ''
-        return '<Entity{0} classes:{1} applications:{2}, parameters:{3}>'.format(
-            name, len(self.classes), len(self.applications), len(self.parameters))
+        return "%s(%r, %r, %r, %r)" % (self.__class__.__name__,
+                                         self.classes, self.applications,
+                                         self.parameters, self.name)

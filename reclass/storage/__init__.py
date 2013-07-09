@@ -29,9 +29,9 @@ class NodeStorageBase(object):
         return {'__reclass__' : {'node': node, 'node_uri': uri,
                                  'timestamp': _get_timestamp()
                                 },
-                'classes': list(entity.classes),
-                'applications': list(entity.applications),
-                'parameters': dict(entity.parameters)
+                'classes': entity.classes,
+                'applications': entity.applications,
+                'parameters': entity.parameters
                }
 
     def _list_inventory(self):
