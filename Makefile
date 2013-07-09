@@ -7,7 +7,7 @@
 PYFILES = $(shell find -name .git -o -name dist -o -name build -prune -o -name '*.py' -print)
 
 tests:
-	python setup.py nosetests
+	python ./run_tests.py
 .PHONY: tests
 
 lint:

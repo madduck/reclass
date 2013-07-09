@@ -26,6 +26,5 @@ setup(
             'reclass-ansible = reclass.adapters.ansible:cli'
         ]
     },
-    install_requires = ['pyyaml'],
-    setup_requires = ['nose'],
+    install_requires = ['pyyaml']
 )
