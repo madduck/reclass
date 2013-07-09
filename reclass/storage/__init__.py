@@ -31,7 +31,7 @@ class NodeStorageBase(object):
                                 },
                 'classes': entity.classes.as_list(),
                 'applications': entity.applications.as_list(),
-                'parameters': entity.parameters
+                'parameters': entity.parameters.as_dict()
                }
 
     def _list_inventory(self):
