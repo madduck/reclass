@@ -2,9 +2,10 @@ reclass TODO
 ============
 
 - Puppet adapter, whoever might want that…???
-- Tests for outputters
-- Improve testing of yaml_fs, maybe with more realistic examples
-- Tests for CLI and adapters
+- Write unittest for everything but datatypes, the existing nosetests are
+  pretty crap, incl. yaml_fs, outputters, CLI and adapters.
 - Configurable file extension (.yaml/.yml, or support both)
 - Variable interpolation
 - Verbosity options, debugging
+- Add a configuration option to allow a set of classes to be slapped onto
+  nodes by default (#5).
