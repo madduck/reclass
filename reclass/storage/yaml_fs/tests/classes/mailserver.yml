@@ -1,5 +1,0 @@
-applications:
-- postfix
-parameters:
-  firewall:
-    openport: 25/tcp

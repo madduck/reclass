@@ -1,5 +1,0 @@
-applications:
-- lighttpd
-parameters:
-  firewall:
-    openport: 80/tcp

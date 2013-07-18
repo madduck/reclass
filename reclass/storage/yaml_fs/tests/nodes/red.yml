@@ -1,9 +1,0 @@
-classes:
-- debiannode@sid
-- hosted@zurich
-- webserver
-parameters:
-  apt:  # null-value must not override inherited dictionary
-  motd:
-    greeting: This node is $nodename
-  colour: red
