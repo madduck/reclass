@@ -51,9 +51,10 @@ def top(storage_type=OPT_STORAGE_TYPE,
 
 def cli():
     try:
+        inventory_dir = os.path.abspath(os.path.dirname(sys.argv[0]))
         defaults = {'pretty_print' : True,
                     'output' : 'yaml',
-                    'inventory_base_uri': os.path.dirname(sys.argv[0])
+                    'inventory_base_uri': inventory_dir
                    }
         defaults.update(find_and_read_configfile())
         options = get_options(RECLASS_NAME, VERSION, DESCRIPTION,
