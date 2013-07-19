@@ -6,8 +6,6 @@
 # Copyright © 2007–13 martin f. krafft <madduck@madduck.net>
 # Released under the terms of the Artistic Licence 2.0
 #
-from reclass.mergers.dict import DictRecursivePolicyUpdate
-
 class Parameters(object):
     '''
     A class to hold nested dictionaries with the following speciality:
