@@ -7,6 +7,8 @@
 # Released under the terms of the Artistic Licence 2.0
 #
 from reclass.datatypes import Parameters
+from reclass.defaults import PARAMETER_INTERPOLATION_SENTINELS
+from reclass.errors import InfiniteRecursionError
 import unittest
 try:
     import unittest.mock as mock
@@ -186,7 +188,47 @@ class TestParametersNoMock(unittest.TestCase):
         p.merge(Parameters(mergee))
         self.assertDictEqual(p.as_dict(), mergee)
 
-    test_cur = test_merge_scalar_over_dict
+    def test_interpolate_single(self):
+        v = 42
+        d = {'foo': 'bar'.join(PARAMETER_INTERPOLATION_SENTINELS),
+             'bar': v}
+        p = Parameters(d)
+        p.interpolate()
+        self.assertEqual(p.as_dict()['foo'], v)
+
+    def test_interpolate_multiple(self):
+        v = '42'
+        d = {'foo': 'bar'.join(PARAMETER_INTERPOLATION_SENTINELS) + 'meep'.join(PARAMETER_INTERPOLATION_SENTINELS),
+             'bar': v[0],
+             'meep': v[1]}
+        p = Parameters(d)
+        p.interpolate()
+        self.assertEqual(p.as_dict()['foo'], v)
+
+    def test_interpolate_multilevel(self):
+        v = 42
+        d = {'foo': 'bar'.join(PARAMETER_INTERPOLATION_SENTINELS),
+             'bar': 'meep'.join(PARAMETER_INTERPOLATION_SENTINELS),
+             'meep': v}
+        p = Parameters(d)
+        p.interpolate()
+        self.assertEqual(p.as_dict()['foo'], v)
+
+    def test_interpolate_list(self):
+        l = [41,42,43]
+        d = {'foo': 'bar'.join(PARAMETER_INTERPOLATION_SENTINELS),
+             'bar': l}
+        p = Parameters(d)
+        p.interpolate()
+        self.assertEqual(p.as_dict()['foo'], l)
+
+    def test_interpolate_infrecursion(self):
+        v = 42
+        d = {'foo': 'bar'.join(PARAMETER_INTERPOLATION_SENTINELS),
+             'bar': 'foo'.join(PARAMETER_INTERPOLATION_SENTINELS)}
+        p = Parameters(d)
+        with self.assertRaises(InfiniteRecursionError):
+            p.interpolate()
 
 if __name__ == '__main__':
     unittest.main()

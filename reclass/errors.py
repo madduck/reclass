@@ -93,3 +93,11 @@ class IncompleteInterpolationError(InterpolationError):
         msg = "Missing '%s' to end reference: %s" % \
                 (end_sentinel, string.join(PARAMETER_INTERPOLATION_SENTINELS))
         super(IncompleteInterpolationError, self).__init__(msg)
+
+
+class InfiniteRecursionError(InterpolationError):
+
+    def __init__(self, path, ref):
+        msg = "Infinite recursion while resolving %s at %s" \
+                % (ref.join(PARAMETER_INTERPOLATION_SENTINELS), path)
+        super(InfiniteRecursionError, self).__init__(msg)
