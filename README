@@ -234,8 +234,10 @@ reading parent classes, and finally merges the applications list and the
 parameters.
 
 Merging of parameters is done recursively, meaning that lists and dictionaries
-are extended, rather than replaced. There is currently no way to remove or
-overwrite an existing value.
+are extended (recursively), rather than replaced. However, a scalar value
+*does* overwrite a dictionary or list value. While the scalar could be
+appended to an existing list, there is sane default assumption in the context
+of a dictionary, so this behaviour seems the most logical.
 
 Finally, parameters may reference each other, including deep references, e.g.:
 

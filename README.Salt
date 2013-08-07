@@ -133,8 +133,8 @@ Similarly, all parameters that are collected and merged eventually end up in
 the pillar data of a specific node.
 
 However, the pillar data of a node include all the information about classes
-and applications, so you can use them to target your Salt calls at groups of
-nodes defined in the reclass inventory, e.g.
+and applications, so you could theoretically use them to target your Salt
+calls at groups of nodes defined in the reclass inventory, e.g.
 
   salt -I __reclass__:classes:salt_minion test.ping
 
