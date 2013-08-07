@@ -9,6 +9,8 @@
 
 import posix, sys
 
+from reclass.defaults import PARAMETER_INTERPOLATION_SENTINELS
+
 class ReclassException(Exception):
 
     def __init__(self, msg, rc=posix.EX_SOFTWARE, *args):
@@ -65,3 +67,29 @@ class ClassNotFound(NotFoundError):
         msg = "Class '{0}' (in ancestry of node {1}) not found under {2}://{3}" \
                 .format(self._name, self._nodename, self._storage, self._uri)
         super(ClassNotFound, self).__init__(msg)
+
+
+class InterpolationError(ReclassException):
+
+    def __init__(self, msg, rc=posix.EX_DATAERR):
+        super(InterpolationError, self).__init__(msg, rc)
+
+
+class UndefinedVariableError(InterpolationError):
+
+    def __init__(self, var, context=None):
+        self._var = var
+        msg = "Cannot resolve " + var.join(PARAMETER_INTERPOLATION_SENTINELS)
+        if context:
+            msg += ' in the context of %s' % context
+        super(UndefinedVariableError, self).__init__(msg)
+
+    var = property(lambda x: x._var)
+
+
+class IncompleteInterpolationError(InterpolationError):
+
+    def __init__(self, string, end_sentinel):
+        msg = "Missing '%s' to end reference: %s" % \
+                (end_sentinel, string.join(PARAMETER_INTERPOLATION_SENTINELS))
+        super(IncompleteInterpolationError, self).__init__(msg)
