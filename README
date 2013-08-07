@@ -237,6 +237,22 @@ Merging of parameters is done recursively, meaning that lists and dictionaries
 are extended, rather than replaced. There is currently no way to remove or
 overwrite an existing value.
 
+Finally, parameters may reference each other, including deep references, e.g.:
+
+  parameters:
+    location: Munich, Germany
+    motd:
+      header: This node sits in ${location}
+    for_demonstration: ${motd:header}
+    dict_reference: ${motd}
+
+After merging and interpolation, which happens automatically inside the
+storage modules, the 'for_demonstration' parameter will have a value of "This
+node sits in Munich, Germany".
+
+Types are preserved if the value contains nothing but a reference. Hence, the
+value of 'dict_reference' will actually be a dictionary.
+
 Version control
 ~~~~~~~~~~~~~~~
 I recommend you maintain your reclass inventory database in Git, right from
@@ -299,4 +315,4 @@ default if you don't set it.
 Adapters may implement their own lookup logic, of course, so make sure to read
 their READMEs.
 
- -- martin f. krafft <madduck@madduck.net>  Thu, 04 Jul 2013 22:20:20 +0200
+ -- martin f. krafft <madduck@madduck.net>  Wed, 07 Aug 2013 16:21:04 +0200

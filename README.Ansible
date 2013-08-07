@@ -165,16 +165,39 @@ namely:
 
   - Parameters corresponding to a node become host_vars for that host.
 
-It is possible to include Jinja2-style variables like you would in Ansible,
-in parameter values. This is especially powerful in combination with the
-recursive merging, e.g.
+Ansible allows you to include Jinja2-style variables in parameter values:
 
   parameters:
     motd:
       greeting: Welcome to {{ ansible_fqdn }}!
       closing: This system is part of {{ realm }}
+    dict_reference: {{ motd }}
+
+However, in resolving this, Ansible casts everything to a string, so in this
+example, 'dict_reference' would be the string-representation of the dictionary
+under the 'motd' key.¹ To get at facts (such as 'ansible_fqdn'), you still
+have to use this approach, but for pure parameter references, I strongly
+suggest to use reclass interpolation instead, as it supports deep references,
+does not clobber type information, and is more efficient anyway:
+
+  parameters:
+    motd:
+      greeting: Welcome to {{ ansible_fqdn }}!
+      closing: This system is part of ${realm}
+    dict_reference: ${motd}
 
 Now you just need to specify realm somewhere. The reference can reside in
-a parent class, while the variable is defined e.g. in the node.
+a parent class, while the variable is defined e.g. in the node definition.
 
- -- martin f. krafft <madduck@madduck.net>  Thu, 04 Jul 2013 22:20:20 +0200
+And as expected, 'dict_reference' now points to a dictionary, not
+a string-representation thereof.
+
+Footnotes
+~~~~~~~~~
+¹) I pointed this out to Michael Dehaan, Ansible's chief developer, but he
+   denied this behaviour. When I tried to provide further insights, I found
+   myself banned from the mailing list, apparently because I dared to point
+   out flaws. If you care, you may look at
+   https://github.com/madduck/reclass/issues/6 for more information.
+
+ -- martin f. krafft <madduck@madduck.net>  Wed, 07 Aug 2013 16:21:04 +0200

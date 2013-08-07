@@ -141,22 +141,4 @@ nodes defined in the reclass inventory, e.g.
 Unfortunately, this does not work yet, please stay tuned, and let me know
 if you figure out a way. Salt issue #5787 is also of relevance.
 
-It will also be possible to include Jinja2-style variables in parameter
-values. This is especially powerful in combination with the recursive merging,
-e.g.
-
-  parameters:
-    motd:
-      greeting: Welcome to {{ grains.fqdn }}!
-      closing: This system is part of {{ realm }}
-
-Now you just need to specify realm somewhere. The reference can reside in
-a parent class, while the variable is defined e.g. in the node.
-
-This is also not yet working. The main reason is that the expansion cannot
-happen at the YAML-file level, because that would cast most types to strings.
-Instead, the interpolation needs to happen at the data structure level inside
-reclass, or maybe at the adapter level, reusing the templating of Salt. This
-will require some more thought, but it's on the horizon…
-
- -- martin f. krafft <madduck@madduck.net>  Thu, 04 Jul 2013 22:20:20 +0200
+ -- martin f. krafft <madduck@madduck.net>  Wed, 07 Aug 2013 16:21:04 +0200

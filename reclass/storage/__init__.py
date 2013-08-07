@@ -26,6 +26,7 @@ class NodeStorageBase(object):
 
     def nodeinfo(self, node):
         entity, uri = self._read_nodeinfo(node, self.nodes_uri, {})
+        entity.interpolate()
         return {'__reclass__' : {'node': node, 'node_uri': uri,
                                  'timestamp': _get_timestamp()
                                 },

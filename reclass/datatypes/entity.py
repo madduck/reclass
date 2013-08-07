@@ -55,6 +55,9 @@ class Entity(object):
         self._parameters.merge(other._parameters)
         self._name = other.name
 
+    def interpolate(self):
+        self._parameters.interpolate()
+
     def __eq__(self, other):
         return self._applications == other._applications \
                 and self._classes == other._classes \
