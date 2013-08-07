@@ -37,9 +37,12 @@ reclass@pobox.madduck.net.
 I have added rudimentary unit tests, and it would be nice if you could submit
 your changes with appropriate changes to the tests. To run tests, invoke
 
-  $ python setup.py nosetests
+  $ make tests
 
-in the top-level checkout directory.
+in the top-level checkout directory. The tests are rather inconsistent, some
+using mock objects, and only the datatypes-related code is covered. If you are
+a testing expert, I could certainly use some help here to improve the
+consistency of the existing tests, as well as their coverage.
 
 Also, there is a Makefile giving access to PyLint and coverage.py (running
 tests). If you run that, you can see there is a lot of work to be done
@@ -48,4 +51,4 @@ means — be my guest! ;)
 
 If you have larger ideas, I'll be looking forward to discuss them with you.
 
- -- martin f. krafft <madduck@madduck.net>  Thu, 04 Jul 2013 22:20:20 +0200
+ -- martin f. krafft <madduck@madduck.net>  Wed, 07 Aug 2013 16:21:04 +0200

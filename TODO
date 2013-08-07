@@ -2,8 +2,8 @@ reclass TODO
 ============
 
 - Puppet adapter, whoever might want that…???
-- Write unittest for everything but datatypes, the existing nosetests are
-  pretty crap, incl. yaml_fs, outputters, CLI and adapters.
+- Write unittest for everything but datatypes, incl. yaml_fs, outputters, CLI
+  and adapters.
 - Configurable file extension (.yaml/.yml, or support both)
 - Verbosity options, debugging
 - Add a configuration option to allow a set of classes to be slapped onto
