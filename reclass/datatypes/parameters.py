@@ -147,18 +147,22 @@ class Parameters(object):
     def interpolate(self):
         while len(self._refs) > 0:
             path, refvalue = self._refs.iteritems().next()
-            self._refs[path] = None
             self._interpolate_inner(path, refvalue)
 
     def _interpolate_inner(self, path, refvalue):
+        self._refs[path] = None
         for ref in refvalue.get_references():
             path_from_ref = DictPath(self.delimiter, ref)
             try:
                 refvalue_inner = self._refs[path_from_ref]
                 if refvalue_inner is None:
+                    # every call to _interpolate_inner replaces the value of
+                    # the saved occurrences of a reference with None.
+                    # Therefore, if we encounter None instead of a refvalue,
+                    # it means that we have already processed it and are now
+                    # faced with a cyclical reference.
                     raise InfiniteRecursionError(path, ref)
-                self._interpolate_inner(path_from_ref,
-                                        self._refs[path_from_ref])
+                self._interpolate_inner(path_from_ref, refvalue_inner)
             except KeyError as e:
                 pass
         try:
