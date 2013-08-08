@@ -43,7 +43,7 @@ class Parameters(object):
             delimiter = Parameters.DEFAULT_PATH_DELIMITER
         self._delimiter = delimiter
         self._base = {}
-        self._refs = {}
+        self._occurrences = {}
         if mapping is not None:
             # we initialise by merging, otherwise the list of references might
             # not be updated
@@ -68,9 +68,6 @@ class Parameters(object):
     def as_dict(self):
         return self._base.copy()
 
-    def _register_ref_occurrence(self, path, ref):
-        self._refs[path] = ref
-
     def _update_scalar(self, cur, new, path):
         if self.delimiter is None or not isinstance(new, types.StringTypes):
             return new
@@ -82,7 +79,11 @@ class Parameters(object):
                 # references
                 return new
 
-            self._register_ref_occurrence(path, ret)
+            # finally, keep a reference to the RefValue instance we just
+            # created, in a dict indexed by the dictionary path, instead of
+            # just a list. The keys are required to resolve dependencies
+            # during interpolation
+            self._occurrences[path] = ret
             return ret
 
     def _extend_list(self, cur, new, path):
@@ -138,37 +139,59 @@ class Parameters(object):
         elif isinstance(other, self.__class__):
             self._base = self._merge_recurse(self._base, other._base,
                                              None)
-            self._refs.update(other._refs)
+            self._occurrences.update(other._occurrences)
 
         else:
             raise TypeError('Cannot merge %s objects into %s' % (type(other),
                             self.__class__.__name__))
 
+    def has_unresolved_refs(self):
+        return len(self._occurrences) > 0
+
     def interpolate(self):
-        while len(self._refs) > 0:
-            path, refvalue = self._refs.iteritems().next()
+        while self.has_unresolved_refs():
+            # we could use a view here, but this is simple enough:
+            # _interpolate_inner removes references from the refs hash after
+            # processing them, so we cannot just iterate the dict
+            path, refvalue = self._occurrences.iteritems().next()
             self._interpolate_inner(path, refvalue)
 
     def _interpolate_inner(self, path, refvalue):
-        self._refs[path] = None
+        self._occurrences[path] = True  # mark as seen
         for ref in refvalue.get_references():
             path_from_ref = DictPath(self.delimiter, ref)
             try:
-                refvalue_inner = self._refs[path_from_ref]
-                if refvalue_inner is None:
+                refvalue_inner = self._occurrences[path_from_ref]
+
+                # If there is no reference, then this will throw a KeyError,
+                # look further down where this is caught and execution passed
+                # to the next iteration of the loop
+                #
+                # If we get here, then the ref references another parameter,
+                # requiring us to recurse, dereferencing first those refs that
+                # are most used and are thus at the leaves of the dependency
+                # tree.
+
+                if refvalue_inner is True:
                     # every call to _interpolate_inner replaces the value of
-                    # the saved occurrences of a reference with None.
-                    # Therefore, if we encounter None instead of a refvalue,
+                    # the saved occurrences of a reference with True.
+                    # Therefore, if we encounter True instead of a refvalue,
                     # it means that we have already processed it and are now
                     # faced with a cyclical reference.
                     raise InfiniteRecursionError(path, ref)
                 self._interpolate_inner(path_from_ref, refvalue_inner)
+
             except KeyError as e:
-                pass
+                # not actually an error, but we are done resolving all
+                # dependencies of the current ref, so move on
+                continue
+
         try:
             new = refvalue.render(self._base)
             path.set_value(self._base, new)
-            del self._refs[path]
+
+            # finally, remove the reference from the occurrences cache
+            del self._occurrences[path]
         except UndefinedVariableError as e:
             raise UndefinedVariableError(e.var, path)
 
