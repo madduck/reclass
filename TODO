@@ -11,3 +11,6 @@ reclass TODO
 - Think about alternative implementations for Parameter interpolation, as
   DictPath and RefValue are a bit cumbersome. It works, but it's not exactly
   intuitive or pretty.
+- Maybe a regexp→class mapping to allow massive numbers of nodes (e.g. web\d+)
+  to be classified all at once, without requiring thousands of node-files to be
+  created.
