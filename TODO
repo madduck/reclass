@@ -14,3 +14,4 @@ reclass TODO
 - Maybe a regexp→class mapping to allow massive numbers of nodes (e.g. web\d+)
   to be classified all at once, without requiring thousands of node-files to be
   created.
+- Make data from CMS available to reclass
