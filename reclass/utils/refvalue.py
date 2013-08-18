@@ -96,10 +96,10 @@ class RefValue(object):
             # preserve the type of the referenced variable
             return resolver(self._refs[0])
 
-        # reassemble the string by taking a string and a var pairwise
+        # reassemble the string by taking a string and str(ref) pairwise
         ret = ''
         for i in range(0, len(self._refs)):
-            ret += self._strings[i] + resolver(self._refs[i])
+            ret += self._strings[i] + str(resolver(self._refs[i]))
         if len(self._strings) > len(self._refs):
             # and finally append a trailing string, if any
             ret += self._strings[-1]
