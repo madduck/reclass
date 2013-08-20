@@ -32,7 +32,7 @@ where the following steps have already been prepared.
 
      It's handy to symlink reclass' Salt adapter itself to that directory.
 
-       $ ln -s $(which salt-reclass) /srv/salt/states/reclass
+       $ ln -s $(which reclass-salt) /srv/salt/states/reclass
 
      As you can now just inspect the data right there from the command line:
 
@@ -54,7 +54,7 @@ where the following steps have already been prepared.
 
   2. Check out your inventory by invoking
 
-       $ salt-reclass --top
+       $ reclass-salt --top
 
      which should return all the information about all defined nodes, which is
      only 'localhost' in the example. This is essentially the same information
@@ -66,7 +66,7 @@ where the following steps have already been prepared.
 
   3. See the pillar information for 'localhost':
 
-       $ salt-reclass --pillar localhost
+       $ reclass-salt --pillar localhost
 
   4. Now add reclass to /etc/salt/master, like so:
 
