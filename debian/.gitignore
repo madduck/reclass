@@ -1,0 +1,7 @@
+/reclass
+/reclass-doc
+/tmp
+/*.log
+/*.debhelper
+/files
+/*.substvars
