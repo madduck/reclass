@@ -1,0 +1,73 @@
+============
+Installation
+============
+
+For Debian users (including Ubuntu)
+-----------------------------------
+|reclass| has been `packaged for Debian`_. To use it, just install it with
+APT::
+
+  $ apt-get install reclass
+
+.. _packaged for Debian: http://packages.debian.org/search?keywords=reclass
+
+Other distributions
+-------------------
+Developers of other distributions are cordially invited to package |reclass|
+themselves and `ping me <mailto:reclass@pobox.madduck.net>`_ to have details
+included here. Or send a patch!
+
+From source
+-----------
+|reclass| is currently maintained `on Github
+<http://github.com/madduck/reclass>`_, so to obtain the source, run::
+
+  $ git clone https://github.com/madduck/reclass.git
+
+or::
+
+  $ git clone ssh://git@github.com:madduck/reclass.git
+
+Before you can use |reclass|, you need to install it into a place where Python
+can find it. Unless you installed a package from your distribution, the
+following step should install the package to /usr/local::
+
+  $ python setup.py install
+
+If you want to install to a different location, use --prefix like so::
+
+  $ python setup.py install --prefix=/opt/local
+
+Just make sure that the destination is in the Python module search path, which
+you can check like this::
+
+  $ python -c 'import sys; print sys.path'
+
+More options can be found in the output of
+
+::
+
+  $ python setup.py install --help
+  $ python setup.py --help
+  $ python setup.py --help-commands
+  $ python setup.py --help [cmd]
+
+If you just want to run |reclass| from source, e.g. because you are going to be
+making and testing changes, install it in "development mode"::
+
+  $ python setup.py develop
+
+To uninstall (the rm call is necessary due to `a bug in setuptools`_)::
+
+  $ python setup.py develop --uninstall
+  $ rm /usr/local/bin/reclass*
+
+`Uninstallation currently isn't possible`_ for packages installed to
+/usr/local as per the above method, unfortunately. The following should do::
+
+  $ rm -r /usr/local/lib/python*/dist-packages/reclass* /usr/local/bin/reclass*
+
+.. _a bug in setuptools: http://bugs.debian.org/714960
+.. _Uninstallation currently isn't possible: http://bugs.python.org/issue4673
+
+.. include:: substs.inc

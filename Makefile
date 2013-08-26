@@ -28,3 +28,6 @@ coverage: .coverage
 .PHONY: coverage
 .coverage: $(PYFILES)
 	python-coverage -x setup.py nosetests
+
+docs:
+	$(MAKE) -C doc man html
