@@ -38,7 +38,8 @@ docspub: docs
 	git checkout $(BRANCH)
 	git rm -rf . || :
 	echo '/doc/build/html/.buildinfo' > .gitignore
-	git add $(HTMLDIR) .gitignore
+	touch .nojekyll
+	git add $(HTMLDIR) .gitignore .nojekyll
 	git mv $(HTMLDIR)/* .
 	if git commit -m'Webpage update' -s; then \
 	  git push $(shell git config --get branch.$(BRANCH).remote) $(BRANCH); \
