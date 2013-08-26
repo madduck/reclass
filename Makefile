@@ -45,3 +45,6 @@ docspub: docs
 	  git push $(shell git config --get branch.$(BRANCH).remote) $(BRANCH); \
 	fi
 	git checkout '@{-1}'
+
+docsclean:
+	$(MAKE) -C doc clean
