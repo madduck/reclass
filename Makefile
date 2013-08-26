@@ -31,3 +31,16 @@ coverage: .coverage
 
 docs:
 	$(MAKE) -C doc man html
+
+docspub: BRANCH=gh-pages
+docspub: HTMLDIR=doc/build/html
+docspub: docs
+	git checkout $(BRANCH)
+	git rm -rf . || :
+	echo '/doc/build/html/.buildinfo' > .gitignore
+	git add $(HTMLDIR) .gitignore
+	git mv $(HTMLDIR)/* .
+	if git commit -m'Webpage update' -s; then \
+	  git push $(shell git config --get branch.$(BRANCH).remote) $(BRANCH); \
+	fi
+	git checkout '@{-1}'
