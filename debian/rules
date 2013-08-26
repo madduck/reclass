@@ -1,0 +1,24 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+DH_BUILDSYSTEM_OPTION=--buildsystem=python_distutils
+DH_OPTIONS=--with python2,sphinxdoc $(DH_BUILDSYSTEM_OPTION)
+
+%:
+	dh $@ $(DH_OPTIONS)
+
+override_dh_sphinxdoc:
+	dh_sphinxdoc || :
+
+override_dh_auto_build:
+	$(MAKE) -C doc man html
+
+override_dh_install:
+	dh_install
+	mv debian/tmp/usr/bin/reclass-* debian/reclass/usr/share/reclass
+
+override_dh_clean:
+	dh_clean -O$(DH_BUILDSYSTEM_OPTION)
+	$(MAKE) docsclean

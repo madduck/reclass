@@ -1,0 +1,39 @@
+Source: reclass
+Section: admin
+Priority: extra
+Maintainer: martin f. krafft <madduck@debian.org>
+Build-Depends: python-setuptools, python, debhelper (>= 8.9.7), python-sphinx
+Standards-Version: 3.9.4
+XS-Python-Version: all
+Homepage: http://github.com/madduck/reclass
+Vcs-Git: git://git.debian.org/collab-maint/reclass.git
+Vcs-Browser: http://git.debian.org/?p=collab-maint/reclass.git;a=summary
+
+Package: reclass
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}
+Description: hierarchical inventory backend for configuration management systems
+ reclass is an "external node classifier" (ENC) as can be used with automation
+ tools, such as Puppet, Salt, and Ansible. It is also a stand-alone tool for
+ merging data sources recursively.
+ .
+ The purpose of an ENC is to allow a system administrator to maintain an
+ inventory of nodes to be managed, completely separately from the configuration
+ of the automation tool. Usually, the external node classifier completely
+ replaces the tool-specific inventory (such as site.pp for Puppet,
+ ext_pillar/master_tops for Salt, or /etc/ansible/hosts).
+ .
+ reclass allows you to define your nodes through class inheritance, while
+ always able to override details further up the tree (i.e. in more specific
+ nodes). Think of classes as feature sets, as commonalities between nodes, or
+ as tags. Add to that the ability to nest classes (multiple inheritance is
+ allowed, well-defined, and encouraged), and piece together your infrastructure
+ from smaller bits, eliminating redundancy and exposing all important
+ parameters to a single location, logically organised.
+
+Package: reclass-doc
+Architecture: all
+Section: doc
+Depends: ${sphinxdoc:Depends}, ${misc:Depends}
+Description: reclass documentation
+ Provides the documentation for reclass.
