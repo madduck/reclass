@@ -38,6 +38,13 @@ If you want to install to a different location, use --prefix like so::
 
   $ python setup.py install --prefix=/opt/local
 
+.. todo::
+
+  These will install the ``reclass-salt`` and ``reclass-ansible`` adapters to
+  ``$prefix/bin``, but they should go to ``$prefix/share/reclass``. How can
+  setup.py be told to do so? It would be better for consistency if this was
+  done "upstream", rather than fixed by the distros.
+
 Just make sure that the destination is in the Python module search path, which
 you can check like this::
 

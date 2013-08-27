@@ -30,6 +30,11 @@ following steps have already been prepared.
 
 /…/reclass refers to the location of your |reclass| checkout.
 
+.. todo::
+
+  With |reclass| now in Debian, as well as installable from source, the
+  following should be checked for path consistency…
+
 #. Complete the installation steps described in the :doc:`installation section
    <install>`.
 
