@@ -8,7 +8,7 @@
 #
 RECLASS_NAME = 'reclass'
 DESCRIPTION = 'merge data by recursive descent down an ancestry hierarchy'
-VERSION = '1.0'
+VERSION = '1.0.2'
 AUTHOR = 'martin f. krafft'
 AUTHOR_EMAIL = 'reclass@pobox.madduck.net'
 COPYRIGHT = 'Copyright © 2007–13 ' + AUTHOR

@@ -28,6 +28,10 @@ or::
 
   $ git clone ssh://git@github.com:madduck/reclass.git
 
+If you want a tarball, please `obtain it from the Debian archive`_.
+
+.. _obtain it from the Debian archive: http://http.debian.net/debian/pool/main/r/reclass/
+
 Before you can use |reclass|, you need to install it into a place where Python
 can find it. Unless you installed a package from your distribution, the
 following step should install the package to /usr/local::
