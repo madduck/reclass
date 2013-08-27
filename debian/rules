@@ -13,7 +13,7 @@ override_dh_sphinxdoc:
 	dh_sphinxdoc || :
 
 override_dh_auto_build:
-	$(MAKE) -C doc man html text
+	PYTHONPATH=.. $(MAKE) -C doc man html text
 
 override_dh_install:
 	dh_install
