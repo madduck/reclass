@@ -40,6 +40,10 @@ following command::
 
 .. _on Github: https://github.com/madduck/reclass
 
+If you want a tarball, please `obtain it from the Debian archive`_.
+
+.. _obtain it from the Debian archive: http://http.debian.net/debian/pool/main/r/reclass/
+
 Licence
 -------
 |reclass| is © 2007–2013 by martin f. krafft and released under the terms of
