@@ -1,3 +1,9 @@
+reclass (1.0.2-1) UNRELEASED; urgency=low
+
+  * New upstream release (version number fix).
+
+ -- martin f. krafft <madduck@debian.org>  Tue, 27 Aug 2013 20:47:21 +0200
+
 reclass (1.0.1-1) unstable; urgency=low
 
   * New upstream release (documentation updates only).
