@@ -19,11 +19,10 @@ To uninstall::
 
 Discussing reclass
 ------------------
-If you want to talk about |reclass|, the best way right now is to use the
-`salt-users mailing list`_ (please put 'reclass' into the subject), or to find
-me on IRC, in ``#reclass`` on ``irc.oftc.net``.
+If you want to talk about |reclass|, use the `mailing list`_ or to find me on
+IRC, in ``#reclass`` on ``irc.oftc.net``.
 
-.. _salt-users mailing list: https://groups.google.com/d/forum/salt-users
+.. _mailing list: http://lists.pantsfullofunix.net/listinfo/reclass
 
 Contributing to reclass
 -----------------------

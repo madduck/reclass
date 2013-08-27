@@ -3,6 +3,38 @@ reclass — Recursive external node classification
 ================================================
 .. include:: intro.inc
 
+Community
+---------
+There is a `mailing list`_, where you can bring up anything related to
+|reclass|.
+
+.. _mailing list: http://lists.pantsfullofunix.net/listinfo/reclass
+
+For real-time communication, please join the ``#reclass`` IRC channel on
+``irc.oftc.net``.
+
+If you're using `Salt`_, you can also ask your |reclass|-and-Salt-related
+questions on the mailing list, ideally specifying "reclass" in the subject of
+your message.
+
+Source code
+-----------
+For now, |reclass| is hosted `on Github`_, and you may clone it with the
+following command::
+
+  git clone https://github.com/madduck/reclass.git
+
+.. _on Github: https://github.com/madduck/reclass
+
+If you want a tarball, please `obtain it from the Debian archive`_.
+
+.. _obtain it from the Debian archive: http://http.debian.net/debian/pool/main/r/reclass/
+
+Licence
+-------
+|reclass| is © 2007–2013 by martin f. krafft and released under the terms of
+the `Artistic Licence 2.0`_.
+
 Contents
 --------
 These documents aim to get you started with |reclass|:
@@ -22,32 +54,6 @@ These documents aim to get you started with |reclass|:
    hacking
    todo
    changelog
-
-Community
----------
-Currently, there exists only an IRC channel, ``#reclass`` on ``irc.oftc.net``,
-where you may stop by to ask questions. When usage grows, I'll set up
-a mailing list. If you're using `Salt`_, you can also ask your
-|reclass|-related questions on the mailing list, ideally specifying
-"reclass" in the subject of your message.
-
-Source code
------------
-For now, |reclass| is hosted `on Github`_, and you may clone it with the
-following command::
-
-  git clone https://github.com/madduck/reclass.git
-
-.. _on Github: https://github.com/madduck/reclass
-
-If you want a tarball, please `obtain it from the Debian archive`_.
-
-.. _obtain it from the Debian archive: http://http.debian.net/debian/pool/main/r/reclass/
-
-Licence
--------
-|reclass| is © 2007–2013 by martin f. krafft and released under the terms of
-the `Artistic Licence 2.0`_.
 
 About the name
 --------------
