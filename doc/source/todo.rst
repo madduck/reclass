@@ -2,6 +2,13 @@
 reclass to-do list
 ==================
 
+Common set of classes
+---------------------
+A lot of the classes I have set up during the various stages of development of
+|reclass| are generic. It would probably be sensible to make them available as
+part of |reclass|, to give people a common baseline to work from, and to
+ensure a certain level of consistency between users.
+
 Testing framework
 -----------------
 There is rudimentary testing in place, but it's inconsistent. I got
