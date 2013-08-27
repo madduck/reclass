@@ -32,19 +32,23 @@ coverage: .coverage
 docs:
 	$(MAKE) -C doc man html
 
-docspub: BRANCH=gh-pages
-docspub: HTMLDIR=doc/build/html
-docspub: docs
-	git checkout $(BRANCH)
-	git rm -rf . || :
-	echo '/doc/build/html/.buildinfo' > .gitignore
-	touch .nojekyll
-	git add $(HTMLDIR) .gitignore .nojekyll
+GH_BRANCH=gh-pages
+HTMLDIR=doc/build/html
+docspub:
+ifeq ($(shell git branch --list $(GH_BRANCH)-base),)
+	@echo "Please fetch the $(GH_BRANCH)-base branch from Github to be able to publish documentation:" >&2
+	@echo "  git branch gh-pages-base github/gh-pages-base" >&2
+	@false
+else
+	$(MAKE) docs
+	git checkout $(GH_BRANCH) || git checkout -b $(GH_BRANCH) $(GH_BRANCH)-base
+	git reset --hard $(GH_BRANCH)-base
+	git add $(HTMLDIR)
 	git mv $(HTMLDIR)/* .
-	if git commit -m'Webpage update' -s; then \
-	  git push $(shell git config --get branch.$(BRANCH).remote) $(BRANCH); \
-	fi
+	git commit -m'Webpage update'
+	git push -f $(shell git config --get branch.$(GH_BRANCH)-base.remote) $(GH_BRANCH)
 	git checkout '@{-1}'
+endif
 
 docsclean:
 	$(MAKE) -C doc clean

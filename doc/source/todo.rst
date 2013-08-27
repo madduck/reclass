@@ -57,3 +57,5 @@ be possible in Ansible and Puppet.
 
 Ideally, |reclass| could unify the interface so that even templates can be
 shared between the various CMS.
+
+.. include:: substs.inc

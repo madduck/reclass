@@ -21,6 +21,7 @@ These documents aim to get you started with |reclass|:
    puppet
    hacking
    todo
+   changelog
 
 Community
 ---------
@@ -29,6 +30,15 @@ where you may stop by to ask questions. When usage grows, I'll set up
 a mailing list. If you're using `Salt`_, you can also ask your
 |reclass|-related questions on the mailing list, ideally specifying
 "reclass" in the subject of your message.
+
+Source code
+-----------
+For now, |reclass| is hosted `on Github`_, and you may clone it with the
+following command::
+
+  git clone https://github.com/madduck/reclass.git
+
+.. _on Github: https://github.com/madduck/reclass
 
 Licence
 -------

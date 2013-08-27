@@ -10,6 +10,11 @@
 from reclass.version import *
 from setuptools import setup, find_packages
 
+ADAPTERS = ['salt', 'ansible']
+console_scripts = ['reclass = reclass.cli:main']
+console_scripts.extend('reclass-{0} = reclass.adapters.{0}:cli'.format(i)
+                       for i in ADAPTERS)
+
 setup(
     name = RECLASS_NAME,
     description = DESCRIPTION,
@@ -19,12 +24,6 @@ setup(
     license = LICENCE,
     url = URL,
     packages = find_packages(),
-    entry_points = {
-        'console_scripts': [
-            'reclass = reclass.cli:main',
-            'reclass-salt = reclass.adapters.salt:cli',
-            'reclass-ansible = reclass.adapters.ansible:cli'
-        ]
-    },
+    entry_points = { 'console_scripts': console_scripts },
     install_requires = ['pyyaml']
 )
