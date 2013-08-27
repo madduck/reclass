@@ -45,7 +45,7 @@ Information
 
 See also
 --------
-Please visit http://madduck.github.io/reclass for more information about
+Please visit http://reclass.pantsfullofunix.net/ for more information about
 |reclass|.
 
 The documentation is also available from the ``./doc`` subtree in the source
