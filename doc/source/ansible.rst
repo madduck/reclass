@@ -2,11 +2,11 @@
 Using reclass with Ansible
 ==========================
 
-Not-so-nice disclaimer
-----------------------
-I was kicked out of the Ansible community, presumably for `asking the wrong
-questions`_, and therefore I have no interest in developing this adapter
-anymore. If you use it and have changes, I will take your patch.
+.. warning::
+
+  I was kicked out of the Ansible community, presumably for `asking the wrong
+  questions`_, and therefore I have no interest in developing this adapter
+  anymore. If you use it and have changes, I will take your patch.
 
 .. _asking the wrong questions: https://github.com/madduck/reclass/issues/6
 
