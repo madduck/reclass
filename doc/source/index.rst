@@ -30,6 +30,15 @@ a mailing list. If you're using `Salt`_, you can also ask your
 |reclass|-related questions on the mailing list, ideally specifying
 "reclass" in the subject of your message.
 
+Source code
+-----------
+For now, |reclass| is hosted `on Github`_, and you may clone it with the
+following command::
+
+  git clone https://github.com/madduck/reclass.git
+
+.. _on Github: https://github.com/madduck/reclass
+
 Licence
 -------
 |reclass| is © 2007–2013 by martin f. krafft and released under the terms of
