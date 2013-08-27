@@ -46,6 +46,7 @@ These documents aim to get you started with |reclass|:
    concepts
    operations
    usage
+   refs
    manpage
    configfile
    salt
