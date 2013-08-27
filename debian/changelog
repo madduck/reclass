@@ -1,6 +1,7 @@
 reclass (1.0.2-1) UNRELEASED; urgency=low
 
   * New upstream release (version number fix).
+  * Split Python module into python-reclass.
 
  -- martin f. krafft <madduck@debian.org>  Tue, 27 Aug 2013 20:47:21 +0200
 

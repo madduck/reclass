@@ -1,5 +1,6 @@
 /reclass
 /reclass-doc
+/python-reclass
 /tmp
 /*.log
 /*.debhelper
