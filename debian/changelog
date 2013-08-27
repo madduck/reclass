@@ -1,3 +1,9 @@
+reclass (1.0-2) UNRELEASED; urgency=low
+
+  * 
+
+ -- martin f. krafft <madduck@debian.org>  Tue, 27 Aug 2013 13:48:59 +0200
+
 reclass (1.0-1) unstable; urgency=low
 
   * Initial release (closes: #720922).
