@@ -21,6 +21,7 @@ These documents aim to get you started with |reclass|:
    puppet
    hacking
    todo
+   changelog
 
 Community
 ---------
