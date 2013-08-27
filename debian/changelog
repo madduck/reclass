@@ -1,8 +1,8 @@
-reclass (1.0.1-1) UNRELEASED; urgency=low
+reclass (1.0.1-1) unstable; urgency=low
 
   * New upstream release (documentation updates only).
 
- -- martin f. krafft <madduck@debian.org>  Tue, 27 Aug 2013 13:48:59 +0200
+ -- martin f. krafft <madduck@debian.org>  Tue, 27 Aug 2013 18:07:39 +0200
 
 reclass (1.0-1) unstable; urgency=low
 
