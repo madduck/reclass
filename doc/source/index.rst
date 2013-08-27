@@ -20,6 +20,7 @@ These documents aim to get you started with |reclass|:
    ansible
    puppet
    hacking
+   todo
 
 Community
 ---------

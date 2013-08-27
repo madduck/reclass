@@ -1,6 +1,11 @@
 =============
 Using reclass
 =============
+.. todo::
+
+  With |reclass| now in Debian, as well as installable from source, the
+  following should be checked for path consistency…
+
 For information on how to use |reclass| directly, call ``reclass --help``
 and study the output, or have a look at its :doc:`manual page <manpage>`.
 

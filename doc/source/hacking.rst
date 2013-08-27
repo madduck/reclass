@@ -54,6 +54,9 @@ tests). If you run that, you can see there is a lot of work to be done
 cleaning up the code. If this is the sort of stuff you want to do — by all
 means — be my guest! ;)
 
+There are a number of items on the :doc:`to-do list <todo>`, so if you are
+bored…
+
 If you have larger ideas, I'll be looking forward to discuss them with you.
 
 .. include:: substs.inc

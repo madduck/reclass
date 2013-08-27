@@ -2,11 +2,11 @@
 Using reclass with Ansible
 ==========================
 
-Not-so-nice disclaimer
-----------------------
-I was kicked out of the Ansible community, presumably for `asking the wrong
-questions`_, and therefore I have no interest in developing this adapter
-anymore. If you use it and have changes, I will take your patch.
+.. warning::
+
+  I was kicked out of the Ansible community, presumably for `asking the wrong
+  questions`_, and therefore I have no interest in developing this adapter
+  anymore. If you use it and have changes, I will take your patch.
 
 .. _asking the wrong questions: https://github.com/madduck/reclass/issues/6
 
@@ -21,6 +21,11 @@ Or you can also just look into ``./examples/ansible`` of your |reclass|
 checkout, where the following steps have already been prepared.
 
 /…/reclass refers to the location of your |reclass| checkout.
+
+.. todo::
+
+  With |reclass| now in Debian, as well as installable from source, the
+  following should be checked for path consistency…
 
 #. Complete the installation steps described in the :doc:`installation section
    <install>`.

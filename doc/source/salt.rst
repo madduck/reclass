@@ -2,6 +2,20 @@
 Using reclass with Salt
 =======================
 
+.. warning::
+
+  The latest release of Salt, version 0.16.3, does *not yet* include the
+  reclass adapter. You could use the ``cmd_yaml`` adapters, but at least for
+  ``ext_pillar``, they are currently not useable, as they `do not export the
+  minion ID to the command they run`_.
+
+  Your best bet at this stage is to wait for Salt 0.17, or to run Salt from
+  a Git clone, `branch "develop"`_. Sorry about that.
+
+.. _do not export the minion ID to the command they run:
+   https://github.com/saltstack/salt/issues/2276
+.. _branch "develop": https://github.com/saltstack/salt/tree/develop
+
 Quick start
 -----------
 The following steps should get you up and running quickly with |reclass| and
@@ -15,6 +29,11 @@ checkout (``/usr/share/doc/examples/salt`` on Debian-systems), where the
 following steps have already been prepared.
 
 /…/reclass refers to the location of your |reclass| checkout.
+
+.. todo::
+
+  With |reclass| now in Debian, as well as installable from source, the
+  following should be checked for path consistency…
 
 #. Complete the installation steps described in the :doc:`installation section
    <install>`.
