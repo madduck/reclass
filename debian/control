@@ -5,7 +5,7 @@ Maintainer: martin f. krafft <madduck@debian.org>
 Build-Depends: python-setuptools, python, debhelper (>= 8.9.7), python-sphinx
 Standards-Version: 3.9.4
 XS-Python-Version: all
-Homepage: http://github.com/madduck/reclass
+Homepage: http://reclass.pantsfullofunix.net/
 Vcs-Git: git://git.debian.org/collab-maint/reclass.git
 Vcs-Browser: http://git.debian.org/?p=collab-maint/reclass.git;a=summary
 
