@@ -68,4 +68,10 @@ because I don't see the use-case (anymore) with |reclass|. If you still see
 a use-case, then please help me understand it and let's figure out a good way
 to introduce this concept into |reclass|.
 
+Membership information
+----------------------
+It would be nice if |reclass| could provide e.g. the Nagios master node with
+a list of clients that define it as their master. That would short-circuit
+Puppet's ``storeconfigs`` and Salt's ``mine``.
+
 .. include:: substs.inc
