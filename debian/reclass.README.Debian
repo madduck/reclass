@@ -1,0 +1,10 @@
+reclass for Debian
+==================
+
+The documentation for reclass is provided in the reclass-doc package. Once
+installed, please have a look at /usr/share/doc/reclass-doc/html/index.html.
+
+Alternatively, you may also view the documentation online at
+http://reclass.pantsfullofunix.net/
+
+ -- martin f. krafft <madduck@debian.org>  Wed, 28 Aug 2013 13:23:23 +0200
