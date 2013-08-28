@@ -11,6 +11,7 @@ Vcs-Browser: http://git.debian.org/?p=collab-maint/reclass.git;a=summary
 
 Package: reclass
 Architecture: all
+Section: admin
 Depends: python-reclass (= ${binary:Version}), ${misc:Depends}, ${python:Depends}
 Suggests: reclass-doc
 Description: hierarchical inventory backend for configuration management systems
