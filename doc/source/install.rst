@@ -7,7 +7,7 @@ For Debian users (including Ubuntu)
 |reclass| has been `packaged for Debian`_. To use it, just install it with
 APT::
 
-  $ apt-get install reclass
+  $ apt-get install reclass [reclass-doc]
 
 .. _packaged for Debian: http://packages.debian.org/search?keywords=reclass
 

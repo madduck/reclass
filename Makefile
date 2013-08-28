@@ -37,7 +37,7 @@ HTMLDIR=doc/build/html
 docspub:
 ifeq ($(shell git branch --list $(GH_BRANCH)-base),)
 	@echo "Please fetch the $(GH_BRANCH)-base branch from Github to be able to publish documentation:" >&2
-	@echo "  git branch gh-pages-base github/gh-pages-base" >&2
+	@echo "  git branch gh-pages-base origin/gh-pages-base" >&2
 	@false
 else
 	$(MAKE) docs

@@ -31,22 +31,30 @@ def ext_pillar(minion_id, pillar,
     return params
 
 
-def top(storage_type=OPT_STORAGE_TYPE,
+def top(minion_id, storage_type=OPT_STORAGE_TYPE,
         inventory_base_uri=OPT_INVENTORY_BASE_URI, nodes_uri=OPT_NODES_URI,
         classes_uri=OPT_CLASSES_URI):
 
-    data = get_inventory(storage_type, inventory_base_uri, nodes_uri,
-                         classes_uri)
     env = 'base'
-    top = {env: {}}
     # TODO: node environments
-    for node_id, node_data in data['nodes'].iteritems():
-        #env = data.environment
-        #if env not in top:
-        #    top[env] = {}
-        top[env][node_id] = node_data['applications']
 
-    return top
+    # if the minion_id is not None, then return just the applications for the
+    # specific minion, otherwise return the entire top data (which we need for
+    # CLI invocations of the adapter):
+    if minion_id is not None:
+        data = get_nodeinfo(storage_type, inventory_base_uri, nodes_uri,
+                            classes_uri, minion_id)
+        applications = data.get('applications', [])
+        return {env: applications}
+
+    else:
+        data = get_inventory(storage_type, inventory_base_uri, nodes_uri,
+                            classes_uri)
+        nodes = {}
+        for node_id, node_data in data['nodes'].iteritems():
+            nodes[node_id] = node_data['applications']
+
+        return {env: nodes}
 
 
 def cli():
@@ -74,7 +82,8 @@ def cli():
                               nodes_uri=options.nodes_uri,
                               classes_uri=options.classes_uri)
         else:
-            data = top(storage_type=options.storage_type,
+            data = top(minion_id=None,
+                       storage_type=options.storage_type,
                        inventory_base_uri=options.inventory_base_uri,
                        nodes_uri=options.nodes_uri,
                        classes_uri=options.classes_uri)

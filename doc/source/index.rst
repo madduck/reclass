@@ -24,6 +24,9 @@ following command::
 
   git clone https://github.com/madduck/reclass.git
 
+Or use the Debian package, as explained in the :doc:`install instructions
+<install>`.
+
 .. _on Github: https://github.com/madduck/reclass
 
 If you want a tarball, please `obtain it from the Debian archive`_.
