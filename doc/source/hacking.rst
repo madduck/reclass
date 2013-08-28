@@ -34,7 +34,8 @@ clean history, I will not just merge pull request.
 
 You can submit pull requests, of course, and I'll rebase them onto ``HEAD``
 before merging. Or send your patches using ``git-format-patch`` and
-``git-send-e-mail`` to reclass@pobox.madduck.net.
+``git-send-e-mail`` to `the mailing list
+<reclass@lists.pantsfullofunix.net>`_.
 
 I have added rudimentary unit tests, and it would be nice if you could submit
 your changes with appropriate changes to the tests. To run tests, invoke

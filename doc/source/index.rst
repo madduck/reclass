@@ -3,6 +3,23 @@ reclass — Recursive external node classification
 ================================================
 .. include:: intro.inc
 
+Releases
+--------
+The latest released |reclass| version is |release|. Please have a look at the
+:doc:`change log <changelog>` for information about recent changes.
+
+Source code
+-----------
+For now, |reclass| is hosted `on Github`_, and you may clone it with the
+following command::
+
+  git clone https://github.com/madduck/reclass.git
+
+Please see the :doc:`install instructions <install>` for information about
+distribution packages and tarballs.
+
+.. _on Github: https://github.com/madduck/reclass
+
 Community
 ---------
 There is a `mailing list`_, where you can bring up anything related to
@@ -16,22 +33,6 @@ For real-time communication, please join the ``#reclass`` IRC channel on
 If you're using `Salt`_, you can also ask your |reclass|-and-Salt-related
 questions on the mailing list, ideally specifying "reclass" in the subject of
 your message.
-
-Source code
------------
-For now, |reclass| is hosted `on Github`_, and you may clone it with the
-following command::
-
-  git clone https://github.com/madduck/reclass.git
-
-Or use the Debian package, as explained in the :doc:`install instructions
-<install>`.
-
-.. _on Github: https://github.com/madduck/reclass
-
-If you want a tarball, please `obtain it from the Debian archive`_.
-
-.. _obtain it from the Debian archive: http://http.debian.net/debian/pool/main/r/reclass/
 
 Licence
 -------
