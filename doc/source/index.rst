@@ -3,13 +3,11 @@ reclass — Recursive external node classification
 ================================================
 .. include:: intro.inc
 
-Releases
---------
+Releases and source code
+------------------------
 The latest released |reclass| version is |release|. Please have a look at the
 :doc:`change log <changelog>` for information about recent changes.
 
-Source code
------------
 For now, |reclass| is hosted `on Github`_, and you may clone it with the
 following command::
 
