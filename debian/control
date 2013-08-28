@@ -11,7 +11,7 @@ Vcs-Browser: http://git.debian.org/?p=collab-maint/reclass.git;a=summary
 
 Package: reclass
 Architecture: all
-Depends: python-reclass (= ${source:Version}), ${misc:Depends}, ${python:Depends}
+Depends: python-reclass (= ${binary:Version}), ${misc:Depends}, ${python:Depends}
 Suggests: reclass-doc
 Description: hierarchical inventory backend for configuration management systems
  reclass is an "external node classifier" (ENC) as can be used with automation
