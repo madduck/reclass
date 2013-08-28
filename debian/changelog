@@ -1,6 +1,6 @@
 reclass (1.0.2-2) UNRELEASED; urgency=low
 
-  * 
+  * Add a build-dependency on python-yaml, thanks Jeroen Dekkers.
 
  -- martin f. krafft <madduck@debian.org>  Wed, 28 Aug 2013 09:13:48 +0200
 
