@@ -13,10 +13,19 @@ APT::
 
 For ArchLinux users
 -------------------
-|reclass| is `available for ArchLinux`_, thanks to Niels Abspoel. More
-information about installing to come.
+|reclass| is `available for ArchLinux`_, thanks to Niels Abspoel.
+Dowload the tarball_ from ``aur`` or ``yaourt``::
+
+  $ yaourt -S reclass
+
+or::
+
+  $ tar xvzf reclass-git.tar.gz
+  $ cd reclass-git; makepkg
+  $ sudo pacman -U reclass-git-<git-commit-hash>.tar.gz
 
 .. _available for ArchLinux: https://aur.archlinux.org/packages/reclass-git/
+.. _tarball: https://aur.archlinux.org/packages/re/reclass-git/reclass-git.tar.gz
 
 Other distributions
 -------------------
