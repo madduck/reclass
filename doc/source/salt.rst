@@ -99,6 +99,13 @@ following steps have already been prepared.
       ext_pillar:
           - reclass: *reclass
 
+   .. warning::
+
+     When using ``ext_pillar`` and/or ``master_tops``, you should make sure
+     that your ``file_roots`` paths do not contain a ``top.sls`` file. Even
+     though they ought to be able to coexist, there are a few sharp edges
+     around at the moment, so beware!
+
    If you did not install |reclass| (but you are running it from source),
    you can either specify the source path like above, or you can add it to
    ``PYTHONPATH`` before invoking the Salt master, to ensure that Python can
