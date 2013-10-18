@@ -4,17 +4,13 @@ Using reclass with Salt
 
 .. warning::
 
-  The latest release of Salt, version 0.16.3, does *not yet* include the
-  reclass adapter. You could use the ``cmd_yaml`` adapters, but at least for
+  You need Salt 0.17 to use `reclass`, as older versions do not include the
+  `reclass` adapter. You could use the ``cmd_yaml`` adapters, but at least for
   ``ext_pillar``, they are currently not useable, as they `do not export the
   minion ID to the command they run`_.
 
-  Your best bet at this stage is to wait for Salt 0.17, or to run Salt from
-  a Git clone, `branch "develop"`_. Sorry about that.
-
 .. _do not export the minion ID to the command they run:
    https://github.com/saltstack/salt/issues/2276
-.. _branch "develop": https://github.com/saltstack/salt/tree/develop
 
 Quick start
 -----------
