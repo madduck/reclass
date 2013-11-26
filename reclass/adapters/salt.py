@@ -74,19 +74,22 @@ def cli():
                               nodeinfo_dest='nodename',
                               nodeinfo_help='output pillar data for a specific node',
                               defaults=defaults)
+        class_mappings = defaults.get('class_mappings')
 
         if options.mode == MODE_NODEINFO:
             data = ext_pillar(options.nodename, {},
                               storage_type=options.storage_type,
                               inventory_base_uri=options.inventory_base_uri,
                               nodes_uri=options.nodes_uri,
-                              classes_uri=options.classes_uri)
+                              classes_uri=options.classes_uri,
+                              class_mappings=class_mappings)
         else:
             data = top(minion_id=None,
                        storage_type=options.storage_type,
                        inventory_base_uri=options.inventory_base_uri,
                        nodes_uri=options.nodes_uri,
-                       classes_uri=options.classes_uri)
+                       classes_uri=options.classes_uri,
+                       class_mappings=class_mappings)
 
         print output(data, options.output, options.pretty_print)
 

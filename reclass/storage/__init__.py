@@ -7,8 +7,12 @@
 # Released under the terms of the Artistic Licence 2.0
 #
 
-import time, sys
-from reclass.datatypes import Entity
+import time
+import types
+import re
+import sys
+import fnmatch
+from reclass.datatypes import Entity, Classes
 
 def _get_timestamp():
     return time.strftime('%c')
@@ -19,13 +23,39 @@ def vvv(msg):
 
 class NodeStorageBase(object):
 
-    def __init__(self, nodes_uri, classes_uri):
+    def __init__(self, nodes_uri, classes_uri, class_mappings):
         self._nodes_uri = nodes_uri
         self._classes_uri = classes_uri
         self._classes_cache = {}
+        self._class_mappings = class_mappings
 
     nodes_uri = property(lambda self: self._nodes_uri)
     classes_uri = property(lambda self: self._classes_uri)
+    class_mappings = property(lambda self: self._class_mappings)
+
+    def _match_regexp(self, key, nodename):
+        return re.search(key, nodename)
+
+    def _match_glob(self, key, nodename):
+        return fnmatch.fnmatchcase(nodename, key)
+
+    def _populate_with_class_mappings(self, nodename):
+        c = Classes()
+        for key, value in self.class_mappings.iteritems():
+            match = False
+            if key.startswith('/') and key.endswith('/'):
+                match = self._match_regexp(key[1:-1], nodename)
+            else:
+                match = self._match_glob(key, nodename)
+            if match:
+                if isinstance(value, (types.ListType, types.TupleType)):
+                    for v in value:
+                        c.append_if_new(v)
+                else:
+                    c.append_if_new(value)
+
+        return Entity(classes=c,
+                      name='class mappings for node {0}'.format(nodename))
 
     def _get_storage_name(self):
         raise NotImplementedError, "Storage class does not have a name"
@@ -66,7 +96,7 @@ class NodeStorageBase(object):
 
     def _nodeinfo(self, nodename):
         node_entity = self._get_node(nodename)
-        merge_base = Entity(name='merge base for {0}'.format(nodename))
+        merge_base = self._populate_with_class_mappings(nodename)
         ret = self._recurse_entity(node_entity, merge_base, nodename=nodename)
         ret.interpolate()
         return ret
@@ -74,7 +104,7 @@ class NodeStorageBase(object):
     def _nodeinfo_as_dict(self, nodename, entity):
         ret = {'__reclass__' : {'node': nodename, 'uri': entity.uri,
                                 'timestamp': _get_timestamp()
-                                },
+                               },
               }
         ret.update(entity.as_dict())
         return ret

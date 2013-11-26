@@ -22,8 +22,9 @@ def vvv(msg):
 
 class ExternalNodeStorage(NodeStorageBase):
 
-    def __init__(self, nodes_uri, classes_uri):
-        super(ExternalNodeStorage, self).__init__(nodes_uri, classes_uri)
+    def __init__(self, nodes_uri, classes_uri, class_mappings):
+        super(ExternalNodeStorage, self).__init__(nodes_uri, classes_uri,
+                                                  class_mappings)
 
         def _handle_node_duplicates(name, uri1, uri2):
             raise reclass.errors.DuplicateNodeNameError(self._get_storage_name(),

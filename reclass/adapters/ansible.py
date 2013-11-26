@@ -52,11 +52,13 @@ def cli():
                               nodeinfo_help='output host_vars for the given host',
                               add_options_cb=add_ansible_options_group,
                               defaults=defaults)
+        class_mappings = defaults.get('class_mappings')
 
         if options.mode == MODE_NODEINFO:
             data = get_nodeinfo(options.storage_type,
                                 options.inventory_base_uri, options.nodes_uri,
-                                options.classes_uri, options.hostname)
+                                options.classes_uri, options.hostname,
+                                class_mappings)
             # Massage and shift the data like Ansible wants it
             data['parameters']['__reclass__'] = data['__reclass__']
             for i in ('classes', 'applications'):
@@ -66,7 +68,8 @@ def cli():
         else:
             data = get_inventory(options.storage_type,
                                  options.inventory_base_uri,
-                                 options.nodes_uri, options.classes_uri)
+                                 options.nodes_uri, options.classes_uri,
+                                 class_mappings)
             # Ansible inventory is only the list of groups. Groups are the set
             # of classes plus the set of applications with the postfix added:
             groups = data['classes']
