@@ -20,7 +20,7 @@ class ExternalNodeStorage(NodeStorageBase):
     def __init__(self, nodes_uri, classes_uri):
         super(ExternalNodeStorage, self).__init__(nodes_uri, classes_uri)
 
-    def _read_nodeinfo(self, name, base_uri, seen, nodename=None):
+    def _read_entity(self, name, base_uri, seen, nodename=None):
         path = os.path.join(base_uri, name + FILE_EXTENSION)
         try:
             entity = YamlFile(path).entity
@@ -29,7 +29,7 @@ class ExternalNodeStorage(NodeStorageBase):
             merge_base = Entity()
             for klass in entity.classes.as_list():
                 if klass not in seen:
-                    ret = self._read_nodeinfo(klass, self.classes_uri, seen,
+                    ret = self._read_entity(klass, self.classes_uri, seen,
                                               name if nodename is None else nodename)[0]
                     # on every iteration, we merge the result of the
                     # recursive descend into what we have so far…
