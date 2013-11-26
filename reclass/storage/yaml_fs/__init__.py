@@ -45,7 +45,7 @@ class ExternalNodeStorage(NodeStorageBase):
             # result of the iteration, so that elements at the current level
             # overwrite stuff defined by parents
             merge_base.merge(entity)
-            return merge_base, path
+            return merge_base, 'file://{0}'.format(path)
 
         except reclass.errors.NotFoundError, e:
             self._handle_read_error(e, name, base_uri, nodename)
