@@ -75,6 +75,23 @@ After all classes (and the classes they reference) have been visited,
 node into what has been accumulated during the processing of the classes, and
 returns the final result.
 
+Wildcard/Regexp mappings
+------------------------
+Using the :doc:`configuration file <configfile>`, it is also possible to
+provide a list mappings between node names and classes. For instance::
+
+  class_mappings:
+    - \* default
+    - /^www\d+/ webserver
+    - \*.ch hosted@switzerland another_class_to_show_that_it_can_take_lists
+
+This will assign the ``default`` class to all nodes (make sure to escape
+a leading asterisk (\*) to keep YAML happy), ``webserver`` to all nodes named
+``www1`` or ``www999``, and ``hosted-in-switzerland`` to all nodes whose names
+end with ``.ch`` (again, note the escaped leading asterisk). Multiple classes
+can be assigned to each mapping by providing a space-separated list (class
+names cannot contain spaces anyway).
+
 Parameter interpolation
 ------------------------
 Parameters may reference each other, including deep references, e.g.::

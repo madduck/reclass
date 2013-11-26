@@ -29,22 +29,15 @@ Verbose output and debug logging would be a very useful addition to help
 people understand what's going on, where data are being changed/merged, and to
 help solve problems.
 
-Default classes
----------------
-Through the configuration file, it should be possible to define a set of
-default classes that are applied to all nodes (before anything else).
+Mapping interpolation
+---------------------
+Given class mappings, it should be possible to use references in the classes,
+e.g.:
 
-This would be covered by the next point:
+    /\.(\S+)$/ → in-domain-\1
 
-Wildcards, regexp→class mapping
--------------------------------
-I envision the ability to define mappings between regexps and classes, e.g.::
-
-    /^www\d+/   →  webservers
-    /\.ch\./    →  hosted@switzerland
-
-These classes would be applied before a YAML file matching the actual hostname
-would be read and merged.
+such that a host like ``example.org`` would get the class ``in-domain-org``
+assigned to it.
 
 Data from CMS for interpolation
 -------------------------------
