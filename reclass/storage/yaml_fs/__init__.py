@@ -20,6 +20,12 @@ class ExternalNodeStorage(NodeStorageBase):
     def __init__(self, nodes_uri, classes_uri):
         super(ExternalNodeStorage, self).__init__(nodes_uri, classes_uri)
 
+    def _handle_read_error(self, exc, name, base_uri, nodename):
+        if base_uri == self.classes_uri:
+            raise reclass.errors.ClassNotFound('yaml_fs', name, base_uri, nodename)
+        else:
+            raise reclass.errors.NodeNotFound('yaml_fs', name, base_uri)
+
     def _read_entity(self, name, base_uri, seen, nodename=None):
         path = os.path.join(base_uri, name + FILE_EXTENSION)
         try:
@@ -41,11 +47,11 @@ class ExternalNodeStorage(NodeStorageBase):
             merge_base.merge(entity)
             return merge_base, path
 
-        except IOError:
-            if base_uri == self.classes_uri:
-                raise reclass.errors.ClassNotFound('yaml_fs', name, base_uri, nodename)
-            else:
-                raise reclass.errors.NodeNotFound('yaml_fs', name, base_uri)
+        except reclass.errors.NotFoundError, e:
+            self._handle_read_error(e, name, base_uri, nodename)
+
+        except IOError, e:
+            self._handle_read_error(e, name, base_uri, nodename)
 
     def _list_inventory(self):
         d = Directory(self.nodes_uri)
