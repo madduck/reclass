@@ -101,3 +101,15 @@ class InfiniteRecursionError(InterpolationError):
         msg = "Infinite recursion while resolving %s at %s" \
                 % (ref.join(PARAMETER_INTERPOLATION_SENTINELS), path)
         super(InfiniteRecursionError, self).__init__(msg)
+
+
+class NameError(ReclassException):
+
+    def __init__(self, msg, rc=posix.EX_DATAERR):
+        super(NameError, self).__init__(msg, rc)
+
+
+class InvalidClassnameError(NameError):
+
+    def __init__(self, msg):
+        super(InvalidClassnameError, self).__init__(msg)

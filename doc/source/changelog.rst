@@ -5,6 +5,7 @@ ChangeLog
 ========= ========== ========================================================
 Version   Date       Changes
 ========= ========== ========================================================
+                     * Class names must not contain spaces
 1.1       2013-08-28 Salt adapter: fix interface to include minion_id, filter
                      output accordingly; fixes master_tops
 1.0.2     2013-08-27 Fix incorrect versioning in setuptools
