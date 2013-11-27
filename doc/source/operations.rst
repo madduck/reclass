@@ -92,6 +92,14 @@ end with ``.ch`` (again, note the escaped leading asterisk). Multiple classes
 can be assigned to each mapping by providing a space-separated list (class
 names cannot contain spaces anyway).
 
+.. warning::
+
+  The class mappings do not really belong in the configuration file, as they
+  are data, not configuration inmformation. Therefore, they are likely going
+  to move elsewhere, but I have not quite figured out to where. Most likely,
+  there will be an additional file, specified in the configuration file, which
+  then lists the mappings.
+
 Note that mappings are not designed to replace node definitions. Mappings can
 be used to pre-populate the classes of existing nodes, but you still need to
 define all nodes (and if only to allow them to be enumerated for the

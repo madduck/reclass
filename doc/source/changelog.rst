@@ -5,6 +5,8 @@ ChangeLog
 ========= ========== ========================================================
 Version   Date       Changes
 ========= ========== ========================================================
+                     * Introduce class mappings (see :doc:`operations`)
+                       (closes: #5)
                      * Fix parameter interpolation across merged lists
                        (closes: #13).
                      * Caching of classes for performance reasons, especially
