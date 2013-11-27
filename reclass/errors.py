@@ -129,6 +129,18 @@ class InfiniteRecursionError(InterpolationError):
         super(InfiniteRecursionError, self).__init__(msg)
 
 
+class MappingError(ReclassException):
+
+    def __init__(self, msg, rc=posix.EX_DATAERR):
+        super(MappingError, self).__init__(msg, rc)
+
+
+class MappingFormatError(MappingError):
+
+    def __init__(self, msg):
+        super(MappingFormatError, self).__init__(msg)
+
+
 class NameError(ReclassException):
 
     def __init__(self, msg, rc=posix.EX_DATAERR):

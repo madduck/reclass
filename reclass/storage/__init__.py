@@ -12,7 +12,9 @@ import types
 import re
 import sys
 import fnmatch
+import shlex
 from reclass.datatypes import Entity, Classes
+from reclass.errors import MappingFormatError
 
 def _get_timestamp():
     return time.strftime('%c')
@@ -39,20 +41,37 @@ class NodeStorageBase(object):
     def _match_glob(self, key, nodename):
         return fnmatch.fnmatchcase(nodename, key)
 
+    def _shlex_split(self, instr):
+        lexer = shlex.shlex(instr, posix=True)
+        lexer.whitespace_split = True
+        lexer.commenters = ''
+        regexp = False
+        if instr[0] == '/':
+            lexer.quotes += '/'
+            regexp = True
+        try:
+            key = lexer.get_token()
+        except ValueError, e:
+            raise MappingFormatError('Error in mapping "{0}": missing closing '
+                                     'quote (or slash)'.format(instr))
+        if regexp:
+            key = '/{0}/'.format(key)
+        return key, list(lexer)
+
     def _populate_with_class_mappings(self, nodename):
+        if not self.class_mappings:
+            return Entity(name='empty')
         c = Classes()
-        for key, value in self.class_mappings.iteritems():
-            match = False
-            if key.startswith('/') and key.endswith('/'):
-                match = self._match_regexp(key[1:-1], nodename)
+        for mapping in self.class_mappings:
+            matched = False
+            key, klasses = self._shlex_split(mapping)
+            if key[0] == ('/'):
+                matched = self._match_regexp(key[1:-1], nodename)
             else:
-                match = self._match_glob(key, nodename)
-            if match:
-                if isinstance(value, (types.ListType, types.TupleType)):
-                    for v in value:
-                        c.append_if_new(v)
-                else:
-                    c.append_if_new(value)
+                matched = self._match_glob(key, nodename)
+            if matched:
+                for klass in klasses:
+                    c.append_if_new(klass)
 
         return Entity(classes=c,
                       name='class mappings for node {0}'.format(nodename))
