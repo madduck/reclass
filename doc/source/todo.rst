@@ -29,16 +29,6 @@ Verbose output and debug logging would be a very useful addition to help
 people understand what's going on, where data are being changed/merged, and to
 help solve problems.
 
-Mapping interpolation
----------------------
-Given class mappings, it should be possible to use references in the classes,
-e.g.:
-
-    /\.(\S+)$/ → in-domain-\1
-
-such that a host like ``example.org`` would get the class ``in-domain-org``
-assigned to it.
-
 Data from CMS for interpolation
 -------------------------------
 Depending on the CMS in question, it would be nice if |reclass| had access to

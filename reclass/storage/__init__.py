@@ -67,11 +67,14 @@ class NodeStorageBase(object):
             key, klasses = self._shlex_split(mapping)
             if key[0] == ('/'):
                 matched = self._match_regexp(key[1:-1], nodename)
+                if matched:
+                    for klass in klasses:
+                        c.append_if_new(matched.expand(klass))
+
             else:
-                matched = self._match_glob(key, nodename)
-            if matched:
-                for klass in klasses:
-                    c.append_if_new(klass)
+                if self._match_glob(key, nodename):
+                    for klass in klasses:
+                        c.append_if_new(klass)
 
         return Entity(classes=c,
                       name='class mappings for node {0}'.format(nodename))

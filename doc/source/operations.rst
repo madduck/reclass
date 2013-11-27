@@ -97,6 +97,12 @@ be used to pre-populate the classes of existing nodes, but you still need to
 define all nodes (and if only to allow them to be enumerated for the
 inventory).
 
+The mapped classes can also contain backreferences when regular expressions
+are used, although they need to be escaped, e.g.::
+
+  class_mappings:
+    - /\.(\S+)$/ tld-\\1
+
 Parameter interpolation
 ------------------------
 Parameters may reference each other, including deep references, e.g.::
