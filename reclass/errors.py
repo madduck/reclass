@@ -47,9 +47,9 @@ class NotFoundError(ReclassException):
 
 class NodeNotFound(NotFoundError):
 
-    def __init__(self, storage, classname, uri):
+    def __init__(self, storage, nodename, uri):
         self._storage = storage
-        self._name = classname
+        self._name = nodename
         self._uri = uri
         msg = "Node '{0}' not found under {1}://{2}".format(self._name,
                                                             self._storage,
