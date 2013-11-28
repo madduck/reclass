@@ -6,7 +6,7 @@
 # Copyright © 2007–13 martin f. krafft <madduck@madduck.net>
 # Released under the terms of the Artistic Licence 2.0
 #
-import os
+import os, sys
 from reclass.storage import NodeStorageBase
 from yamlfile import YamlFile
 from directory import Directory
@@ -14,6 +14,10 @@ from reclass.datatypes import Entity
 import reclass.errors
 
 FILE_EXTENSION = '.yml'
+
+def vvv(msg):
+    #print >>sys.stderr, msg
+    pass
 
 class ExternalNodeStorage(NodeStorageBase):
 
@@ -59,6 +63,7 @@ class ExternalNodeStorage(NodeStorageBase):
         entities = {}
 
         def register_fn(dirpath, filenames):
+            vvv('REGISTER {0} in path {1}'.format(filenames, dirpath))
             for f in filter(lambda f: f.endswith(FILE_EXTENSION), filenames):
                 name = f[:-len(FILE_EXTENSION)]
                 nodeinfo = self.nodeinfo(name)
