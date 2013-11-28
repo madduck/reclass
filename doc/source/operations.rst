@@ -103,6 +103,15 @@ are used, although they need to be escaped, e.g.::
   class_mappings:
     - /\.(\S+)$/ tld-\\1
 
+Furthermore, since the outer slashes ('/') are used to "quote" the regular
+expression, *any* slashes within the regular expression must be escaped::
+
+  class_mappings:
+    - /^([^\/]+)\// \\1
+
+This is a bit theoretical right now, as nodenames cannot (yet) include
+slashes, but that might come…
+
 Parameter interpolation
 ------------------------
 Parameters may reference each other, including deep references, e.g.::

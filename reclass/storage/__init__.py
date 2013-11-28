@@ -48,6 +48,7 @@ class NodeStorageBase(object):
         regexp = False
         if instr[0] == '/':
             lexer.quotes += '/'
+            lexer.escapedquotes += '/'
             regexp = True
         try:
             key = lexer.get_token()
