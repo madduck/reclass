@@ -74,4 +74,9 @@ It would be nice if |reclass| could provide e.g. the Nagios master node with
 a list of clients that define it as their master. That would short-circuit
 Puppet's ``storeconfigs`` and Salt's ``mine``.
 
+Caching of classes in yaml\_fs
+------------------------------
+Right now, ``yaml\_fs`` opens each class file dozens of times during an
+inventory run. A class could be cached.
+
 .. include:: substs.inc
