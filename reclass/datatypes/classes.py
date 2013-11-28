@@ -8,9 +8,10 @@
 #
 
 import types
+import os
 from reclass.errors import InvalidClassnameError
 
-INVALID_CHARACTERS_FOR_CLASSNAMES = ' '
+INVALID_CHARACTERS_FOR_CLASSNAMES = ' ' + os.sep
 
 class Classes(object):
     '''
@@ -57,8 +58,7 @@ class Classes(object):
     def _assert_valid_characters(self, item):
         for c in INVALID_CHARACTERS_FOR_CLASSNAMES:
             if c in item:
-                raise InvalidClassnameError("Invalid character '{0}' "
-                                            "in class name '{1}'.".format(c, item))
+                raise InvalidClassnameError(c, item)
 
     def _append_if_new(self, item):
         if item not in self._items:

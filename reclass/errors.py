@@ -111,5 +111,9 @@ class NameError(ReclassException):
 
 class InvalidClassnameError(NameError):
 
-    def __init__(self, msg):
+    def __init__(self, invalid_character, classname):
+        self._invalid_character = invalid_character
+        self._classname = classname
+        msg = "Invalid character '{0}' in class name '{1}'."
+        msg = msg.format(invalid_character, classname)
         super(InvalidClassnameError, self).__init__(msg)
