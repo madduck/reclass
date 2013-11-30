@@ -7,10 +7,14 @@
 # Released under the terms of the Artistic Licence 2.0
 #
 
-import time
+import time, sys
 
 def _get_timestamp():
     return time.strftime('%c')
+
+def vvv(msg):
+    print >>sys.stderr, msg
+    pass
 
 class NodeStorageBase(object):
 
