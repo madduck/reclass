@@ -59,7 +59,8 @@ class Parameters(object):
                                self.delimiter)
 
     def __eq__(self, other):
-        return self._base == other._base \
+        return isinstance(other, type(self)) \
+                and self._base == other._base \
                 and self._delimiter == other._delimiter
 
     def __ne__(self, other):
