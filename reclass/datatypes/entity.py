@@ -59,7 +59,8 @@ class Entity(object):
         self._parameters.interpolate()
 
     def __eq__(self, other):
-        return self._applications == other._applications \
+        return isinstance(other, type(self)) \
+                and self._applications == other._applications \
                 and self._classes == other._classes \
                 and self._parameters == other._parameters \
                 and self._name == other._name

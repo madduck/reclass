@@ -68,6 +68,13 @@ class TestEntity(unittest.TestCase):
         for i in instances:
             i.__eq__.assert_called_once_with(i)
 
+    def test_unequal_types(self, **types):
+        instances = self._make_instances(**types)
+        self.assertNotEqual(Entity(*instances, name='empty'),
+                            None)
+        for i in instances:
+            self.assertEqual(i.__eq__.call_count, 0)
+
     def _test_constructor_wrong_types(self, which_replace, **types):
         instances = self._make_instances(**types)
         instances[which_replace] = 'Invalid type'
