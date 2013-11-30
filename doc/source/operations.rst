@@ -2,8 +2,8 @@
 reclass operations
 ==================
 
-Data merging
-------------
+YAML FS storage
+---------------
 While |reclass| has been built to support different storage backends through
 plugins, currently only the ``yaml_fs`` storage backend exists. This is a very
 simple, yet powerful, YAML-based backend, using flat files on the filesystem
@@ -40,16 +40,34 @@ parameters   key-value pairs to set defaults in class definitions, override
                     permit_root_login: no
 ============ ================================================================
 
-|reclass| starts out reading a node definition file, obtains the list of
-classes, then reads the files corresponding to these classes, recursively
-reading parent classes, and finally merges the applications list and the
-parameters.
+Data merging
+------------
+|reclass| has two modes of operation: node information retrieval and inventory
+listing. The second is really just a loop of the first across all defined
+nodes, and needs not be further described.
 
-Merging of parameters is done recursively, meaning that lists and dictionaries
+When retrieving information about a node, |reclass| first obtains the node
+definition from the storage backend. Then, it iterates the list of classes
+defined for the node and recursively asks the storage backend for each class
+definition (unless already cached).
+
+Next, |reclass| recursively descends each class, looking at the classes it
+defines, and so on, until a leaf node is reached, i.e. a class that references
+no other classes.
+
+Now, the merging starts. At every step, the list of applications and the set
+of parameters at each level is merged into what has been accumulated so far.
+
+Merging of parameters is done "deeply", meaning that lists and dictionaries
 are extended (recursively), rather than replaced. However, a scalar value
 *does* overwrite a dictionary or list value. While the scalar could be
 appended to an existing list, there is sane default assumption in the context
 of a dictionary, so this behaviour seems the most logical.
+
+After all classes (and the classes they reference) have been visited,
+|reclass| finally merges the applications list and parameters defined for the
+node into what has been accumulated during the processing of the classes, and
+returns the final result.
 
 Parameter interpolation
 ------------------------
