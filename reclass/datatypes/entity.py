@@ -72,3 +72,9 @@ class Entity(object):
         return "%s(%r, %r, %r, %r)" % (self.__class__.__name__,
                                          self.classes, self.applications,
                                          self.parameters, self.name)
+
+    def as_dict(self):
+        return {'classes': self._classes.as_list(),
+                'applications': self._applications.as_list(),
+                'parameters': self._parameters.as_dict()
+               }

@@ -104,5 +104,16 @@ class TestEntity(unittest.TestCase):
         e1.merge(e2)
         self.assertEqual(e1.name, newname)
 
+    def test_as_dict(self, **types):
+        instances = self._make_instances(**types)
+        entity = Entity(*instances, name='test')
+        comp = {}
+        comp['classes'] = instances[0].as_list()
+        comp['applications'] = instances[1].as_list()
+        comp['parameters'] = instances[2].as_dict()
+        d = entity.as_dict()
+        self.assertDictEqual(d, comp)
+
+
 if __name__ == '__main__':
     unittest.main()
