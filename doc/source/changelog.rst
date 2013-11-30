@@ -5,6 +5,7 @@ ChangeLog
 ========= ========== ========================================================
 Version   Date       Changes
 ========= ========== ========================================================
+                     * Classes and nodes URI must not overlap anymore
                      * Class names must not contain spaces
 1.1       2013-08-28 Salt adapter: fix interface to include minion_id, filter
                      output accordingly; fixes master_tops

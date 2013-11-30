@@ -39,6 +39,29 @@ class InvocationError(ReclassException):
         super(InvocationError, self).__init__(msg, rc)
 
 
+class ConfigError(ReclassException):
+
+    def __init__(self, msg, rc=posix.EX_CONFIG):
+        super(ConfigError, self).__init__(msg, rc)
+
+
+class DuplicateUriError(ConfigError):
+
+    def __init__(self, nodes_uri, classes_uri):
+        msg = "The inventory URIs must not be the same for nodes and classes: "
+        msg += nodes_uri
+        super(DuplicateUriError, self).__init__(msg)
+
+
+class UriOverlapError(ConfigError):
+
+    def __init__(self, nodes_uri, classes_uri):
+        msg = "The URIs for the nodes and classes inventories must not " \
+              "overlap, but {0} and {1} do."
+        msg = msg.format(nodes_uri, classes_uri)
+        super(UriOverlapError, self).__init__(msg)
+
+
 class NotFoundError(ReclassException):
 
     def __init__(self, msg, rc=posix.EX_IOERR):

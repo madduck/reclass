@@ -185,6 +185,11 @@ def path_mangler(inventory_base_uri, nodes_uri, classes_uri):
         ret = os.path.expanduser(ret)
         return os.path.abspath(ret)
 
-    return map(_path_mangler_inner, (nodes_uri, classes_uri))
+    n, c = map(_path_mangler_inner, (nodes_uri, classes_uri))
+    if n == c:
+        raise errors.DuplicateUriError(n, c)
+    common = os.path.commonprefix((n, c))
+    if common == n or common == c:
+        raise errors.UriOverlapError(n, c)
 
-    return nodes_uri, classes_uri
+    return n, c

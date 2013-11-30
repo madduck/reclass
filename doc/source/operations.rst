@@ -10,8 +10,8 @@ simple, yet powerful, YAML-based backend, using flat files on the filesystem
 (as suggested by the ``_fs`` postfix).
 
 ``yaml_fs`` works with two directories, one for node definitions, and another
-for class definitions. It is possible to use a single directory for both, but
-that could get messy and is therefore not recommended.
+for class definitions. The two directories must not be the same, nor can one
+be a parent of the other.
 
 Files in those directories are YAML-files, specifying key-value pairs. The
 following three keys are read by |reclass|:
