@@ -40,6 +40,12 @@ parameters   key-value pairs to set defaults in class definitions, override
                     permit_root_login: no
 ============ ================================================================
 
+Nodes may be defined in subdirectories. However, node names (filename) must be
+unique across all subdirectories, and |reclass| will exit with an error if
+a node is defined multiple times. Subdirectories therefore really only exist
+for the administrator's sanity (and may be used in the future to tag
+additional classes onto nodes).
+
 Data merging
 ------------
 |reclass| has two modes of operation: node information retrieval and inventory

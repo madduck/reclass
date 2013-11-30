@@ -7,6 +7,7 @@
 # Released under the terms of the Artistic Licence 2.0
 #
 import os, sys
+import fnmatch
 from reclass.storage import NodeStorageBase
 from yamlfile import YamlFile
 from directory import Directory
@@ -24,65 +25,55 @@ class ExternalNodeStorage(NodeStorageBase):
     def __init__(self, nodes_uri, classes_uri):
         super(ExternalNodeStorage, self).__init__(nodes_uri, classes_uri)
 
-    def _handle_read_error(self, exc, name, base_uri, nodename):
-        if base_uri == self.classes_uri:
-            raise reclass.errors.ClassNotFound('yaml_fs', name, base_uri, nodename)
-        else:
-            raise reclass.errors.NodeNotFound('yaml_fs', name, base_uri)
+        def _handle_node_duplicates(name, uri1, uri2):
+            raise reclass.errors.DuplicateNodeNameError(self._get_storage_name(),
+                                                        name, uri1, uri2)
+        self._nodes = self._enumerate_inventory(nodes_uri,
+                                                duplicate_handler=_handle_node_duplicates)
+        self._classes = self._enumerate_inventory(classes_uri)
 
-    def _read_entity(self, name, base_uri, seen, nodename=None):
-        path = os.path.join(base_uri, name + FILE_EXTENSION)
+    def _get_storage_name(self):
+        return 'yaml_fs'
+
+    def _enumerate_inventory(self, basedir, duplicate_handler=None):
+        ret = {}
+        def register_fn(dirpath, filenames):
+            filenames = fnmatch.filter(filenames, '*{0}'.format(FILE_EXTENSION))
+            vvv('REGISTER {0} in path {1}'.format(filenames, dirpath))
+            for f in filenames:
+                name = os.path.splitext(f)[0]
+                uri = os.path.join(dirpath, f)
+                if name in ret and callable(duplicate_handler):
+                    duplicate_handler(name, os.path.join(basedir, ret[name]), uri)
+                ret[name] = os.path.relpath(uri, basedir)
+
+        d = Directory(basedir)
+        d.walk(register_fn)
+        return ret
+
+    def _get_node(self, name):
+        vvv('GET NODE {0}'.format(name))
         try:
-            entity = YamlFile(path).entity
-            seen[name] = True
+            path = os.path.join(self.nodes_uri, self._nodes[name])
+        except KeyError, e:
+            raise reclass.errors.NodeNotFound(self._get_storage_name(),
+                                              name, self.nodes_uri)
+        entity = YamlFile(path).entity
+        return entity, 'file://{0}'.format(path)
 
-            merge_base = Entity()
-            for klass in entity.classes.as_list():
-                if klass not in seen:
-                    ret = self._read_entity(klass, self.classes_uri, seen,
-                                              name if nodename is None else nodename)[0]
-                    # on every iteration, we merge the result of the
-                    # recursive descend into what we have so far…
-                    merge_base.merge(ret)
-
-            # … and finally, we merge what we have at this level into the
-            # result of the iteration, so that elements at the current level
-            # overwrite stuff defined by parents
-            merge_base.merge(entity)
-            return merge_base, 'file://{0}'.format(path)
-
-        except reclass.errors.NotFoundError, e:
-            self._handle_read_error(e, name, base_uri, nodename)
-
-        except IOError, e:
-            self._handle_read_error(e, name, base_uri, nodename)
+    def _get_class(self, name, nodename=None):
+        vvv('GET CLASS {0}'.format(name))
+        try:
+            path = os.path.join(self.classes_uri, self._classes[name])
+        except KeyError, e:
+            raise reclass.errors.ClassNotFound(self._get_storage_name(),
+                                               name, self.classes_uri,
+                                               nodename)
+        entity = YamlFile(path).entity
+        return entity, 'file://{0}'.format(path)
 
     def _list_inventory(self):
-        d = Directory(self.nodes_uri)
-
         entities = {}
-
-        def register_fn(dirpath, filenames):
-            vvv('REGISTER {0} in path {1}'.format(filenames, dirpath))
-            for f in filter(lambda f: f.endswith(FILE_EXTENSION), filenames):
-                name = f[:-len(FILE_EXTENSION)]
-                nodeinfo = self.nodeinfo(name)
-                entities[name] = nodeinfo
-
-        d.walk(register_fn)
-
-        applications = {}
-        classes = {}
-        for f, nodeinfo in entities.iteritems():
-            for a in nodeinfo['applications']:
-                if a in applications:
-                    applications[a].append(f)
-                else:
-                    applications[a] = [f]
-            for c in nodeinfo['classes']:
-                if c in classes:
-                    classes[c].append(f)
-                else:
-                    classes[c] = [f]
-
-        return entities, applications, classes
+        for n in self._nodes.iterkeys():
+            entities[n] = self._nodeinfo(n)
+        return entities

@@ -140,3 +140,12 @@ class InvalidClassnameError(NameError):
         msg = "Invalid character '{0}' in class name '{1}'."
         msg = msg.format(invalid_character, classname)
         super(InvalidClassnameError, self).__init__(msg)
+
+
+class DuplicateNodeNameError(NameError):
+
+    def __init__(self, storage, name, uri1, uri2):
+        msg = "{0}: Definition of node '{1}' in '{2}' collides with " \
+              "definition in '{3}'. Nodes can only be defined once per inventory."
+        msg = msg.format(storage, name, uri2, uri1)
+        super(DuplicateNodeNameError, self).__init__(msg)
