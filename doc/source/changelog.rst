@@ -5,6 +5,8 @@ ChangeLog
 ========= ========== ========================================================
 Version   Date       Changes
 ========= ========== ========================================================
+                     * Fix parameter interpolation across merged lists
+                       (closes: #13).
                      * Caching of classes for performance reasons, especially
                        during the inventory runs
                      * yaml_fs: nodes may be defined in subdirectories
