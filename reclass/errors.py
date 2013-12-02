@@ -8,6 +8,7 @@
 #
 
 import posix, sys
+import traceback
 
 from reclass.defaults import PARAMETER_INTERPOLATION_SENTINELS
 
@@ -16,6 +17,7 @@ class ReclassException(Exception):
     def __init__(self, msg, rc=posix.EX_SOFTWARE, *args):
         super(ReclassException, self).__init__(msg, *args)
         self._rc = rc
+        self._traceback = traceback.format_exc()
 
     def __str__(self):
         return self.message
@@ -24,6 +26,7 @@ class ReclassException(Exception):
 
     def exit_with_message(self, out=sys.stderr):
         print >>out, self.message
+        print >>out, self._traceback
         sys.exit(self.rc)
 
 
