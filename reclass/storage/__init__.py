@@ -36,7 +36,10 @@ class NodeStorageBase(object):
     def _get_class(self, name):
         raise NotImplementedError, "Storage class not implement class entity retrieval"
 
-    def _recurse_entity(self, entity, merge_base=None, seen={}, nodename=None):
+    def _recurse_entity(self, entity, merge_base=None, seen=None, nodename=None):
+        if seen is None:
+            seen = {}
+
         if merge_base is None:
             merge_base = Entity(name='empty (@{0})'.format(nodename))
 
