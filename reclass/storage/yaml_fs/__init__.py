@@ -59,7 +59,7 @@ class ExternalNodeStorage(NodeStorageBase):
             raise reclass.errors.NodeNotFound(self._get_storage_name(),
                                               name, self.nodes_uri)
         entity = YamlFile(path).entity
-        return entity, 'file://{0}'.format(path)
+        return entity
 
     def _get_class(self, name, nodename=None):
         vvv('GET CLASS {0}'.format(name))
@@ -70,7 +70,7 @@ class ExternalNodeStorage(NodeStorageBase):
                                                name, self.classes_uri,
                                                nodename)
         entity = YamlFile(path).entity
-        return entity, 'file://{0}'.format(path)
+        return entity
 
     def _list_inventory(self):
         entities = {}

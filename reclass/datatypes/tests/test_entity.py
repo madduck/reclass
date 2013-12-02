@@ -26,6 +26,7 @@ class TestEntity(unittest.TestCase):
         # all other tests shall pass instances to the constructor
         e = Entity()
         self.assertEqual(e.name, '')
+        self.assertEqual(e.uri, '')
         self.assertIsInstance(e.classes, Classes)
         self.assertIsInstance(e.applications, Applications)
         self.assertIsInstance(e.parameters, Parameters)
@@ -34,6 +35,7 @@ class TestEntity(unittest.TestCase):
         instances = self._make_instances(**types)
         e = Entity(*instances)
         self.assertEqual(e.name, '')
+        self.assertEqual(e.uri, '')
         cl, al, pl = [getattr(i, '__len__') for i in instances]
         self.assertEqual(len(e.classes), cl.return_value)
         cl.assert_called_once_with()
@@ -46,6 +48,11 @@ class TestEntity(unittest.TestCase):
         name = 'empty'
         e = Entity(*self._make_instances(**types), name=name)
         self.assertEqual(e.name, name)
+
+    def test_constructor_empty_uri(self, **types):
+        uri = 'test://uri'
+        e = Entity(*self._make_instances(**types), uri=uri)
+        self.assertEqual(e.uri, uri)
 
     def test_equal_empty(self, **types):
         instances = self._make_instances(**types)
@@ -62,9 +69,17 @@ class TestEntity(unittest.TestCase):
 
     def test_unequal_empty_named(self, **types):
         instances = self._make_instances(**types)
+        uri = 'test://uri'
+        self.assertNotEqual(Entity(*instances, uri=uri),
+                            Entity(*instances, name=uri[::-1]))
+        for i in instances:
+            i.__eq__.assert_called_once_with(i)
+
+    def test_unequal_empty_named(self, **types):
+        instances = self._make_instances(**types)
         name = 'empty'
-        self.assertNotEqual(Entity(*instances, name='empty'),
-                            Entity(*instances, name='ytpme'))
+        self.assertNotEqual(Entity(*instances, name=name),
+                            Entity(*instances, name=name[::-1]))
         for i in instances:
             i.__eq__.assert_called_once_with(i)
 
@@ -103,6 +118,14 @@ class TestEntity(unittest.TestCase):
         e2 = Entity(*instances, name=newname)
         e1.merge(e2)
         self.assertEqual(e1.name, newname)
+
+    def test_merge_newuri(self, **types):
+        instances = self._make_instances(**types)
+        newuri = 'test://uri2'
+        e1 = Entity(*instances, uri='test://uri1')
+        e2 = Entity(*instances, uri=newuri)
+        e1.merge(e2)
+        self.assertEqual(e1.uri, newuri)
 
     def test_as_dict(self, **types):
         instances = self._make_instances(**types)

@@ -48,7 +48,7 @@ class NodeStorageBase(object):
                 try:
                     class_entity = self._classes_cache[klass]
                 except KeyError, e:
-                    class_entity, uri = self._get_class(klass)
+                    class_entity = self._get_class(klass)
                     self._classes_cache[klass] = class_entity
 
                 descent = self._recurse_entity(class_entity, seen=seen,
@@ -65,14 +65,14 @@ class NodeStorageBase(object):
         return merge_base
 
     def _nodeinfo(self, nodename):
-        node_entity, uri = self._get_node(nodename)
+        node_entity = self._get_node(nodename)
         merge_base = Entity(name='merge base for {0}'.format(nodename))
         ret = self._recurse_entity(node_entity, merge_base, nodename=nodename)
         ret.interpolate()
-        return ret, uri
+        return ret
 
-    def _nodeinfo_as_dict(self, nodename, entity, uri):
-        ret = {'__reclass__' : {'node': nodename, 'uri': uri,
+    def _nodeinfo_as_dict(self, nodename, entity):
+        ret = {'__reclass__' : {'node': nodename, 'uri': entity.uri,
                                 'timestamp': _get_timestamp()
                                 },
               }
@@ -80,7 +80,7 @@ class NodeStorageBase(object):
         return ret
 
     def nodeinfo(self, nodename):
-        return self._nodeinfo_as_dict(nodename, *self._nodeinfo(nodename))
+        return self._nodeinfo_as_dict(nodename, self._nodeinfo(nodename))
 
     def _list_inventory(self):
         raise NotImplementedError, "Storage class does not implement inventory listing"
@@ -91,8 +91,8 @@ class NodeStorageBase(object):
         nodes = {}
         applications = {}
         classes = {}
-        for f, (nodeinfo, uri) in entities.iteritems():
-            d = nodes[f] = self._nodeinfo_as_dict(f, nodeinfo, uri)
+        for f, nodeinfo in entities.iteritems():
+            d = nodes[f] = self._nodeinfo_as_dict(f, nodeinfo)
             for a in d['applications']:
                 if a in applications:
                     applications[a].append(f)

@@ -48,7 +48,8 @@ class YamlFile(object):
         parameters = datatypes.Parameters(parameters)
 
         return datatypes.Entity(classes, applications, parameters,
-                                name='yaml_fs://{0}'.format(self._path))
+                                name=self._path,
+                                uri='yaml_fs://{0}'.format(self._path))
     entity = property(lambda self: self._get_entity())
 
     def __repr__(self):
