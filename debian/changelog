@@ -1,4 +1,4 @@
-reclass (1.2-1) UNRELEASED; urgency=low
+reclass (1.2-1) unstable; urgency=low
 
   * New upstream release, with the following major changes:
     - class mappings
