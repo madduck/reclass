@@ -13,14 +13,14 @@ override_dh_sphinxdoc:
 	dh_sphinxdoc || :
 
 override_dh_auto_build:
-	PYTHONPATH=.. $(MAKE) -C doc man html text
+	PYTHONPATH=.. $(MAKE) -C doc man html
 
 override_dh_install:
 	dh_install
 	mv debian/tmp/usr/bin/reclass-* debian/reclass/usr/share/reclass
 
 override_dh_installchangelogs:
-	dh_installchangelogs doc/build/text/changelog.txt
+	dh_installchangelogs doc/source/changelog.rst
 
 override_dh_clean:
 	dh_clean -O$(DH_BUILDSYSTEM_OPTION)
