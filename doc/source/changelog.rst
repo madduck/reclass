@@ -5,7 +5,7 @@ ChangeLog
 ========= ========== ========================================================
 Version   Date       Changes
 ========= ========== ========================================================
-1.2       2013.12.10 * Introduce class mappings (see :doc:`operations`)
+1.2       2013-12-10 * Introduce class mappings (see :doc:`operations`)
                        (closes: #5)
                      * Fix parameter interpolation across merged lists
                        (closes: #13).
