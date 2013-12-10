@@ -1,5 +1,10 @@
-reclass (1.1-2) UNRELEASED; urgency=low
+reclass (1.2-1) UNRELEASED; urgency=low
 
+  * New upstream release, with the following major changes:
+    - class mappings
+    - parameter interpolation across lists
+    - classes caching
+    - yaml_fs: nodes may reside in subdirectories
   * Remove dangling symlink from /usr/share/doc/reclass/html, add a note about
     documentation in reclass-doc (and online) to README.Debian instead.
 
