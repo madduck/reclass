@@ -25,6 +25,8 @@ parameter    Node-specific variables, with inheritance throughout the class
 A class consists of zero or more parent classes, zero or more applications,
 and any number of parameters.
 
+A class name must not contain spaces.
+
 A node is almost equivalent to a class, except that it usually does not (but
 can) specify applications.
 

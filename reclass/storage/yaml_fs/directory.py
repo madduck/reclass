@@ -10,7 +10,7 @@ import os
 import sys
 from reclass.errors import NotFoundError
 
-SKIPDIRS = ( '.git' , '.svn' , 'CVS', 'SCCS', '.hg', '_darcs' )
+SKIPDIRS = ( 'CVS', 'SCCS' )
 FILE_EXTENSION = '.yml'
 
 def vvv(msg):
@@ -40,13 +40,18 @@ class Directory(object):
 
     def walk(self, register_fn=None):
         if not callable(register_fn): register_fn = self._register_files
+
+        def _error(exc):
+            raise(exc)
+
         for dirpath, dirnames, filenames in os.walk(self._path,
-                                                      topdown=True,
-                                                      followlinks=True):
+                                                    topdown=True,
+                                                    onerror=_error,
+                                                    followlinks=True):
             vvv('RECURSE {0}, {1} files, {2} subdirectories'.format(
                 dirpath.replace(os.getcwd(), '.'), len(filenames), len(dirnames)))
-            for d in SKIPDIRS:
-                if d in dirnames:
+            for d in dirnames:
+                if d.startswith('.') or d in SKIPDIRS:
                     vvv('   SKIP subdirectory {0}'.format(d))
                     dirnames.remove(d)
             register_fn(dirpath, filenames)

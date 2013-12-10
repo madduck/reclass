@@ -8,6 +8,7 @@
 #
 
 import posix, sys
+import traceback
 
 from reclass.defaults import PARAMETER_INTERPOLATION_SENTINELS
 
@@ -16,6 +17,7 @@ class ReclassException(Exception):
     def __init__(self, msg, rc=posix.EX_SOFTWARE, *args):
         super(ReclassException, self).__init__(msg, *args)
         self._rc = rc
+        self._traceback = traceback.format_exc()
 
     def __str__(self):
         return self.message
@@ -24,6 +26,7 @@ class ReclassException(Exception):
 
     def exit_with_message(self, out=sys.stderr):
         print >>out, self.message
+        print >>out, self._traceback
         sys.exit(self.rc)
 
 
@@ -39,6 +42,29 @@ class InvocationError(ReclassException):
         super(InvocationError, self).__init__(msg, rc)
 
 
+class ConfigError(ReclassException):
+
+    def __init__(self, msg, rc=posix.EX_CONFIG):
+        super(ConfigError, self).__init__(msg, rc)
+
+
+class DuplicateUriError(ConfigError):
+
+    def __init__(self, nodes_uri, classes_uri):
+        msg = "The inventory URIs must not be the same for nodes and classes: "
+        msg += nodes_uri
+        super(DuplicateUriError, self).__init__(msg)
+
+
+class UriOverlapError(ConfigError):
+
+    def __init__(self, nodes_uri, classes_uri):
+        msg = "The URIs for the nodes and classes inventories must not " \
+              "overlap, but {0} and {1} do."
+        msg = msg.format(nodes_uri, classes_uri)
+        super(UriOverlapError, self).__init__(msg)
+
+
 class NotFoundError(ReclassException):
 
     def __init__(self, msg, rc=posix.EX_IOERR):
@@ -47,9 +73,9 @@ class NotFoundError(ReclassException):
 
 class NodeNotFound(NotFoundError):
 
-    def __init__(self, storage, classname, uri):
+    def __init__(self, storage, nodename, uri):
         self._storage = storage
-        self._name = classname
+        self._name = nodename
         self._uri = uri
         msg = "Node '{0}' not found under {1}://{2}".format(self._name,
                                                             self._storage,
@@ -101,3 +127,40 @@ class InfiniteRecursionError(InterpolationError):
         msg = "Infinite recursion while resolving %s at %s" \
                 % (ref.join(PARAMETER_INTERPOLATION_SENTINELS), path)
         super(InfiniteRecursionError, self).__init__(msg)
+
+
+class MappingError(ReclassException):
+
+    def __init__(self, msg, rc=posix.EX_DATAERR):
+        super(MappingError, self).__init__(msg, rc)
+
+
+class MappingFormatError(MappingError):
+
+    def __init__(self, msg):
+        super(MappingFormatError, self).__init__(msg)
+
+
+class NameError(ReclassException):
+
+    def __init__(self, msg, rc=posix.EX_DATAERR):
+        super(NameError, self).__init__(msg, rc)
+
+
+class InvalidClassnameError(NameError):
+
+    def __init__(self, invalid_character, classname):
+        self._invalid_character = invalid_character
+        self._classname = classname
+        msg = "Invalid character '{0}' in class name '{1}'."
+        msg = msg.format(invalid_character, classname)
+        super(InvalidClassnameError, self).__init__(msg)
+
+
+class DuplicateNodeNameError(NameError):
+
+    def __init__(self, storage, name, uri1, uri2):
+        msg = "{0}: Definition of node '{1}' in '{2}' collides with " \
+              "definition in '{3}'. Nodes can only be defined once per inventory."
+        msg = msg.format(storage, name, uri2, uri1)
+        super(DuplicateNodeNameError, self).__init__(msg)

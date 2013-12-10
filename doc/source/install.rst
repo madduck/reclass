@@ -11,11 +11,28 @@ APT::
 
 .. _packaged for Debian: http://packages.debian.org/search?keywords=reclass
 
+For ArchLinux users
+-------------------
+|reclass| is `available for ArchLinux`_, thanks to Niels Abspoel.
+Dowload the tarball_ from ``aur`` or ``yaourt``::
+
+  $ yaourt -S reclass
+
+or::
+
+  $ tar xvzf reclass-git.tar.gz
+  $ cd reclass-git; makepkg
+  $ sudo pacman -U reclass-git-<git-commit-hash>.tar.gz
+
+.. _available for ArchLinux: https://aur.archlinux.org/packages/reclass-git/
+.. _tarball: https://aur.archlinux.org/packages/re/reclass-git/reclass-git.tar.gz
+
 Other distributions
 -------------------
 Developers of other distributions are cordially invited to package |reclass|
-themselves and `ping me <mailto:reclass@pobox.madduck.net>`_ to have details
-included here. Or send a patch!
+themselves and `write to the mailing list
+<mailto:reclass@pantsfullofunix.net>`_ to have details included here. Or send
+a patch!
 
 From source
 -----------
@@ -33,8 +50,7 @@ If you want a tarball, please `obtain it from the Debian archive`_.
 .. _obtain it from the Debian archive: http://http.debian.net/debian/pool/main/r/reclass/
 
 Before you can use |reclass|, you need to install it into a place where Python
-can find it. Unless you installed a package from your distribution, the
-following step should install the package to /usr/local::
+can find it. The following step should install the package to ``/usr/local``::
 
   $ python setup.py install
 

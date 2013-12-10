@@ -7,11 +7,13 @@
 # Released under the terms of the Artistic Licence 2.0
 #
 from reclass.datatypes import Classes
+from reclass.datatypes.classes import INVALID_CHARACTERS_FOR_CLASSNAMES
 import unittest
 try:
     import unittest.mock as mock
 except ImportError:
     import mock
+from reclass.errors import InvalidClassnameError
 
 TESTLIST1 = ['one', 'two', 'three']
 TESTLIST2 = ['red', 'green', 'blue']
@@ -66,6 +68,12 @@ class TestClasses(unittest.TestCase):
         c = Classes()
         with self.assertRaises(TypeError):
             c.append_if_new(0)
+
+    def test_append_invalid_characters(self):
+        c = Classes()
+        invalid_name = ' '.join(('foo', 'bar'))
+        with self.assertRaises(InvalidClassnameError):
+            c.append_if_new(invalid_name)
 
     def test_merge_unique(self):
         c = Classes(TESTLIST1)

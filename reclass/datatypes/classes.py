@@ -8,6 +8,10 @@
 #
 
 import types
+import os
+from reclass.errors import InvalidClassnameError
+
+INVALID_CHARACTERS_FOR_CLASSNAMES = ' ' + os.sep
 
 class Classes(object):
     '''
@@ -51,12 +55,18 @@ class Classes(object):
             raise TypeError('%s instances can only contain strings, '\
                             'not %s' % (self.__class__.__name__, type(item)))
 
+    def _assert_valid_characters(self, item):
+        for c in INVALID_CHARACTERS_FOR_CLASSNAMES:
+            if c in item:
+                raise InvalidClassnameError(c, item)
+
     def _append_if_new(self, item):
         if item not in self._items:
             self._items.append(item)
 
     def append_if_new(self, item):
         self._assert_is_string(item)
+        self._assert_valid_characters(item)
         self._append_if_new(item)
 
     def __repr__(self):

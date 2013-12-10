@@ -24,14 +24,17 @@ def main():
         defaults.update(find_and_read_configfile())
         options = get_options(RECLASS_NAME, VERSION, DESCRIPTION,
                               defaults=defaults)
+        class_mappings = defaults.get('class_mappings')
         if options.mode == MODE_NODEINFO:
             data = get_nodeinfo(options.storage_type,
                                 options.inventory_base_uri, options.nodes_uri,
-                                options.classes_uri, options.nodename)
+                                options.classes_uri, options.nodename,
+                                class_mappings)
         else:
             data = get_inventory(options.storage_type,
                                  options.inventory_base_uri,
-                                 options.nodes_uri, options.classes_uri)
+                                 options.nodes_uri, options.classes_uri,
+                                 class_mappings)
 
         print output(data, options.output, options.pretty_print)
 

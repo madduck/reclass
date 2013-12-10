@@ -31,7 +31,7 @@ class YamlFile(object):
             self._data = data
         fp.close()
 
-    def _get_entity(self):
+    def get_entity(self, name=None):
         classes = self._data.get('classes')
         if classes is None:
             classes = []
@@ -47,9 +47,12 @@ class YamlFile(object):
             parameters = {}
         parameters = datatypes.Parameters(parameters)
 
+        if name is None:
+            name = self._path
+
         return datatypes.Entity(classes, applications, parameters,
-                                name=os.path.basename(self._path))
-    entity = property(lambda self: self._get_entity())
+                                name=name,
+                                uri='yaml_fs://{0}'.format(self._path))
 
     def __repr__(self):
         return '<{0} {1}, {2}>'.format(self.__class__.__name__, self._path,

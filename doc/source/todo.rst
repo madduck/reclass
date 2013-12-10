@@ -29,23 +29,6 @@ Verbose output and debug logging would be a very useful addition to help
 people understand what's going on, where data are being changed/merged, and to
 help solve problems.
 
-Default classes
----------------
-Through the configuration file, it should be possible to define a set of
-default classes that are applied to all nodes (before anything else).
-
-This would be covered by the next point:
-
-Wildcards, regexp→class mapping
--------------------------------
-I envision the ability to define mappings between regexps and classes, e.g.::
-
-    /^www\d+/   →  webservers
-    /\.ch\./    →  hosted@switzerland
-
-These classes would be applied before a YAML file matching the actual hostname
-would be read and merged.
-
 Data from CMS for interpolation
 -------------------------------
 Depending on the CMS in question, it would be nice if |reclass| had access to
@@ -67,5 +50,11 @@ Part of the reason that multiple environments aren't (yet) supported is
 because I don't see the use-case (anymore) with |reclass|. If you still see
 a use-case, then please help me understand it and let's figure out a good way
 to introduce this concept into |reclass|.
+
+Membership information
+----------------------
+It would be nice if |reclass| could provide e.g. the Nagios master node with
+a list of clients that define it as their master. That would short-circuit
+Puppet's ``storeconfigs`` and Salt's ``mine``.
 
 .. include:: substs.inc

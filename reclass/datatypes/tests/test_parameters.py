@@ -98,6 +98,11 @@ class TestParameters(unittest.TestCase):
         self.assertNotEqual(p1, p2)
         b1.__eq__.assert_called_once_with(b2)
 
+    def test_unequal_types(self):
+        p1, b1 = self._construct_mocked_params()
+        self.assertNotEqual(p1, None)
+        self.assertEqual(b1.__eq__.call_count, 0)
+
     def test_construct_wrong_type(self):
         with self.assertRaises(TypeError):
             self._construct_mocked_params('wrong type')

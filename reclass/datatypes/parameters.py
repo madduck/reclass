@@ -59,7 +59,8 @@ class Parameters(object):
                                self.delimiter)
 
     def __eq__(self, other):
-        return self._base == other._base \
+        return isinstance(other, type(self)) \
+                and self._base == other._base \
                 and self._delimiter == other._delimiter
 
     def __ne__(self, other):
@@ -69,30 +70,46 @@ class Parameters(object):
         return self._base.copy()
 
     def _update_scalar(self, cur, new, path):
-        if self.delimiter is None or not isinstance(new, types.StringTypes):
+        if self.delimiter is None or not isinstance(new, (types.StringTypes,
+                                                          RefValue)):
+            # either there is no delimiter defined (and hence no references
+            # are being used), or the new value is not a string (and hence
+            # cannot be turned into a RefValue), and not a RefValue. We can
+            # shortcut and just return the new scalar
             return new
 
+        elif isinstance(new, RefValue):
+            # the new value is (already) a RefValue, so we need not touch it
+            # at all
+            ret = new
+
         else:
+            # the new value is a string, let's see if it contains references,
+            # by way of wrapping it in a RefValue and querying the result
             ret = RefValue(new, self.delimiter)
             if not ret.has_references():
                 # do not replace with RefValue instance if there are no
-                # references
+                # references, i.e. discard the RefValue in ret, just return
+                # the new value
                 return new
 
-            # finally, keep a reference to the RefValue instance we just
-            # created, in a dict indexed by the dictionary path, instead of
-            # just a list. The keys are required to resolve dependencies
-            # during interpolation
-            self._occurrences[path] = ret
-            return ret
+        # So we now have a RefValue. Let's, keep a reference to the instance
+        # we just created, in a dict indexed by the dictionary path, instead
+        # of just a list. The keys are required to resolve dependencies during
+        # interpolation
+        self._occurrences[path] = ret
+        return ret
 
     def _extend_list(self, cur, new, path):
         if isinstance(cur, list):
             ret = cur
+            offset = len(cur)
         else:
             ret = [cur]
+            offset = 1
+
         for i in xrange(len(new)):
-            ret.append(self._merge_recurse(None, new[i], path.new_subpath(i)))
+            ret.append(self._merge_recurse(None, new[i], path.new_subpath(offset + i)))
         return ret
 
     def _merge_dict(self, cur, new, path):
@@ -139,7 +156,6 @@ class Parameters(object):
         elif isinstance(other, self.__class__):
             self._base = self._merge_recurse(self._base, other._base,
                                              None)
-            self._occurrences.update(other._occurrences)
 
         else:
             raise TypeError('Cannot merge %s objects into %s' % (type(other),
