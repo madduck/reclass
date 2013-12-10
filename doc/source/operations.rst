@@ -43,8 +43,8 @@ parameters   key-value pairs to set defaults in class definitions, override
 Nodes may be defined in subdirectories. However, node names (filename) must be
 unique across all subdirectories, and |reclass| will exit with an error if
 a node is defined multiple times. Subdirectories therefore really only exist
-for the administrator's sanity (and may be used in the future to tag
-additional classes onto nodes).
+for the administrator's local data structuring. They may be used in mappings
+(see below) to tag additional classes onto nodes.
 
 Data merging
 ------------
@@ -112,13 +112,12 @@ are used, although they need to be escaped, e.g.::
     - /\.(\S+)$/ tld-\\1
 
 Furthermore, since the outer slashes ('/') are used to "quote" the regular
-expression, *any* slashes within the regular expression must be escaped::
+expression, *any* slashes within the regular expression must be escaped. For
+instance, the following class mapping assigns a ``subdir-X`` class to all
+nodes that are defined in a subdirectory (using yaml_fs).
 
   class_mappings:
-    - /^([^\/]+)\// \\1
-
-This is a bit theoretical right now, as nodenames cannot (yet) include
-slashes, but that might come…
+    - /^([^\/]+)\// subdir-\\1
 
 Parameter interpolation
 ------------------------

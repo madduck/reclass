@@ -119,13 +119,15 @@ class NodeStorageBase(object):
 
     def _nodeinfo(self, nodename):
         node_entity = self._get_node(nodename)
-        merge_base = self._populate_with_class_mappings(nodename)
-        ret = self._recurse_entity(node_entity, merge_base, nodename=nodename)
+        merge_base = self._populate_with_class_mappings(node_entity.name)
+        ret = self._recurse_entity(node_entity, merge_base,
+                                   nodename=node_entity.name)
         ret.interpolate()
         return ret
 
     def _nodeinfo_as_dict(self, nodename, entity):
-        ret = {'__reclass__' : {'node': nodename, 'uri': entity.uri,
+        ret = {'__reclass__' : {'node': entity.name, 'name': nodename,
+                                'uri': entity.uri,
                                 'timestamp': _get_timestamp()
                                },
               }
