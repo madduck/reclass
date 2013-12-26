@@ -3,7 +3,7 @@ Section: python
 Priority: extra
 Maintainer: martin f. krafft <madduck@debian.org>
 Build-Depends: python-setuptools, python, debhelper (>= 8.9.7), python-sphinx, python-yaml
-Standards-Version: 3.9.4
+Standards-Version: 3.9.5
 XS-Python-Version: all
 Homepage: http://reclass.pantsfullofunix.net/
 Vcs-Git: git://git.debian.org/collab-maint/reclass.git

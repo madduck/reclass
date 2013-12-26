@@ -1,6 +1,7 @@
 reclass (1.2.2-1) unstable; urgency=medium
 
   * New upstream release, fixing recursion of class mappings.
+  * Updated Standards-Version to 3.9.5; no changes required.
 
  -- martin f. krafft <madduck@debian.org>  Fri, 27 Dec 2013 09:44:42 +1300
 
