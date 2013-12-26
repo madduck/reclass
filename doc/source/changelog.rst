@@ -5,6 +5,10 @@ ChangeLog
 ========= ========== ========================================================
 Version   Date       Changes
 ========= ========== ========================================================
+1.2.2     2013-12-27 * Recurse classes obtained from class mappings
+                       (closes: #16)
+                     * Fix class mapping regexp rendering in docs
+                       (closes: #15)
 1.2.1     2013-12-26 * Fix Salt adapter wrt. class mappings
                        (closes: #14)
 1.2       2013-12-10 * Introduce class mappings (see :doc:`operations`)

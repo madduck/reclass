@@ -101,7 +101,7 @@ class NodeStorageBase(object):
                 try:
                     class_entity = self._classes_cache[klass]
                 except KeyError, e:
-                    class_entity = self._get_class(klass)
+                    class_entity = self._get_class(klass, nodename)
                     self._classes_cache[klass] = class_entity
 
                 descent = self._recurse_entity(class_entity, seen=seen,
@@ -119,8 +119,11 @@ class NodeStorageBase(object):
 
     def _nodeinfo(self, nodename):
         node_entity = self._get_node(nodename)
-        merge_base = self._populate_with_class_mappings(node_entity.name)
-        ret = self._recurse_entity(node_entity, merge_base,
+        base_entity = self._populate_with_class_mappings(node_entity.name)
+        seen = {}
+        merge_base = self._recurse_entity(base_entity, seen=seen,
+                                          nodename=base_entity.name)
+        ret = self._recurse_entity(node_entity, merge_base, seen=seen,
                                    nodename=node_entity.name)
         ret.interpolate()
         return ret
