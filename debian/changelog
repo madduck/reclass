@@ -1,3 +1,9 @@
+reclass (1.2.2-1) unstable; urgency=medium
+
+  * New upstream release, fixing recursion of class mappings.
+
+ -- martin f. krafft <madduck@debian.org>  Fri, 27 Dec 2013 09:44:42 +1300
+
 reclass (1.2.1-1) unstable; urgency=low
 
   * New upstream release, fixing the Salt adapter.
