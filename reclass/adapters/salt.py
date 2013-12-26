@@ -20,10 +20,11 @@ def ext_pillar(minion_id, pillar,
                storage_type=OPT_STORAGE_TYPE,
                inventory_base_uri=OPT_INVENTORY_BASE_URI,
                nodes_uri=OPT_NODES_URI,
-               classes_uri=OPT_CLASSES_URI):
+               classes_uri=OPT_CLASSES_URI,
+               class_mappings=None):
 
     data = get_nodeinfo(storage_type, inventory_base_uri, nodes_uri,
-                        classes_uri, minion_id)
+                        classes_uri, minion_id, class_mappings)
     params = data.get('parameters', {})
     params['__reclass__'] = {}
     params['__reclass__']['applications'] = data['applications']
@@ -33,7 +34,8 @@ def ext_pillar(minion_id, pillar,
 
 def top(minion_id, storage_type=OPT_STORAGE_TYPE,
         inventory_base_uri=OPT_INVENTORY_BASE_URI, nodes_uri=OPT_NODES_URI,
-        classes_uri=OPT_CLASSES_URI):
+        classes_uri=OPT_CLASSES_URI,
+        class_mappings=None):
 
     env = 'base'
     # TODO: node environments
@@ -43,13 +45,13 @@ def top(minion_id, storage_type=OPT_STORAGE_TYPE,
     # CLI invocations of the adapter):
     if minion_id is not None:
         data = get_nodeinfo(storage_type, inventory_base_uri, nodes_uri,
-                            classes_uri, minion_id)
+                            classes_uri, minion_id, class_mappings)
         applications = data.get('applications', [])
         return {env: applications}
 
     else:
         data = get_inventory(storage_type, inventory_base_uri, nodes_uri,
-                            classes_uri)
+                             classes_uri, class_mappings)
         nodes = {}
         for node_id, node_data in data['nodes'].iteritems():
             nodes[node_id] = node_data['applications']

@@ -127,6 +127,22 @@ following steps have already been prepared.
       $ reclass --inventory
       $ reclass --nodeinfo localhost
 
+Configuration file and master configuration
+-------------------------------------------
+Even though the Salt adapter of |reclass| looks for and reads the
+:doc:`configuration file <configfile>`, a better means to pass information to
+the adapter is via Salt's master configuration file, as shown above. Not all
+configuration options can be passed this way (e.g. ``output`` is hardcoded to
+YAML, which Salt uses), but it *is* possible to specify :doc:`class mappings
+<operations>` next to all the storage-specific options.
+
+.. warning::
+
+  The Salt CLI adapter does *not* read Salt's master configuration, so if you
+  are calling ``reclass-salt`` from the command-line (the CLI exists for
+  debugging purposes, mainly), be aware that it will be run in a different
+  environment than when Salt queries reclass directly.
+
 Integration with Salt
 ---------------------
 |reclass| hooks into Salt at two different points: ``master_tops`` and
