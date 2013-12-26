@@ -57,4 +57,14 @@ It would be nice if |reclass| could provide e.g. the Nagios master node with
 a list of clients that define it as their master. That would short-circuit
 Puppet's ``storeconfigs`` and Salt's ``mine``.
 
+Configuration file lookup improvements
+--------------------------------------
+Right now, the adapters and the CLI look for the :doc:`configuration file
+<configfile>` in a fixed set of locations. On of those derives from
+``OPT_INVENTORY_BASE_URI``, the default inventory base URI (``/etc/reclass``).
+This should probably be updated in case the user changes the URI.
+
+Furthermore, ``$CWD`` and ``~`` might not make a lot of sense in all
+use-cases.
+
 .. include:: substs.inc
