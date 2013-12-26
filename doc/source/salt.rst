@@ -134,8 +134,7 @@ Even though the Salt adapter of |reclass| looks for and reads the
 the adapter is via Salt's master configuration file, as shown above. Not all
 configuration options can be passed this way (e.g. ``output`` is hardcoded to
 YAML, which Salt uses), but it *is* possible to specify :doc:`class mappings
-<operations#wildcardregexp-mappings>` next to all the storage-specific
-options.
+<operations>` next to all the storage-specific options.
 
 .. warning::
 
