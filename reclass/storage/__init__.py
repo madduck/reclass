@@ -101,7 +101,7 @@ class NodeStorageBase(object):
                 try:
                     class_entity = self._classes_cache[klass]
                 except KeyError, e:
-                    class_entity = self._get_class(klass)
+                    class_entity = self._get_class(klass, nodename)
                     self._classes_cache[klass] = class_entity
 
                 descent = self._recurse_entity(class_entity, seen=seen,

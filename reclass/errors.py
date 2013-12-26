@@ -90,7 +90,7 @@ class ClassNotFound(NotFoundError):
         self._name = classname
         self._uri = uri
         self._nodename = nodename
-        msg = "Class '{0}' (in ancestry of node {1}) not found under {2}://{3}" \
+        msg = "Class '{0}' (in ancestry of node '{1}') not found under {2}://{3}" \
                 .format(self._name, self._nodename, self._storage, self._uri)
         super(ClassNotFound, self).__init__(msg)
 
