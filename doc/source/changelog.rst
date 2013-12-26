@@ -5,6 +5,8 @@ ChangeLog
 ========= ========== ========================================================
 Version   Date       Changes
 ========= ========== ========================================================
+                     * Recurse classes obtained from class mappings
+                       (closes: #16)
 1.2.1     2013-12-26 * Fix Salt adapter wrt. class mappings
                        (closes: #14)
 1.2       2013-12-10 * Introduce class mappings (see :doc:`operations`)
