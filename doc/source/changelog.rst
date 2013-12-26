@@ -5,7 +5,7 @@ ChangeLog
 ========= ========== ========================================================
 Version   Date       Changes
 ========= ========== ========================================================
-                     * Recurse classes obtained from class mappings
+1.2.2     2013-12-27 * Recurse classes obtained from class mappings
                        (closes: #16)
                      * Fix class mapping regexp rendering in docs
                        (closes: #15)
