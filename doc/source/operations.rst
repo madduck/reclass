@@ -114,7 +114,7 @@ are used, although they need to be escaped, e.g.::
 Furthermore, since the outer slashes ('/') are used to "quote" the regular
 expression, *any* slashes within the regular expression must be escaped. For
 instance, the following class mapping assigns a ``subdir-X`` class to all
-nodes that are defined in a subdirectory (using yaml_fs).
+nodes that are defined in a subdirectory (using yaml_fs)::
 
   class_mappings:
     - /^([^\/]+)\// subdir-\\1
