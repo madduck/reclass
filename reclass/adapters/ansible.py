@@ -7,7 +7,7 @@
 # I have no interest in developing this adapter anymore. If you use it and
 # have changes, I will take your patch.
 #
-# Copyright © 2007–13 martin f. krafft <madduck@madduck.net>
+# Copyright © 2007–14 martin f. krafft <madduck@madduck.net>
 # Released under the terms of the Artistic Licence 2.0
 #
 
