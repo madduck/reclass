@@ -8,7 +8,7 @@
 #
 
 from output import OutputLoader
-from storage import StorageBackendLoader
+from storage.loader import StorageBackendLoader
 
 def get_storage(storage_type, nodes_uri, classes_uri, class_mappings):
     storage_class = StorageBackendLoader(storage_type).load()

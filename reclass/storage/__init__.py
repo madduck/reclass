@@ -169,18 +169,5 @@ class NodeStorageBase(object):
                }
 
 
-class StorageBackendLoader(object):
 
-    def __init__(self, storage_type):
-        self._name = 'reclass.storage.' + storage_type
-        try:
-            self._module = __import__(self._name, globals(), locals(), self._name)
-        except ImportError:
-            raise NotImplementedError
 
-    def load(self, attr='ExternalNodeStorage'):
-        klass = getattr(self._module, attr, None)
-        if klass is None:
-            raise AttributeError, \
-                'Storage backend class {0} does not export "{1}"'.format(self._name, klass)
-        return klass
