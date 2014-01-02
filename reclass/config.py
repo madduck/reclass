@@ -128,6 +128,30 @@ def make_parser_and_checker(name, version, description,
     return parser, option_checker
 
 
+def path_mangler(inventory_base_uri, nodes_uri, classes_uri):
+
+    if inventory_base_uri is None:
+        # if inventory_base is not given, default to current directory
+        inventory_base_uri = os.getcwd()
+
+    nodes_uri = nodes_uri or 'nodes'
+    classes_uri = classes_uri or 'classes'
+
+    def _path_mangler_inner(path):
+        ret = os.path.join(inventory_base_uri, path)
+        ret = os.path.expanduser(ret)
+        return os.path.abspath(ret)
+
+    n, c = map(_path_mangler_inner, (nodes_uri, classes_uri))
+    if n == c:
+        raise errors.DuplicateUriError(n, c)
+    common = os.path.commonprefix((n, c))
+    if common == n or common == c:
+        raise errors.UriOverlapError(n, c)
+
+    return n, c
+
+
 def get_options(name, version, description,
                             inventory_shortopt='-i',
                             inventory_longopt='--inventory',
@@ -151,6 +175,10 @@ def get_options(name, version, description,
     options, args = parser.parse_args()
     checker(options, args)
 
+    options.nodes_uri, options.classes_uri = \
+            path_mangler(options.inventory_base_uri, options.nodes_uri,
+                         options.classes_uri)
+
     return options
 
 
@@ -169,27 +197,3 @@ def find_and_read_configfile(filename=CONFIG_FILE_NAME,
         elif os.path.isfile(f):
             raise PermissionsError('cannot read %s' % f)
     return {}
-
-
-def path_mangler(inventory_base_uri, nodes_uri, classes_uri):
-
-    if inventory_base_uri is None:
-        # if inventory_base is not given, default to current directory
-        inventory_base_uri = os.getcwd()
-
-    nodes_uri = nodes_uri or 'nodes'
-    classes_uri = classes_uri or 'classes'
-
-    def _path_mangler_inner(path):
-        ret = os.path.join(inventory_base_uri, path)
-        ret = os.path.expanduser(ret)
-        return os.path.abspath(ret)
-
-    n, c = map(_path_mangler_inner, (nodes_uri, classes_uri))
-    if n == c:
-        raise errors.DuplicateUriError(n, c)
-    common = os.path.commonprefix((n, c))
-    if common == n or common == c:
-        raise errors.UriOverlapError(n, c)
-
-    return n, c

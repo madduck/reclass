@@ -9,7 +9,6 @@
 
 from output import OutputLoader
 from storage import StorageBackendLoader
-from config import path_mangler
 
 def get_storage(storage_type, nodes_uri, classes_uri, class_mappings):
     storage_class = StorageBackendLoader(storage_type).load()
@@ -18,8 +17,6 @@ def get_storage(storage_type, nodes_uri, classes_uri, class_mappings):
 
 def get_nodeinfo(storage_type, inventory_base_uri, nodes_uri, classes_uri,
                  nodename, class_mappings):
-    nodes_uri, classes_uri = path_mangler(inventory_base_uri, nodes_uri,
-                                          classes_uri)
     storage = get_storage(storage_type, nodes_uri, classes_uri,
                           class_mappings)
     # TODO: template interpolation
@@ -28,8 +25,6 @@ def get_nodeinfo(storage_type, inventory_base_uri, nodes_uri, classes_uri,
 
 def get_inventory(storage_type, inventory_base_uri, nodes_uri, classes_uri,
                   class_mappings):
-    nodes_uri, classes_uri = path_mangler(inventory_base_uri, nodes_uri,
-                                          classes_uri)
     storage = get_storage(storage_type, nodes_uri, classes_uri,
                           class_mappings)
     return storage.inventory()
