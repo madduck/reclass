@@ -13,7 +13,8 @@
 
 import os, sys, posix, optparse
 
-from reclass import get_nodeinfo, get_inventory, output
+from reclass import get_storage, output
+from reclass.core import Core
 from reclass.errors import ReclassException
 from reclass.config import find_and_read_configfile, get_options
 from reclass.version import *
@@ -52,13 +53,14 @@ def cli():
                               nodeinfo_help='output host_vars for the given host',
                               add_options_cb=add_ansible_options_group,
                               defaults=defaults)
+
+        storage = get_storage(options.storage_type, options.nodes_uri,
+                              options.classes_uri)
         class_mappings = defaults.get('class_mappings')
+        reclass = Core(storage, class_mappings)
 
         if options.mode == MODE_NODEINFO:
-            data = get_nodeinfo(options.storage_type,
-                                options.inventory_base_uri, options.nodes_uri,
-                                options.classes_uri, options.hostname,
-                                class_mappings)
+            data = reclass.nodeinfo(options.hostname)
             # Massage and shift the data like Ansible wants it
             data['parameters']['__reclass__'] = data['__reclass__']
             for i in ('classes', 'applications'):
@@ -66,10 +68,7 @@ def cli():
             data = data['parameters']
 
         else:
-            data = get_inventory(options.storage_type,
-                                 options.inventory_base_uri,
-                                 options.nodes_uri, options.classes_uri,
-                                 class_mappings)
+            data = reclass.inventory()
             # Ansible inventory is only the list of groups. Groups are the set
             # of classes plus the set of applications with the postfix added:
             groups = data['classes']

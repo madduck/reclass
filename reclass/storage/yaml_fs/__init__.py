@@ -15,6 +15,7 @@ from reclass.datatypes import Entity
 import reclass.errors
 
 FILE_EXTENSION = '.yml'
+STORAGE_NAME = 'yaml_fs'
 
 def vvv(msg):
     #print >>sys.stderr, msg
@@ -22,19 +23,20 @@ def vvv(msg):
 
 class ExternalNodeStorage(NodeStorageBase):
 
-    def __init__(self, nodes_uri, classes_uri, class_mappings):
-        super(ExternalNodeStorage, self).__init__(nodes_uri, classes_uri,
-                                                  class_mappings)
+    def __init__(self, nodes_uri, classes_uri):
+        super(ExternalNodeStorage, self).__init__(STORAGE_NAME)
 
         def _handle_node_duplicates(name, uri1, uri2):
             raise reclass.errors.DuplicateNodeNameError(self._get_storage_name(),
                                                         name, uri1, uri2)
+        self._nodes_uri = nodes_uri
         self._nodes = self._enumerate_inventory(nodes_uri,
                                                 duplicate_handler=_handle_node_duplicates)
+        self._classes_uri = classes_uri
         self._classes = self._enumerate_inventory(classes_uri)
 
-    def _get_storage_name(self):
-        return 'yaml_fs'
+    nodes_uri = property(lambda self: self._nodes_uri)
+    classes_uri = property(lambda self: self._classes_uri)
 
     def _enumerate_inventory(self, basedir, duplicate_handler=None):
         ret = {}
@@ -52,31 +54,25 @@ class ExternalNodeStorage(NodeStorageBase):
         d.walk(register_fn)
         return ret
 
-    def _get_node(self, name):
+    def get_node(self, name):
         vvv('GET NODE {0}'.format(name))
         try:
             relpath = self._nodes[name]
             path = os.path.join(self.nodes_uri, relpath)
             name = os.path.splitext(relpath)[0]
         except KeyError, e:
-            raise reclass.errors.NodeNotFound(self._get_storage_name(),
-                                              name, self.nodes_uri)
+            raise reclass.errors.NodeNotFound(self.name, name, self.nodes_uri)
         entity = YamlFile(path).get_entity(name)
         return entity
 
-    def _get_class(self, name, nodename=None):
+    def get_class(self, name, nodename=None):
         vvv('GET CLASS {0}'.format(name))
         try:
             path = os.path.join(self.classes_uri, self._classes[name])
         except KeyError, e:
-            raise reclass.errors.ClassNotFound(self._get_storage_name(),
-                                               name, self.classes_uri,
-                                               nodename)
+            raise reclass.errors.ClassNotFound(self.name, name, self.classes_uri)
         entity = YamlFile(path).get_entity()
         return entity
 
-    def _list_inventory(self):
-        entities = {}
-        for n in self._nodes.iterkeys():
-            entities[n] = self._nodeinfo(n)
-        return entities
+    def enumerate_nodes(self):
+        return self._nodes.keys()

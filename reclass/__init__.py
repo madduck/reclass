@@ -10,24 +10,9 @@
 from output import OutputLoader
 from storage.loader import StorageBackendLoader
 
-def get_storage(storage_type, nodes_uri, classes_uri, class_mappings):
+def get_storage(storage_type, nodes_uri, classes_uri):
     storage_class = StorageBackendLoader(storage_type).load()
-    return storage_class(nodes_uri, classes_uri, class_mappings)
-
-
-def get_nodeinfo(storage_type, inventory_base_uri, nodes_uri, classes_uri,
-                 nodename, class_mappings):
-    storage = get_storage(storage_type, nodes_uri, classes_uri,
-                          class_mappings)
-    # TODO: template interpolation
-    return storage.nodeinfo(nodename)
-
-
-def get_inventory(storage_type, inventory_base_uri, nodes_uri, classes_uri,
-                  class_mappings):
-    storage = get_storage(storage_type, nodes_uri, classes_uri,
-                          class_mappings)
-    return storage.inventory()
+    return storage_class(nodes_uri, classes_uri)
 
 
 def output(data, fmt, pretty_print=False):

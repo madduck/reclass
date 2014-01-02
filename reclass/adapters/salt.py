@@ -9,9 +9,11 @@
 
 import os, sys, posix
 
-from reclass import get_nodeinfo, get_inventory, output
+from reclass import get_storage, output
+from reclass.core import Core
 from reclass.errors import ReclassException
-from reclass.config import find_and_read_configfile, get_options
+from reclass.config import find_and_read_configfile, get_options, \
+        path_mangler
 from reclass.constants import MODE_NODEINFO
 from reclass.defaults import *
 from reclass.version import *
@@ -23,8 +25,12 @@ def ext_pillar(minion_id, pillar,
                classes_uri=OPT_CLASSES_URI,
                class_mappings=None):
 
-    data = get_nodeinfo(storage_type, inventory_base_uri, nodes_uri,
-                        classes_uri, minion_id, class_mappings)
+    nodes_uri, classes_uri = path_mangler(inventory_base_uri,
+                                          nodes_uri, classes_uri)
+    storage = get_storage(storage_type, nodes_uri, classes_uri)
+    reclass = Core(storage, class_mappings)
+
+    data = reclass.nodeinfo(minion_id)
     params = data.get('parameters', {})
     params['__reclass__'] = {}
     params['__reclass__']['applications'] = data['applications']
@@ -39,19 +45,22 @@ def top(minion_id, storage_type=OPT_STORAGE_TYPE,
 
     env = 'base'
     # TODO: node environments
+    nodes_uri, classes_uri = path_mangler(inventory_base_uri,
+                                          nodes_uri, classes_uri)
+    storage = get_storage(storage_type, nodes_uri, classes_uri)
+    reclass = Core(storage, class_mappings)
 
     # if the minion_id is not None, then return just the applications for the
     # specific minion, otherwise return the entire top data (which we need for
     # CLI invocations of the adapter):
     if minion_id is not None:
-        data = get_nodeinfo(storage_type, inventory_base_uri, nodes_uri,
-                            classes_uri, minion_id, class_mappings)
+        data = reclass.nodeinfo(storage_type, inventory_base_uri, nodes_uri,
+                                classes_uri, minion_id, class_mappings)
         applications = data.get('applications', [])
         return {env: applications}
 
     else:
-        data = get_inventory(storage_type, inventory_base_uri, nodes_uri,
-                             classes_uri, class_mappings)
+        data = reclass.inventory()
         nodes = {}
         for node_id, node_data in data['nodes'].iteritems():
             nodes[node_id] = node_data['applications']
