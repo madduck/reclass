@@ -67,11 +67,11 @@ class TestEntity(unittest.TestCase):
         self.assertEqual(Entity(*instances, name=name),
                          Entity(*instances, name=name))
 
-    def test_unequal_empty_named(self, **types):
+    def test_unequal_empty_uri(self, **types):
         instances = self._make_instances(**types)
         uri = 'test://uri'
         self.assertNotEqual(Entity(*instances, uri=uri),
-                            Entity(*instances, name=uri[::-1]))
+                            Entity(*instances, uri=uri[::-1]))
         for i in instances:
             i.__eq__.assert_called_once_with(i)
 
