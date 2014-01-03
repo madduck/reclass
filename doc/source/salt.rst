@@ -163,6 +163,7 @@ nodes             hosts
 classes           (none) [#nodegroups]_
 applications      states
 parameters        pillar
+environment       environment
 ================= ================
 
 .. [#nodegroups] See `Salt issue #5787`_ for steps into the direction of letting

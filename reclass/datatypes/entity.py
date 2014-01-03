@@ -17,7 +17,7 @@ class Entity(object):
     uri of the Entity that is being merged.
     '''
     def __init__(self, classes=None, applications=None, parameters=None,
-                 uri=None, name=None):
+                 uri=None, name=None, environment=None):
         if classes is None: classes = Classes()
         self._set_classes(classes)
         if applications is None: applications = Applications()
@@ -26,9 +26,11 @@ class Entity(object):
         self._set_parameters(parameters)
         self._uri = uri or ''
         self._name = name or ''
+        self._environment = environment or ''
 
     name = property(lambda s: s._name)
     uri = property(lambda s: s._uri)
+    environment = property(lambda s: s._environment)
     classes = property(lambda s: s._classes)
     applications = property(lambda s: s._applications)
     parameters = property(lambda s: s._parameters)
@@ -57,6 +59,7 @@ class Entity(object):
         self._parameters.merge(other._parameters)
         self._name = other.name
         self._uri = other.uri
+        self._environment = other.environment
 
     def interpolate(self):
         self._parameters.interpolate()
@@ -83,5 +86,6 @@ class Entity(object):
     def as_dict(self):
         return {'classes': self._classes.as_list(),
                 'applications': self._applications.as_list(),
-                'parameters': self._parameters.as_dict()
+                'parameters': self._parameters.as_dict(),
+                'environment': self._environment
                }

@@ -27,7 +27,8 @@ def ext_pillar(minion_id, pillar,
 
     nodes_uri, classes_uri = path_mangler(inventory_base_uri,
                                           nodes_uri, classes_uri)
-    storage = get_storage(storage_type, nodes_uri, classes_uri)
+    storage = get_storage(storage_type, nodes_uri, classes_uri,
+                          default_environment='base')
     reclass = Core(storage, class_mappings)
 
     data = reclass.nodeinfo(minion_id)
@@ -35,6 +36,7 @@ def ext_pillar(minion_id, pillar,
     params['__reclass__'] = {}
     params['__reclass__']['applications'] = data['applications']
     params['__reclass__']['classes'] = data['classes']
+    params['__reclass__']['environment'] = data['environment']
     return params
 
 
@@ -43,11 +45,10 @@ def top(minion_id, storage_type=OPT_STORAGE_TYPE,
         classes_uri=OPT_CLASSES_URI,
         class_mappings=None):
 
-    env = 'base'
-    # TODO: node environments
     nodes_uri, classes_uri = path_mangler(inventory_base_uri,
                                           nodes_uri, classes_uri)
-    storage = get_storage(storage_type, nodes_uri, classes_uri)
+    storage = get_storage(storage_type, nodes_uri, classes_uri,
+                          default_environment='base')
     reclass = Core(storage, class_mappings)
 
     # if the minion_id is not None, then return just the applications for the
@@ -56,15 +57,19 @@ def top(minion_id, storage_type=OPT_STORAGE_TYPE,
     if minion_id is not None:
         data = reclass.nodeinfo(minion_id)
         applications = data.get('applications', [])
+        env = data['environment']
         return {env: applications}
 
     else:
         data = reclass.inventory()
         nodes = {}
         for node_id, node_data in data['nodes'].iteritems():
-            nodes[node_id] = node_data['applications']
+            env = node_data['environment']
+            if env not in nodes:
+                nodes[env] = {}
+            nodes[env][node_id] = node_data['applications']
 
-        return {env: nodes}
+        return nodes
 
 
 def cli():

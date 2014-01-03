@@ -38,6 +38,8 @@ parameters   key-value pairs to set defaults in class definitions, override
                 parameters:
                   ssh.server:
                     permit_root_login: no
+environment  only relevant for nodes, this allows to specify an "environment"
+             into which the node definition is supposed to be place.
 ============ ================================================================
 
 Nodes may be defined in subdirectories. However, node names (filename) must be

@@ -116,6 +116,7 @@ class Core(object):
     def _nodeinfo_as_dict(self, nodename, entity):
         ret = {'__reclass__' : {'node': entity.name, 'name': nodename,
                                 'uri': entity.uri,
+                                'environment': entity.environment,
                                 'timestamp': Core._get_timestamp()
                                },
               }

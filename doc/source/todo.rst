@@ -41,16 +41,6 @@ be possible in Ansible and Puppet.
 Ideally, |reclass| could unify the interface so that even templates can be
 shared between the various CMS.
 
-Node environments
------------------
-At least Salt and Puppet support the notion of "environments", but the Salt
-adapter just puts everything into the "base" environment at the moment.
-
-Part of the reason that multiple environments aren't (yet) supported is
-because I don't see the use-case (anymore) with |reclass|. If you still see
-a use-case, then please help me understand it and let's figure out a good way
-to introduce this concept into |reclass|.
-
 Membership information
 ----------------------
 It would be nice if |reclass| could provide e.g. the Nagios master node with
