@@ -7,7 +7,12 @@
 # Released under the terms of the Artistic Licence 2.0
 #
 
-class MODE_NODEINFO:
-    pass
-class MODE_INVENTORY:
-    pass
+class _Constant(object):
+
+    def __init__(self, displayname):
+        self._repr = displayname
+
+    __str__ = __repr__ = lambda self: self._repr
+
+MODE_NODEINFO = _Constant('NODEINFO')
+MODE_INVENTORY = _Constant('INVENTORY')
