@@ -5,6 +5,7 @@ ChangeLog
 ========= ========== ========================================================
 Version   Date       Changes
 ========= ========== ========================================================
+                     * Migrate Salt adapter to new core API (closes: #18)
 1.2.2     2013-12-27 * Recurse classes obtained from class mappings
                        (closes: #16)
                      * Fix class mapping regexp rendering in docs
