@@ -57,12 +57,4 @@ This should probably be updated in case the user changes the URI.
 Furthermore, ``$CWD`` and ``~`` might not make a lot of sense in all
 use-cases.
 
-Class subdirectories
---------------------
-It would be nice syntactic sugar to allow classes to sit in subdirectories,
-such that ``ssh.server`` would load a class in …/ssh/server.yml (assuming
-``yaml_fs``).
-
-See `this pull request for a discussion about it <https://github.com/madduck/reclass/pull/12>`_.
-
 .. include:: substs.inc

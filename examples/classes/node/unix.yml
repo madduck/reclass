@@ -1,5 +1,5 @@
 classes:
-  - basenode
+  - node
 applications:
   - motd
 parameters:
