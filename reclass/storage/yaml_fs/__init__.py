@@ -82,7 +82,6 @@ class ExternalNodeStorage(NodeStorageBase):
     def get_class(self, name, nodename=None):
         vvv('GET CLASS {0}'.format(name))
         try:
-            print self._classes
             path = os.path.join(self.classes_uri, self._classes[name])
         except KeyError, e:
             raise reclass.errors.ClassNotFound(self.name, name, self.classes_uri)
