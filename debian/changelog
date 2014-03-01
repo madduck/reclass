@@ -1,3 +1,9 @@
+reclass (1.3-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- martin f. krafft <madduck@debian.org>  Sat, 01 Mar 2014 14:48:19 +0100
+
 reclass (1.2.2-1) unstable; urgency=medium
 
   * New upstream release, fixing recursion of class mappings.
