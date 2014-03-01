@@ -13,14 +13,15 @@ import re
 #import sys
 import fnmatch
 import shlex
-from reclass.datatypes import Entity, Classes
+from reclass.datatypes import Entity, Classes, Parameters
 from reclass.errors import MappingFormatError, ClassNotFound
 
 class Core(object):
 
-    def __init__(self, storage, class_mappings):
+    def __init__(self, storage, class_mappings, input_data=None):
         self._storage = storage
         self._class_mappings = class_mappings
+        self._input_data = input_data
 
     @staticmethod
     def _get_timestamp():
@@ -53,9 +54,9 @@ class Core(object):
             key = '/{0}/'.format(key)
         return key, list(lexer)
 
-    def _populate_with_class_mappings(self, nodename):
+    def _get_class_mappings_entity(self, nodename):
         if not self._class_mappings:
-            return Entity(name='empty')
+            return Entity(name='empty (class mappings)')
         c = Classes()
         for mapping in self._class_mappings:
             matched = False
@@ -73,6 +74,12 @@ class Core(object):
 
         return Entity(classes=c,
                       name='class mappings for node {0}'.format(nodename))
+
+    def _get_input_data_entity(self):
+        if not self._input_data:
+            return Entity(name='empty (input data)')
+        p = Parameters(self._input_data)
+        return Entity(parameters=p, name='input data')
 
     def _recurse_entity(self, entity, merge_base=None, seen=None, nodename=None):
         if seen is None:
@@ -104,7 +111,9 @@ class Core(object):
 
     def _nodeinfo(self, nodename):
         node_entity = self._storage.get_node(nodename)
-        base_entity = self._populate_with_class_mappings(node_entity.name)
+        base_entity = Entity(name='base')
+        base_entity.merge(self._get_class_mappings_entity(node_entity.name))
+        base_entity.merge(self._get_input_data_entity())
         seen = {}
         merge_base = self._recurse_entity(base_entity, seen=seen,
                                           nodename=base_entity.name)

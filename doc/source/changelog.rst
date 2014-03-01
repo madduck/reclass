@@ -5,6 +5,8 @@ ChangeLog
 ========= ========== ========================================================
 Version   Date       Changes
 ========= ========== ========================================================
+                     * Salt: pillar data from previous pillars are now
+                       available to reclass parameter interpolation
                      * yaml_fs: classes may be defined in subdirectories
                        (closes: #12, #19, #20)
                      * Migrate Salt adapter to new core API (closes: #18)

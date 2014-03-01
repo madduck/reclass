@@ -178,9 +178,9 @@ fine, but currently, Salt does not do anything with the classes ancestry.
 Similarly, all parameters that are collected and merged eventually end up in
 the pillar data of a specific node.
 
-However, the pillar data of a node include all the information about classes
-and applications, so you could theoretically use them to target your Salt
-calls at groups of nodes defined in the |reclass| inventory, e.g.
+The pillar data of a node include all the information about classes and
+applications, so you could theoretically use them to target your Salt calls at
+groups of nodes defined in the |reclass| inventory, e.g.
 
 ::
 
@@ -188,6 +188,18 @@ calls at groups of nodes defined in the |reclass| inventory, e.g.
 
 Unfortunately, this does not work yet, please stay tuned, and let me know
 if you figure out a way. `Salt issue #5787`_ is also of relevance.
+
+Optionally, data from pillars that run before the |reclass| ``ext_pillar``
+(i.e. Salt's builtin ``pillar_roots``, as well as other ``ext_pillar`` modules
+listed before the ``reclass_adapter``) can be made available to |reclass|.
+Please use this with caution as referencing data from Salt in the inventory
+will make it harder or impossible to run |reclass| in other environments. This
+feature is therefore turned off by default and must be explicitly enabled in
+the Salt master configuration file, like this::
+
+  reclass: &reclass
+      […]
+      propagate_pillar_data_to_reclass: True
 
 .. include:: substs.inc
 .. include:: extrefs.inc
