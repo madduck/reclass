@@ -34,6 +34,7 @@ def ext_pillar(minion_id, pillar,
     data = reclass.nodeinfo(minion_id)
     params = data.get('parameters', {})
     params['__reclass__'] = {}
+    params['__reclass__']['nodename'] = minion_id
     params['__reclass__']['applications'] = data['applications']
     params['__reclass__']['classes'] = data['classes']
     params['__reclass__']['environment'] = data['environment']
