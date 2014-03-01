@@ -197,9 +197,19 @@ will make it harder or impossible to run |reclass| in other environments. This
 feature is therefore turned off by default and must be explicitly enabled in
 the Salt master configuration file, like this::
 
-  reclass: &reclass
-      […]
-      propagate_pillar_data_to_reclass: True
+  ext_pillar:
+    - reclass:
+        […]
+        propagate_pillar_data_to_reclass: True
+
+Unfortunately, to use this, currently you cannot use YAML references (i.e.
+``*reclass``) as shown above, as the ``master_tops`` subsystem does not accept
+this configuration parameter, and there seems to be no way to extend an alias.
+Specifically, the following is not possible — let me know if it is!::
+
+  ext_pillar:
+    - reclass: *reclass    # WARNING: this does not work!
+        propagate_pillar_data_to_reclass: True
 
 .. include:: substs.inc
 .. include:: extrefs.inc
