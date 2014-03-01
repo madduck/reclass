@@ -3,13 +3,14 @@
 #
 # This file is part of reclass (http://github.com/madduck/reclass)
 #
-# Copyright © 2007–13 martin f. krafft <madduck@madduck.net>
+# Copyright © 2007–14 martin f. krafft <madduck@madduck.net>
 # Released under the terms of the Artistic Licence 2.0
 #
 
 import sys, os, posix
 
-from reclass import get_nodeinfo, get_inventory, output
+from reclass import get_storage, output
+from reclass.core import Core
 from reclass.config import find_and_read_configfile, get_options
 from reclass.errors import ReclassException
 from reclass.defaults import *
@@ -24,17 +25,17 @@ def main():
         defaults.update(find_and_read_configfile())
         options = get_options(RECLASS_NAME, VERSION, DESCRIPTION,
                               defaults=defaults)
+
+        storage = get_storage(options.storage_type, options.nodes_uri,
+                              options.classes_uri, default_environment='base')
         class_mappings = defaults.get('class_mappings')
+        reclass = Core(storage, class_mappings)
+
         if options.mode == MODE_NODEINFO:
-            data = get_nodeinfo(options.storage_type,
-                                options.inventory_base_uri, options.nodes_uri,
-                                options.classes_uri, options.nodename,
-                                class_mappings)
+            data = reclass.nodeinfo(options.nodename)
+
         else:
-            data = get_inventory(options.storage_type,
-                                 options.inventory_base_uri,
-                                 options.nodes_uri, options.classes_uri,
-                                 class_mappings)
+            data = reclass.inventory()
 
         print output(data, options.output, options.pretty_print)
 

@@ -22,7 +22,7 @@ If you've installed |reclass| from source as per the :doc:`installation
 instructions <install>`, try to run it from the source directory like this::
 
   $ reclass -b examples/ --inventory
-  $ reclass -b examples/ --node localhost
+  $ reclass -b examples/ --nodeinfo localhost
 
 This will make it use the data from ``examples/nodes`` and
 ``examples/classes``, and you can surely make your own way from here.
@@ -30,7 +30,7 @@ This will make it use the data from ``examples/nodes`` and
 On Debian-systems, use the following::
 
   $ reclass -b /usr/share/doc/reclass/examples/ --inventory
-  $ reclass -b /usr/share/doc/reclass/examples/ --node localhost
+  $ reclass -b /usr/share/doc/reclass/examples/ --nodeinfo localhost
 
 More commonly, however, use of |reclass| will happen indirectly, and through
 so-called adapters. The job of an adapter is to translate between different

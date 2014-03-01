@@ -3,7 +3,7 @@
 #
 # This file is part of reclass (http://github.com/madduck/reclass)
 #
-# Copyright © 2007–13 martin f. krafft <madduck@madduck.net>
+# Copyright © 2007–14 martin f. krafft <madduck@madduck.net>
 # Released under the terms of the Artistic Licence 2.0
 #
 import os, sys
@@ -15,6 +15,7 @@ from reclass.datatypes import Entity
 import reclass.errors
 
 FILE_EXTENSION = '.yml'
+STORAGE_NAME = 'yaml_fs'
 
 def vvv(msg):
     #print >>sys.stderr, msg
@@ -22,61 +23,70 @@ def vvv(msg):
 
 class ExternalNodeStorage(NodeStorageBase):
 
-    def __init__(self, nodes_uri, classes_uri, class_mappings):
-        super(ExternalNodeStorage, self).__init__(nodes_uri, classes_uri,
-                                                  class_mappings)
+    def __init__(self, nodes_uri, classes_uri, default_environment=None):
+        super(ExternalNodeStorage, self).__init__(STORAGE_NAME)
 
-        def _handle_node_duplicates(name, uri1, uri2):
-            raise reclass.errors.DuplicateNodeNameError(self._get_storage_name(),
-                                                        name, uri1, uri2)
-        self._nodes = self._enumerate_inventory(nodes_uri,
-                                                duplicate_handler=_handle_node_duplicates)
-        self._classes = self._enumerate_inventory(classes_uri)
+        def name_mangler(relpath, name):
+            # nodes are identified just by their basename
+            return name
+        self._nodes_uri = nodes_uri
+        self._nodes = self._enumerate_inventory(nodes_uri, name_mangler)
 
-    def _get_storage_name(self):
-        return 'yaml_fs'
+        def name_mangler(relpath, name):
+            if relpath == '.':
+                return name
+            parts = relpath.split(os.path.sep)
+            if name != 'index':
+                parts.append(name)
+            return '.'.join(parts)
+        self._classes_uri = classes_uri
+        self._classes = self._enumerate_inventory(classes_uri, name_mangler)
 
-    def _enumerate_inventory(self, basedir, duplicate_handler=None):
+        self._default_environment = default_environment
+
+    nodes_uri = property(lambda self: self._nodes_uri)
+    classes_uri = property(lambda self: self._classes_uri)
+
+    def _enumerate_inventory(self, basedir, name_mangler):
         ret = {}
         def register_fn(dirpath, filenames):
             filenames = fnmatch.filter(filenames, '*{0}'.format(FILE_EXTENSION))
             vvv('REGISTER {0} in path {1}'.format(filenames, dirpath))
             for f in filenames:
                 name = os.path.splitext(f)[0]
+                relpath = os.path.relpath(dirpath, basedir)
+                if callable(name_mangler):
+                    name = name_mangler(relpath, name)
                 uri = os.path.join(dirpath, f)
-                if name in ret and callable(duplicate_handler):
-                    duplicate_handler(name, os.path.join(basedir, ret[name]), uri)
-                ret[name] = os.path.relpath(uri, basedir)
+                if name in ret:
+                    E = reclass.errors.DuplicateNodeNameError
+                    raise E(self._get_storage_name(), name,
+                            os.path.join(basedir, ret[name]), uri)
+                ret[name] = os.path.join(relpath, f)
 
         d = Directory(basedir)
         d.walk(register_fn)
         return ret
 
-    def _get_node(self, name):
+    def get_node(self, name):
         vvv('GET NODE {0}'.format(name))
         try:
             relpath = self._nodes[name]
             path = os.path.join(self.nodes_uri, relpath)
             name = os.path.splitext(relpath)[0]
         except KeyError, e:
-            raise reclass.errors.NodeNotFound(self._get_storage_name(),
-                                              name, self.nodes_uri)
-        entity = YamlFile(path).get_entity(name)
+            raise reclass.errors.NodeNotFound(self.name, name, self.nodes_uri)
+        entity = YamlFile(path).get_entity(name, self._default_environment)
         return entity
 
-    def _get_class(self, name, nodename=None):
+    def get_class(self, name, nodename=None):
         vvv('GET CLASS {0}'.format(name))
         try:
             path = os.path.join(self.classes_uri, self._classes[name])
         except KeyError, e:
-            raise reclass.errors.ClassNotFound(self._get_storage_name(),
-                                               name, self.classes_uri,
-                                               nodename)
-        entity = YamlFile(path).get_entity()
+            raise reclass.errors.ClassNotFound(self.name, name, self.classes_uri)
+        entity = YamlFile(path).get_entity(name)
         return entity
 
-    def _list_inventory(self):
-        entities = {}
-        for n in self._nodes.iterkeys():
-            entities[n] = self._nodeinfo(n)
-        return entities
+    def enumerate_nodes(self):
+        return self._nodes.keys()

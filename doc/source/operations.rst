@@ -38,13 +38,21 @@ parameters   key-value pairs to set defaults in class definitions, override
                 parameters:
                   ssh.server:
                     permit_root_login: no
+environment  only relevant for nodes, this allows to specify an "environment"
+             into which the node definition is supposed to be place.
 ============ ================================================================
 
-Nodes may be defined in subdirectories. However, node names (filename) must be
-unique across all subdirectories, and |reclass| will exit with an error if
-a node is defined multiple times. Subdirectories therefore really only exist
-for the administrator's local data structuring. They may be used in mappings
-(see below) to tag additional classes onto nodes.
+Classes files may reside in subdirectories, which act as namespaces. For
+instance, a class ``ssh.server`` will result in the class definition to be
+read from ``ssh/server.yml``. Specifying just ``ssh`` will cause the class
+data to be read from ``ssh/init.yml`` or ``ssh.yml``. Note, however, that only
+one of those two may be present.
+
+Nodes may also be defined in subdirectories. However, node names (filename)
+must be unique across all subdirectories, and |reclass| will exit with an
+error if a node is defined multiple times. Subdirectories therefore really
+only exist for the administrator's local data structuring. They may be used in
+mappings (see below) to tag additional classes onto nodes.
 
 Data merging
 ------------

@@ -3,7 +3,7 @@
 #
 # This file is part of reclass (http://github.com/madduck/reclass)
 #
-# Copyright © 2007–13 martin f. krafft <madduck@madduck.net>
+# Copyright © 2007–14 martin f. krafft <madduck@madduck.net>
 # Released under the terms of the Artistic Licence 2.0
 #
 from reclass.datatypes import Entity, Classes, Parameters, Applications
@@ -54,6 +54,11 @@ class TestEntity(unittest.TestCase):
         e = Entity(*self._make_instances(**types), uri=uri)
         self.assertEqual(e.uri, uri)
 
+    def test_constructor_empty_env(self, **types):
+        env = 'not base'
+        e = Entity(*self._make_instances(**types), environment=env)
+        self.assertEqual(e.environment, env)
+
     def test_equal_empty(self, **types):
         instances = self._make_instances(**types)
         self.assertEqual(Entity(*instances), Entity(*instances))
@@ -67,11 +72,11 @@ class TestEntity(unittest.TestCase):
         self.assertEqual(Entity(*instances, name=name),
                          Entity(*instances, name=name))
 
-    def test_unequal_empty_named(self, **types):
+    def test_unequal_empty_uri(self, **types):
         instances = self._make_instances(**types)
         uri = 'test://uri'
         self.assertNotEqual(Entity(*instances, uri=uri),
-                            Entity(*instances, name=uri[::-1]))
+                            Entity(*instances, uri=uri[::-1]))
         for i in instances:
             i.__eq__.assert_called_once_with(i)
 
@@ -127,13 +132,22 @@ class TestEntity(unittest.TestCase):
         e1.merge(e2)
         self.assertEqual(e1.uri, newuri)
 
+    def test_merge_newenv(self, **types):
+        instances = self._make_instances(**types)
+        newenv = 'new env'
+        e1 = Entity(*instances, environment='env')
+        e2 = Entity(*instances, environment=newenv)
+        e1.merge(e2)
+        self.assertEqual(e1.environment, newenv)
+
     def test_as_dict(self, **types):
         instances = self._make_instances(**types)
-        entity = Entity(*instances, name='test')
+        entity = Entity(*instances, name='test', environment='test')
         comp = {}
         comp['classes'] = instances[0].as_list()
         comp['applications'] = instances[1].as_list()
         comp['parameters'] = instances[2].as_dict()
+        comp['environment'] = 'test'
         d = entity.as_dict()
         self.assertDictEqual(d, comp)
 

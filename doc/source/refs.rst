@@ -2,6 +2,16 @@
 External references
 ===================
 
+* I `presented reclass`__ at `LCA 2014`_, which as been recorded:
+
+  * (Slides forthcoming)
+  * `Video recording`__
+
+__ http://linux.conf.au/schedule/30203/view_talk?day=wednesday
+__ http://mirror.linux.org.au/pub/linux.conf.au/2014/Wednesday/59-Hierarchical_infrastructure_description_for_your_system_management_needs_-_Martin_Krafft.mp4
+
+.. _LCA 2014: https://lca2014.linux.org.au
+
 * I gave `a talk about reclass`__ at `DebConf13`_, which has been recorded:
 
   * `Slides`__

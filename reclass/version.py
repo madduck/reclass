@@ -3,14 +3,14 @@
 #
 # This file is part of reclass (http://github.com/madduck/reclass)
 #
-# Copyright © 2007–13 martin f. krafft <madduck@madduck.net>
+# Copyright © 2007–14 martin f. krafft <madduck@madduck.net>
 # Released under the terms of the Artistic Licence 2.0
 #
 RECLASS_NAME = 'reclass'
 DESCRIPTION = 'merge data by recursive descent down an ancestry hierarchy'
-VERSION = '1.2.2'
+VERSION = '1.3'
 AUTHOR = 'martin f. krafft'
 AUTHOR_EMAIL = 'reclass@pobox.madduck.net'
-COPYRIGHT = 'Copyright © 2007–13 ' + AUTHOR
+COPYRIGHT = 'Copyright © 2007–14 ' + AUTHOR
 LICENCE = 'Artistic Licence 2.0'
 URL = 'https://github.com/madduck/reclass'

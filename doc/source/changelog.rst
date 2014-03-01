@@ -5,6 +5,12 @@ ChangeLog
 ========= ========== ========================================================
 Version   Date       Changes
 ========= ========== ========================================================
+1.3       2014-03-01 * Salt: pillar data from previous pillars are now
+                       available to reclass parameter interpolation
+                     * yaml_fs: classes may be defined in subdirectories
+                       (closes: #12, #19, #20)
+                     * Migrate Salt adapter to new core API (closes: #18)
+                     * Fix --nodeinfo invocation in docs (closes: #21)
 1.2.2     2013-12-27 * Recurse classes obtained from class mappings
                        (closes: #16)
                      * Fix class mapping regexp rendering in docs
