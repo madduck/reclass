@@ -36,7 +36,11 @@ class ExternalNodeStorage(NodeStorageBase):
             if relpath == '.':
                 return name
             parts = relpath.split(os.path.sep)
-            if name != 'index':
+            if name != 'init':
+                # "init" is the directory index, so only append the basename
+                # to the path parts for all other filenames. This has the
+                # effect that data in file "foo/init.yml" will be registered
+                # as data for class "foo", not "foo.init"
                 parts.append(name)
             return '.'.join(parts)
         self._classes_uri = classes_uri
