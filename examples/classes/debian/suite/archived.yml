@@ -1,0 +1,15 @@
+classes:
+  - debian
+parameters:
+  debian_suite: archived
+  apt:
+    repo_uri: http://archive.debian.org/debian
+    repo_uri_security: http://archive.debian.org/debian-security
+    repo_uri_backports: http://archive.debian.org/debian-backports
+    repo_uri_volatile: http://archive.debian.org/debian-volatile
+    include_security: no
+    include_updates: no
+    include_proposed_updates: no
+  motd:
+    newsitems:
+      - This host is no longer kept up-to-date and will be decomissioned soon.

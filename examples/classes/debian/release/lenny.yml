@@ -1,0 +1,4 @@
+classes:
+  - debian.suite.archived
+parameters:
+  debian_codename: lenny

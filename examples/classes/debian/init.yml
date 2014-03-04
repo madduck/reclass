@@ -1,0 +1,46 @@
+applications:
+  - apt
+  - locales
+parameters:
+  debian_stable_suite: wheezy
+  apt:
+    repo_uri: http://http.debian.net/debian
+    repo_uri_security: http://security.debian.org/debian-security
+    default_components: main  # TODO: pass as a list!
+    include_sources: no
+    include_security: yes
+    include_updates: yes
+    include_proposed_updates: no
+    disable_sources_dir: no
+    disable_preferences_dir: no
+    acquire_pdiffs: no
+    install_recommends: no
+    cache_limit: 67108864
+  apt_repos:
+    - id: debian
+      enabled: yes
+      uri: ${apt:repo_uri}
+      components: ${apt:default_components}
+      sources: ${apt:include_sources}
+    - id: debian-security
+      enabled: ${apt:include_security}
+      uri: ${apt:repo_uri_security}
+      suite_postfix: /updates
+      components: ${apt:default_components}
+      sources: ${apt:include_sources}
+    - id: debian-updates
+      enabled: ${apt:include_updates}
+      suite_postfix: -updates
+      uri: ${apt:repo_uri}
+      components: ${apt:default_components}
+      sources: ${apt:include_sources}
+    - id: debian-proposed-updates
+      enabled: ${apt:include_proposed_updates}
+      uri: ${apt:repo_uri}
+      suite_postfix: -proposed-updates
+      components: ${apt:default_components}
+      sources: ${apt:include_sources}
+  locales:
+    list:
+    - en_NZ.UTF-8 UTF-8
+    - de_CH.UTF-8 UTF-8

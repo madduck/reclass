@@ -1,0 +1,9 @@
+classes:
+  - example.org
+  - debian.release.wheezy
+  - hosted@munich
+  - salt.minion
+  - mail.relay
+environment: dev
+parameters:
+  rgb_colour_code: "00ffff"

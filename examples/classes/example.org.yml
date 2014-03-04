@@ -1,0 +1,12 @@
+classes:
+  - sudo # all nodes in the example.org domain provide sudo
+applications:
+  - motd # all nodes in the example.org domain are expected to provide /etc/motd
+parameters:
+  motd:
+    legalese: This system is for authorized users only. All traffic on this
+      device is monitored and will be used as evidence if necessary. Use your
+      brain.
+    support: "Please write a message to <${local_admin:email}> in case of problems."
+    location: "Rack ${location:rack}, ${location:address}"
+    tagline: "My hostname's RGB colour code is ${rgb_colour_code}."

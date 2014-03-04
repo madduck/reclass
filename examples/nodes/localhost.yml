@@ -1,6 +1,0 @@
-classes:
-  - node.unix
-  - mysite
-environment: testing
-parameters:
-  colour: yellow

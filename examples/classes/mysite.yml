@@ -1,5 +1,0 @@
-applications:
-  - test
-parameters:
-  realm: mysite
-  greeting: Servus!

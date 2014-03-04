@@ -1,0 +1,8 @@
+classes:
+  - debian
+parameters:
+  debian_suite: oldstable
+  apt:
+    include_security: yes
+    include_updates: no
+    include_proposed_updates: no

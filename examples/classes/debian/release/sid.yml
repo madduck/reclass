@@ -1,0 +1,4 @@
+classes:
+  - debian.suite.unstable
+parameters:
+  debian_codename: sid

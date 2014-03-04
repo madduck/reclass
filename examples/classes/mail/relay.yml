@@ -1,0 +1,6 @@
+classes:
+  - mail
+parameters:
+  mail:
+    role: relay
+    port: 587

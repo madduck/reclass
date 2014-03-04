@@ -1,0 +1,4 @@
+classes:
+  - debian.suite.oldstable
+parameters:
+  debian_codename: squeeze

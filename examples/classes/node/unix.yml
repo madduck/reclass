@@ -1,6 +1,0 @@
-classes:
-  - node
-applications:
-  - motd
-parameters:
-  greeting: Hello, world!

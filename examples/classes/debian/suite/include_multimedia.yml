@@ -1,0 +1,12 @@
+classes:
+  - debian
+parameters:
+  apt:
+    repo_uri_multimedia: http://deb-multimedia.org
+    include_multimedia: yes
+  apt_repos:
+    - id: debian-multimedia
+      enabled: ${apt:include_multimedia}
+      uri: ${apt:repo_uri_multimedia}
+      components: ${apt:default_components}
+      sources: ${apt:include_sources}

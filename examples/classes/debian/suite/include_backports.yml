@@ -1,0 +1,13 @@
+classes:
+  - debian
+parameters:
+  apt:
+    repo_uri_backports: http://http.debian.net/debian
+    include_backports: yes
+  apt_repos:
+    - id: debian-backports
+      enabled: ${apt:include_backports}
+      uri: ${apt:repo_uri_backports}
+      suite_postfix: -backports
+      components: ${apt:default_components}
+      sources: ${apt:include_sources}

@@ -1,0 +1,6 @@
+parameters:
+  location:
+    address: Letzigraben 4, 8004 Zurich
+    rack: C/IV 6.43
+  local_admin:
+    email: local-admins@zurich.example.org

@@ -1,0 +1,4 @@
+classes:
+  - debian.suite.stable
+parameters:
+  debian_codename: wheezy

@@ -1,0 +1,8 @@
+classes:
+  - debian
+parameters:
+  debian_suite: unstable
+  apt:
+    include_security: no
+    include_updates: no
+    include_proposed_updates: no

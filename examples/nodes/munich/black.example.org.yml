@@ -1,0 +1,10 @@
+classes:
+  - example.org
+  - debian.release.jessie
+  - hosted@munich
+  - salt.minion
+  - webserver
+  - mail.satellite
+environment: dev
+parameters:
+  rgb_colour_code: "000000"

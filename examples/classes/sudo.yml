@@ -1,0 +1,13 @@
+applications:
+  - sudo
+parameters:
+  sudo:
+    opt_lecture: false
+    opt_ignore_dot: true
+    opt_listpw: true
+    opt_insults: true
+    opt_requiretty: true
+    opt_tty_tickets: true
+    opt_passwd_tries: 1
+    opt_secure_path: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    no_passwd_group: wheel

@@ -1,0 +1,13 @@
+classes:
+  - debian
+parameters:
+  apt:
+    repo_uri_experimental: ${apt:repo_uri}
+    include_experimental: yes
+  apt_repos:
+    - id: debian-experimental
+      enabled: ${apt:include_experimental}
+      uri: ${apt:repo_uri_experimental}
+      suite: experimental
+      components: ${apt:default_components}
+      sources: ${apt:include_sources}

@@ -1,0 +1,6 @@
+parameters:
+  location:
+    address: Briennerstrasse 32, 80333 Munich
+    rack: 2.64
+  local_admin:
+    email: local-admins@munich.example.org

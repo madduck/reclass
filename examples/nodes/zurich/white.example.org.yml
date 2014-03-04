@@ -1,0 +1,9 @@
+classes:
+  - example.org
+  - debian.release.jessie
+  - hosted@zurich
+  - salt.minion
+  - mail.server
+environment: prod
+parameters:
+  rgb_colour_code: "ffffff"

@@ -1,0 +1,11 @@
+classes:
+  - example.org
+  - debian.release.wheezy
+  - debian.suite.include_backports
+  - hosted@zurich
+  - salt.minion
+  - webserver
+  - mail.satellite
+environment: prod
+parameters:
+  rgb_colour_code: "0000ff"

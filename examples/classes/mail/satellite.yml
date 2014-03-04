@@ -1,0 +1,8 @@
+classes:
+  - mail
+parameters:
+  mail:
+    role: satellite
+    smtp_relay: smtp.example.org:587
+    smtp_relay_fingerprint: 45:88:ff:11:b0:be:39:c8:30:2a:84:bd:fc:6c:52:ff:76:d4:c5:41
+    tls: enforce

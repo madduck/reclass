@@ -1,0 +1,18 @@
+classes:
+  - debian
+parameters:
+  apt:
+    repo_uri_volatile: ${repo_uri}-volatile
+    include_volatile: True
+    include_volatile_sloppy: False
+  apt_repos:
+    - id: debian-volatile
+      enabled: ${apt:include_volatile}
+      uri: ${apt:repo_uri_volatile}
+      components: ${apt:default_components}
+      sources: ${apt:include_sources}
+    - id: debian-volatile-sloppy
+      enabled: ${apt:include_volatile_sloppy}
+      uri: ${apt:repo_uri_volatile}-sloppy
+      components: ${apt:default_components}
+      sources: ${apt:include_sources}

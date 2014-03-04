@@ -1,0 +1,8 @@
+classes:
+  - debian
+parameters:
+  debian_suite: stable
+  apt:
+    include_security: yes
+    include_updates: yes
+    include_proposed_updates: no
