@@ -27,14 +27,16 @@ class ExternalNodeStorage(NodeStorageBase):
         super(ExternalNodeStorage, self).__init__(STORAGE_NAME)
 
         def name_mangler(relpath, name):
-            # nodes are identified just by their basename
-            return name
+            # nodes are identified just by their basename, so
+            # no mangling required
+            return relpath, name
         self._nodes_uri = nodes_uri
         self._nodes = self._enumerate_inventory(nodes_uri, name_mangler)
 
         def name_mangler(relpath, name):
             if relpath == '.':
-                return name
+                # './' is converted to None
+                return None, name
             parts = relpath.split(os.path.sep)
             if name != 'init':
                 # "init" is the directory index, so only append the basename
@@ -42,7 +44,7 @@ class ExternalNodeStorage(NodeStorageBase):
                 # effect that data in file "foo/init.yml" will be registered
                 # as data for class "foo", not "foo.init"
                 parts.append(name)
-            return '.'.join(parts)
+            return relpath, '.'.join(parts)
         self._classes_uri = classes_uri
         self._classes = self._enumerate_inventory(classes_uri, name_mangler)
 
@@ -60,13 +62,15 @@ class ExternalNodeStorage(NodeStorageBase):
                 name = os.path.splitext(f)[0]
                 relpath = os.path.relpath(dirpath, basedir)
                 if callable(name_mangler):
-                    name = name_mangler(relpath, name)
+                    relpath, name = name_mangler(relpath, name)
                 uri = os.path.join(dirpath, f)
                 if name in ret:
                     E = reclass.errors.DuplicateNodeNameError
                     raise E(self.name, name,
                             os.path.join(basedir, ret[name]), uri)
-                ret[name] = os.path.join(relpath, f)
+                if relpath:
+                    f = os.path.join(relpath, f)
+                ret[name] = f
 
         d = Directory(basedir)
         d.walk(register_fn)
