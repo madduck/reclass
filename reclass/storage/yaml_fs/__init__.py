@@ -60,7 +60,7 @@ class ExternalNodeStorage(NodeStorageBase):
                 uri = os.path.join(dirpath, f)
                 if name in ret:
                     E = reclass.errors.DuplicateNodeNameError
-                    raise E(self._get_storage_name(), name,
+                    raise E(self.name, name,
                             os.path.join(basedir, ret[name]), uri)
                 ret[name] = os.path.join(relpath, f)
 

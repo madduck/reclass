@@ -208,4 +208,4 @@ class DuplicateNodeNameError(NameError):
         msg = "{0}: Definition of node '{1}' in '{2}' collides with " \
               "definition in '{3}'. Nodes can only be defined once " \
               "per inventory."
-        return msg.format(storage, name, uris[1], uris[0])
+        return msg.format(self._storage, self._name, self._uris[1], self._uris[0])
