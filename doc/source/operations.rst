@@ -75,8 +75,9 @@ of parameters at each level is merged into what has been accumulated so far.
 Merging of parameters is done "deeply", meaning that lists and dictionaries
 are extended (recursively), rather than replaced. However, a scalar value
 *does* overwrite a dictionary or list value. While the scalar could be
-appended to an existing list, there is sane default assumption in the context
-of a dictionary, so this behaviour seems the most logical.
+appended to an existing list, there is no sane default assumption in the
+context of a dictionary, so this behaviour seems the most logical. Plus, it
+allows for a dictionary to be erased by overwriting it with the null value.
 
 After all classes (and the classes they reference) have been visited,
 |reclass| finally merges the applications list and parameters defined for the
