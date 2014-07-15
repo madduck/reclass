@@ -5,6 +5,7 @@ ChangeLog
 ========= ========== ========================================================
 Version   Date       Changes
 ========= ========== ========================================================
+                     * Prevent interpolate() from overwriting merged values
 1.3       2014-03-01 * Salt: pillar data from previous pillars are now
                        available to reclass parameter interpolation
                      * yaml_fs: classes may be defined in subdirectories
