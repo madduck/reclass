@@ -127,6 +127,12 @@ class TestParameters(unittest.TestCase):
             self.assertIn(mock.call(key), b1.get.call_args_list)
             self.assertIn(mock.call(key, value), b1.__setitem__.call_args_list)
 
+    def test_stray_occurrence_overwrites_during_interpolation(self):
+        p1 = Parameters({'r' : mock.sentinel.ref, 'b': '${r}'})
+        p2 = Parameters({'b' : mock.sentinel.goal})
+        p1.merge(p2)
+        p1.interpolate()
+        self.assertEqual(p1.as_dict()['b'], mock.sentinel.goal)
 
 class TestParametersNoMock(unittest.TestCase):
 

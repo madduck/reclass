@@ -70,6 +70,13 @@ class Parameters(object):
         return self._base.copy()
 
     def _update_scalar(self, cur, new, path):
+        if isinstance(cur, RefValue) and path in self._occurrences:
+            # If the current value already holds a RefValue, we better forget
+            # the occurrence, or else interpolate() will later overwrite
+            # unconditionally. If the new value is a RefValue, the occurrence
+            # will be added again further on
+            del self._occurrences[path]
+
         if self.delimiter is None or not isinstance(new, (types.StringTypes,
                                                           RefValue)):
             # either there is no delimiter defined (and hence no references
