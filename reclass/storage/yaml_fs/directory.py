@@ -8,14 +8,16 @@
 #
 import os
 import sys
+import logging
+
+from reclass.defaults import RECLASS_NAME
 from reclass.errors import NotFoundError
+
+logger = logging.getLogger(RECLASS_NAME)
 
 SKIPDIRS = ( 'CVS', 'SCCS' )
 FILE_EXTENSION = '.yml'
 
-def vvv(msg):
-    #print >>sys.stderr, msg
-    pass
 
 class Directory(object):
 
@@ -31,7 +33,7 @@ class Directory(object):
 
     def _register_files(self, dirpath, filenames):
         for f in filter(lambda f: f.endswith(FILE_EXTENSION), filenames):
-            vvv('REGISTER {0}'.format(f))
+            logger.debug('REGISTER {0}'.format(f))
             f = os.path.join(dirpath, f)
             ptr = None if not self._fileclass else self._fileclass(f)
             self._files[f] = ptr
@@ -48,11 +50,11 @@ class Directory(object):
                                                     topdown=True,
                                                     onerror=_error,
                                                     followlinks=True):
-            vvv('RECURSE {0}, {1} files, {2} subdirectories'.format(
+            logger.debug('RECURSE {0}, {1} files, {2} subdirectories'.format(
                 dirpath.replace(os.getcwd(), '.'), len(filenames), len(dirnames)))
             for d in dirnames:
                 if d.startswith('.') or d in SKIPDIRS:
-                    vvv('   SKIP subdirectory {0}'.format(d))
+                    logger.debug('   SKIP subdirectory {0}'.format(d))
                     dirnames.remove(d)
             register_fn(dirpath, filenames)
 

@@ -12,7 +12,7 @@ import logging.config
 from reclass.defaults import RECLASS_NAME
 
 
-RECLASS_LOGGER = 'reclass'
+RECLASS_LOGGER = RECLASS_NAME
 
 LOGGING_CONFIG = {
     'version': 1,
