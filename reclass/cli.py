@@ -8,6 +8,7 @@
 #
 
 import sys, os, posix
+import logging
 
 from reclass import get_storage, output
 from reclass.core import Core
@@ -15,8 +16,10 @@ from reclass.config import find_and_read_configfile, get_options
 from reclass.errors import ReclassException
 from reclass.defaults import *
 from reclass.constants import MODE_NODEINFO
-from reclass.logs import logger
 from reclass.version import *
+
+logger = logging.getLogger(RECLASS_NAME)
+
 
 def main():
     try:
