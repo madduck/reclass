@@ -13,14 +13,16 @@ import re
 #import sys
 import fnmatch
 import shlex
+from reclass import get_storage
 from reclass.datatypes import Entity, Classes, Parameters
 from reclass.errors import MappingFormatError, ClassNotFound
 
+
 class Core(object):
 
-    def __init__(self, storage, class_mappings, input_data=None):
-        self._storage = storage
-        self._class_mappings = class_mappings
+    def __init__(self, config, input_data=None):
+        self._config = config
+        self._storage = get_storage(self._config)
         self._input_data = input_data
 
     @staticmethod
@@ -55,10 +57,10 @@ class Core(object):
         return key, list(lexer)
 
     def _get_class_mappings_entity(self, nodename):
-        if not self._class_mappings:
+        if not self._config['class_mappings']:
             return Entity(name='empty (class mappings)')
         c = Classes()
-        for mapping in self._class_mappings:
+        for mapping in self._config['class_mappings']:
             matched = False
             key, klasses = Core._shlex_split(mapping)
             if key[0] == ('/'):
