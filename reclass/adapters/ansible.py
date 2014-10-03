@@ -19,6 +19,7 @@ from reclass.errors import ReclassException
 from reclass.config import find_and_read_configfile, get_options
 from reclass.version import *
 from reclass.constants import MODE_NODEINFO
+from reclass.logs import logger
 
 def cli():
     try:
@@ -53,6 +54,7 @@ def cli():
                               nodeinfo_help='output host_vars for the given host',
                               add_options_cb=add_ansible_options_group,
                               defaults=defaults)
+        logger.debug('parsed options: %s' % options)
 
         storage = get_storage(options.storage_type, options.nodes_uri,
                               options.classes_uri)

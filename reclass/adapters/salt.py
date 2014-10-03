@@ -16,7 +16,9 @@ from reclass.config import find_and_read_configfile, get_options, \
         path_mangler
 from reclass.constants import MODE_NODEINFO
 from reclass.defaults import *
+from reclass.logger import logger
 from reclass.version import *
+
 
 def ext_pillar(minion_id, pillar,
                storage_type=OPT_STORAGE_TYPE,
@@ -94,6 +96,7 @@ def cli():
                               nodeinfo_dest='nodename',
                               nodeinfo_help='output pillar data for a specific node',
                               defaults=defaults)
+        logger.debug('parsed options: %s' % options)
         class_mappings = defaults.get('class_mappings')
 
         if options.mode == MODE_NODEINFO:
