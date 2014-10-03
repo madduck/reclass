@@ -10,9 +10,9 @@
 import yaml, os, optparse, posix, sys
 import logging
 
-import errors
-from defaults import *
-from constants import MODE_NODEINFO, MODE_INVENTORY
+from reclass import errors
+from ..defaults import *
+from ..constants import MODE_NODEINFO, MODE_INVENTORY
 
 logger = logging.getLogger(RECLASS_NAME)
 
