@@ -9,7 +9,6 @@
 
 import sys, os, posix
 
-from reclass import output
 from reclass.core import Core
 from reclass.config import get_options, Config
 from reclass.errors import ReclassException
@@ -35,7 +34,7 @@ def main():
         else:
             data = reclass.inventory()
 
-        print output(data, options.output, options.pretty_print)
+        print reclass.output(data)
 
     except ReclassException, e:
         e.exit_with_message(sys.stderr)

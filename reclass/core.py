@@ -13,16 +13,20 @@ import re
 #import sys
 import fnmatch
 import shlex
-from reclass import get_storage
+
 from reclass.datatypes import Entity, Classes, Parameters
 from reclass.errors import MappingFormatError, ClassNotFound
+from reclass.output import OutputLoader
+from reclass.storage.loader import StorageBackendLoader
+from reclass.storage.memcache_proxy import MemcacheProxy
+
 
 
 class Core(object):
 
     def __init__(self, config, input_data=None):
         self._config = config
-        self._storage = get_storage(self._config)
+        self._storage = self._get_storage()
         self._input_data = input_data
 
     @staticmethod
@@ -55,6 +59,13 @@ class Core(object):
         if regexp:
             key = '/{0}/'.format(key)
         return key, list(lexer)
+
+    def _get_storage(self, **kwargs):
+        c = self._config
+        storage_class = StorageBackendLoader(c['storage_type']).load()
+        return MemcacheProxy(storage_class(c['nodes_uri'],
+                                           c['classes_uri'],
+                                           **kwargs))
 
     def _get_class_mappings_entity(self, nodename):
         if not self._config['class_mappings']:
@@ -163,3 +174,12 @@ class Core(object):
                 'classes': classes,
                 'applications': applications
                }
+
+    def output(self, data, fmt=None, pretty_print=False):
+        if not fmt:
+            fmt = self._config['output']
+        if not pretty_print:
+            pretty_print = self._config['pretty_print']
+        output_class = OutputLoader(fmt).load()
+        outputter = output_class()
+        return outputter.dump(data, pretty_print=pretty_print)
