@@ -13,8 +13,28 @@ import logging
 from reclass import errors
 from ..defaults import *
 from ..constants import MODE_NODEINFO, MODE_INVENTORY
+from .base import ConfigBase
+
 
 logger = logging.getLogger(RECLASS_NAME)
+
+RECLASS_OPTS_TO_EXTRACT = [
+    'inventory_base_uri', 'output', 'pretty_print', 'nodename'
+]
+
+class Config(ConfigBase):
+    '''
+    Cater to the needs of Reclass Core, config that is internal to Reclass.
+    Serve as a collection point for processing and compiling configuration
+    from multiple sources, and separate internal Configuration from user
+    Options and environment variables.
+
+    '''
+    _filelist = DEFAULT_CONFIG_LIST
+    _defaults = DEFAULT_CONFIG
+    _opts_list = RECLASS_OPTS_TO_EXTRACT
+    logger = logger
+
 
 def make_db_options_group(parser, defaults={}):
     ret = optparse.OptionGroup(parser, 'Database options',
