@@ -61,11 +61,10 @@ class Core(object):
         return key, list(lexer)
 
     def _get_storage(self, **kwargs):
-        c = self._config
-        storage_class = StorageBackendLoader(c['storage_type']).load()
-        return MemcacheProxy(storage_class(c['nodes_uri'],
-                                           c['classes_uri'],
-                                           **kwargs))
+        stype = self._config['storage_type']
+        sconf = self._config[stype]
+        storage_class = StorageBackendLoader(stype).load()
+        return MemcacheProxy(storage_class(sconf, **kwargs))
 
     def _get_class_mappings_entity(self, nodename):
         if not self._config['class_mappings']:

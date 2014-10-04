@@ -9,8 +9,9 @@
 
 class NodeStorageBase(object):
 
-    def __init__(self, name):
+    def __init__(self, name, conf):
         self._name = name
+        self._conf = conf
 
     name = property(lambda self: self._name)
 

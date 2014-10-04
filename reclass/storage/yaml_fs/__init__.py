@@ -25,15 +25,15 @@ STORAGE_NAME = 'yaml_fs'
 
 class ExternalNodeStorage(NodeStorageBase):
 
-    def __init__(self, nodes_uri, classes_uri, default_environment=None):
-        super(ExternalNodeStorage, self).__init__(STORAGE_NAME)
+    def __init__(self, config, default_environment=None):
+        super(ExternalNodeStorage, self).__init__(STORAGE_NAME, config)
 
         def name_mangler(relpath, name):
             # nodes are identified just by their basename, so
             # no mangling required
             return relpath, name
-        self._nodes_uri = nodes_uri
-        self._nodes = self._enumerate_inventory(nodes_uri, name_mangler)
+        self._nodes_uri = self._conf['nodes_uri']
+        self._nodes = self._enumerate_inventory(self._nodes_uri, name_mangler)
 
         def name_mangler(relpath, name):
             if relpath == '.':
@@ -47,8 +47,8 @@ class ExternalNodeStorage(NodeStorageBase):
                 # as data for class "foo", not "foo.init"
                 parts.append(name)
             return relpath, '.'.join(parts)
-        self._classes_uri = classes_uri
-        self._classes = self._enumerate_inventory(classes_uri, name_mangler)
+        self._classes_uri = self._conf['classes_uri']
+        self._classes = self._enumerate_inventory(self._classes_uri, name_mangler)
 
         self._default_environment = default_environment
 

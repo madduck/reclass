@@ -16,7 +16,8 @@ class MemcacheProxy(NodeStorageBase):
     def __init__(self, real_storage, cache_classes=True, cache_nodes=True,
                  cache_nodelist=True):
         name = '{0}({1})'.format(STORAGE_NAME, real_storage.name)
-        super(MemcacheProxy, self).__init__(name)
+        conf = {}
+        super(MemcacheProxy, self).__init__(name, conf)
         self._real_storage = real_storage
         self._cache_classes = cache_classes
         if cache_classes:
