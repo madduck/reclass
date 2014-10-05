@@ -9,8 +9,8 @@
 
 class StorageBackendLoader(object):
 
-    def __init__(self, storage_name):
-        self._name = 'reclass.storage.' + storage_name
+    def __init__(self, storage_module):
+        self._name = storage_module
         try:
             self._module = __import__(self._name, globals(), locals(), self._name)
         except ImportError:

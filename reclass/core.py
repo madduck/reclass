@@ -63,7 +63,7 @@ class Core(object):
     def _get_storage(self, **kwargs):
         stype = self._config['storage_type']
         sconf = self._config[stype]
-        storage_class = StorageBackendLoader(stype).load()
+        storage_class = StorageBackendLoader(sconf['module']).load()
         return MemcacheProxy(storage_class(sconf, **kwargs))
 
     def _get_class_mappings_entity(self, nodename):
