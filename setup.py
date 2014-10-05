@@ -11,7 +11,7 @@ from reclass.version import *
 from setuptools import setup, find_packages
 
 ADAPTERS = ['salt', 'ansible']
-console_scripts = ['reclass = reclass.cli.scripts:main',
+console_scripts = ['reclass = reclass.cli.scripts:reclass',
                    'reclass-orig = reclass.cli:main']
 console_scripts.extend('reclass-{0} = reclass.cli.scripts:reclass_{0}'.format(i)
                        for i in ADAPTERS)

@@ -26,7 +26,7 @@ from .cmd import nodeinfo, inventory, salt, ansible
 
 p = argh.ArghParser()
 
-def main():
+def reclass():
     '''
     Entry point for ``reclass`` shell script, registered with setup.py. Dispatch
     commands ``nodeinfo`` and ``inventory``.
@@ -69,3 +69,5 @@ def reclass_ansible():
     sys.exit(posix.EX_OK)
 
 
+if __name__ == '__main__':
+    reclass()
