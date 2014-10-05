@@ -29,11 +29,16 @@ DEFAULT_CONFIG_LIST = [
     os.path.join(d, CONFIG_FILE_NAME) for d in CONFIG_FILE_SEARCH_PATH
 ]
 
-DEFAULT_CONFIG = {
-    'storage_type': OPT_STORAGE_TYPE,
-    'inventory_base_uri': OPT_INVENTORY_BASE_URI,
+DEFAULT_YAMLFS_STORAGE_CONFIG = {
+    'module': 'reclass.storage.yaml_fs',
     'nodes_uri': OPT_NODES_URI,
     'classes_uri': OPT_CLASSES_URI,
+}
+
+DEFAULT_CONFIG = {
+    'storage_type': OPT_STORAGE_TYPE,
+    OPT_STORAGE_TYPE: DEFAULT_YAMLFS_STORAGE_CONFIG,
+    'inventory_base_uri': OPT_INVENTORY_BASE_URI,
     'pretty_print': OPT_PRETTY_PRINT,
     'output': OPT_OUTPUT,
     'debug': False,
