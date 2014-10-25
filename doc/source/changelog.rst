@@ -5,6 +5,7 @@ ChangeLog
 ========= ========== ========================================================
 Version   Date       Changes
 ========= ========== ========================================================
+1.4       2014-10-25 * Add rudimentary debug logging
                      * Prevent interpolate() from overwriting merged values
 1.3       2014-03-01 * Salt: pillar data from previous pillars are now
                        available to reclass parameter interpolation
