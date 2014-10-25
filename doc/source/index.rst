@@ -34,7 +34,7 @@ your message.
 
 Licence
 -------
-|reclass| is © 2007–2013 by martin f. krafft and released under the terms of
+|reclass| is © 2007–2014 by martin f. krafft and released under the terms of
 the `Artistic Licence 2.0`_.
 
 Contents
