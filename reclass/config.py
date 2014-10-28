@@ -42,10 +42,6 @@ def make_output_options_group(parser, defaults={}):
                    action="store_true",
                    default=defaults.get('pretty_print', OPT_PRETTY_PRINT),
                    help='try to make the output prettier [%default]')
-    ret.add_option('-d', '--debug', dest='debug',
-                   action="store_true",
-                   default=False,
-                   help='enable logging to console for debug [%default]')
     return ret
 
 

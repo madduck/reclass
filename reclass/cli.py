@@ -15,7 +15,6 @@ from reclass.config import find_and_read_configfile, get_options
 from reclass.errors import ReclassException
 from reclass.defaults import *
 from reclass.constants import MODE_NODEINFO
-from reclass.logs import logger
 from reclass.version import *
 
 def main():
@@ -27,7 +26,6 @@ def main():
         options = get_options(RECLASS_NAME, VERSION, DESCRIPTION,
                               defaults=defaults)
 
-        logger.debug('defaults: %s' % options)
         storage = get_storage(options.storage_type, options.nodes_uri,
                               options.classes_uri, default_environment='base')
         class_mappings = defaults.get('class_mappings')
