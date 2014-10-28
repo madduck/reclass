@@ -5,6 +5,8 @@ ChangeLog
 ========= ========== ========================================================
 Version   Date       Changes
 ========= ========== ========================================================
+1.4.1     2014-10-28 * Revert debug logging, which wasn't fault-free and so
+                       it needs more time to mature.
 1.4       2014-10-25 * Add rudimentary debug logging
                      * Prevent interpolate() from overwriting merged values
                      * Look for "init" instead of "index" when being fed
