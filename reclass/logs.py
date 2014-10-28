@@ -14,7 +14,7 @@ from reclass.defaults import RECLASS_NAME
 from reclass.version import VERSION, DESCRIPTION
 
 
-RECLASS_LOGGER = RECLASS_NAME
+RECLASS_LOGGER = 'reclass'
 
 options = get_options(RECLASS_NAME, VERSION, DESCRIPTION)
 LOG_LEVEL = 'ERROR'

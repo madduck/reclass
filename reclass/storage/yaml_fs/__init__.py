@@ -8,20 +8,18 @@
 #
 import os, sys
 import fnmatch
-import logging
-
-from reclass.defaults import RECLASS_NAME
 from reclass.storage import NodeStorageBase
 from yamlfile import YamlFile
 from directory import Directory
 from reclass.datatypes import Entity
 import reclass.errors
 
-logger = logging.getLogger(RECLASS_NAME)
-
 FILE_EXTENSION = '.yml'
 STORAGE_NAME = 'yaml_fs'
 
+def vvv(msg):
+    #print >>sys.stderr, msg
+    pass
 
 class ExternalNodeStorage(NodeStorageBase):
 
@@ -59,7 +57,7 @@ class ExternalNodeStorage(NodeStorageBase):
         ret = {}
         def register_fn(dirpath, filenames):
             filenames = fnmatch.filter(filenames, '*{0}'.format(FILE_EXTENSION))
-            logger.debug('REGISTER {0} in path {1}'.format(filenames, dirpath))
+            vvv('REGISTER {0} in path {1}'.format(filenames, dirpath))
             for f in filenames:
                 name = os.path.splitext(f)[0]
                 relpath = os.path.relpath(dirpath, basedir)
@@ -79,7 +77,7 @@ class ExternalNodeStorage(NodeStorageBase):
         return ret
 
     def get_node(self, name):
-        logger.debug('GET NODE {0}'.format(name))
+        vvv('GET NODE {0}'.format(name))
         try:
             relpath = self._nodes[name]
             path = os.path.join(self.nodes_uri, relpath)
@@ -90,7 +88,7 @@ class ExternalNodeStorage(NodeStorageBase):
         return entity
 
     def get_class(self, name, nodename=None):
-        logger.debug('GET CLASS {0}'.format(name))
+        vvv('GET CLASS {0}'.format(name))
         try:
             path = os.path.join(self.classes_uri, self._classes[name])
         except KeyError, e:

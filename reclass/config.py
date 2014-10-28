@@ -8,13 +8,10 @@
 #
 
 import yaml, os, optparse, posix, sys
-import logging
 
 import errors
 from defaults import *
 from constants import MODE_NODEINFO, MODE_INVENTORY
-
-logger = logging.getLogger(RECLASS_NAME)
 
 def make_db_options_group(parser, defaults={}):
     ret = optparse.OptionGroup(parser, 'Database options',
@@ -189,12 +186,17 @@ def get_options(name, version, description,
     return options
 
 
+def vvv(msg):
+    #print >>sys.stderr, msg
+    pass
+
+
 def find_and_read_configfile(filename=CONFIG_FILE_NAME,
                              dirs=CONFIG_FILE_SEARCH_PATH):
     for d in dirs:
         f = os.path.join(d, filename)
         if os.access(f, os.R_OK):
-            logger.debug('Using config file: {0}'.format(f))
+            vvv('Using config file: {0}'.format(f))
             return yaml.safe_load(file(f))
         elif os.path.isfile(f):
             raise PermissionsError('cannot read %s' % f)
