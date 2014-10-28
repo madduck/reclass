@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>reclass to-do list &mdash; reclass 1.4.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="reclass 1.4.1 documentation" href="index.html" />
+    <link rel="next" title="ChangeLog" href="changelog.html" />
+    <link rel="prev" title="Hacking on reclass" href="hacking.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="changelog.html" title="ChangeLog"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="hacking.html" title="Hacking on reclass"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">reclass</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="reclass-to-do-list">
+<h1>reclass to-do list<a class="headerlink" href="#reclass-to-do-list" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="common-set-of-classes">
+<h2>Common set of classes<a class="headerlink" href="#common-set-of-classes" title="Permalink to this headline">¶</a></h2>
+<p>A lot of the classes I have set up during the various stages of development of
+<strong>reclass</strong> are generic. It would probably be sensible to make them available as
+part of <strong>reclass</strong>, to give people a common baseline to work from, and to
+ensure a certain level of consistency between users.</p>
+<p>This could also provide a more realistic example to users on how to use
+<strong>reclass</strong>.</p>
+</div>
+<div class="section" id="testing-framework">
+<h2>Testing framework<a class="headerlink" href="#testing-framework" title="Permalink to this headline">¶</a></h2>
+<p>There is rudimentary testing in place, but it&#8217;s inconsistent. I got
+side-tracked into discussions about the philosphy of mocking objects. This
+could all be fixed and unified.</p>
+<p>Also, storage, outputters, CLI and adapters have absolutely no tests yet…</p>
+<p>The testing framework should also incorporate the example classes mentioned
+above.</p>
+</div>
+<div class="section" id="configurable-file-extension">
+<h2>Configurable file extension<a class="headerlink" href="#configurable-file-extension" title="Permalink to this headline">¶</a></h2>
+<p>Right now, <tt class="docutils literal"><span class="pre">.yml</span></tt> is hard-coded. This could be exported to the
+configuration file, or even given as a list, so that <tt class="docutils literal"><span class="pre">.yml</span></tt> and <tt class="docutils literal"><span class="pre">.yaml</span></tt>
+can both be used.</p>
+<p>Actually, I don&#8217;t think this is such a good idea. If we create too many
+options right now, it&#8217;ll be harder to unify later. Please also see <a href="#id1"><span class="problematic" id="id2">`issue #17
+&lt;https://github.com/madduck/reclass/issues/17`_</span></a> for a discussion about this.</p>
+</div>
+<div class="section" id="verbosity-debugging">
+<h2>Verbosity, debugging<a class="headerlink" href="#verbosity-debugging" title="Permalink to this headline">¶</a></h2>
+<p>Verbose output and debug logging would be a very useful addition to help
+people understand what&#8217;s going on, where data are being changed/merged, and to
+help solve problems.</p>
+</div>
+<div class="section" id="data-from-cms-for-interpolation">
+<h2>Data from CMS for interpolation<a class="headerlink" href="#data-from-cms-for-interpolation" title="Permalink to this headline">¶</a></h2>
+<p>Depending on the CMS in question, it would be nice if <strong>reclass</strong> had access to
+the host-specific data (facts, grains, etc.) and could use those in parameter
+interpolation. I can imagine this working for Salt, where the <tt class="docutils literal"><span class="pre">grains</span></tt>
+dictionary (and results from previous external node classifiers) is made
+available to the external node classifiers, but I am not convinced this will
+be possible in Ansible and Puppet.</p>
+<p>On the other hand, providing CMS-specific data to reclass will make people
+depend on it, meaning Salt cannot be used with multiple tools anymore.</p>
+<p>The way to deal with that would be to map grains, facts, whatever the CMS
+calls them, to a shared naming scheme/taxonomy, but that&#8217;s a painful task,
+I think. It would mean, however, that even templates could be shared between
+CMSs if they only use the data provided by reclass (i.e. grains/facts become
+pillar data).</p>
+</div>
+<div class="section" id="membership-information">
+<h2>Membership information<a class="headerlink" href="#membership-information" title="Permalink to this headline">¶</a></h2>
+<p>It would be nice if <strong>reclass</strong> could provide e.g. the Nagios master node with
+a list of clients that define it as their master. That would short-circuit
+Puppet&#8217;s <tt class="docutils literal"><span class="pre">storeconfigs</span></tt> and Salt&#8217;s <tt class="docutils literal"><span class="pre">mine</span></tt>.</p>
+<p>The way I envision this currently is to provide something I call &#8220;inventory
+queries&#8221;. For instance, the Nagios master node&#8217;s reclass data would contain
+the following (<tt class="docutils literal"><span class="pre">$[…]</span></tt> would denote interpolation to create a list, a bit
+like list comprehension):</p>
+<div class="highlight-python"><div class="highlight"><pre>parameters:
+  nagios:
+    hosts: $[nagios:master == SELF.nodename]
+</pre></div>
+</div>
+<p>This would cause <strong>reclass</strong> to iterate the inventory and generate a list of all
+the nodes that define a parameter <tt class="docutils literal"><span class="pre">nagios:master</span></tt> whose value equals to the
+name of the current node.</p>
+<p>This could be greatly simplified. For instance, we could simply limit
+comparisons against the name of the current node and just specify</p>
+<div class="highlight-python"><div class="highlight"><pre>$[nagios:master]
+</pre></div>
+</div>
+<p>which would be expanded to a list of node names whose pillar data includes
+<tt class="docutils literal"><span class="pre">${nagios:master}</span></tt> that matches the current node&#8217;s name.</p>
+<p>Or it could be made arbitrarily complex and flexible, e.g. any of the
+following:</p>
+<div class="highlight-python"><div class="highlight"><pre>$[nagios:master == SELF.nodename]                  # replace with nodename
+$[nagios:master == SELF.nodename | nodename]       # name replacement value
+$[nagios:master == SELF.nodename | nagios:nodeid]  # replace with pillar data
+$[x:nagios:nodeid foreach x | x:nagios:master == SELF.nodename]
+…
+</pre></div>
+</div>
+<p>I&#8217;d rather not code this up from scratch, so I am looking for ideas for reuse…</p>
+</div>
+<div class="section" id="configuration-file-lookup-improvements">
+<h2>Configuration file lookup improvements<a class="headerlink" href="#configuration-file-lookup-improvements" title="Permalink to this headline">¶</a></h2>
+<p>Right now, the adapters and the CLI look for the <a class="reference internal" href="configfile.html"><em>configuration file</em></a> in a fixed set of locations. On of those derives from
+<tt class="docutils literal"><span class="pre">OPT_INVENTORY_BASE_URI</span></tt>, the default inventory base URI (<tt class="docutils literal"><span class="pre">/etc/reclass</span></tt>).
+This should probably be updated in case the user changes the URI.</p>
+<p>Furthermore, <tt class="docutils literal"><span class="pre">$CWD</span></tt> and <tt class="docutils literal"><span class="pre">~</span></tt> might not make a lot of sense in all
+use-cases.</p>
+<p>However, this might be better addressed by the following point:</p>
+</div>
+<div class="section" id="adapter-class-hierarchy">
+<h2>Adapter class hierarchy<a class="headerlink" href="#adapter-class-hierarchy" title="Permalink to this headline">¶</a></h2>
+<p>At the moment, adapters are just imperative code. It might make more sense to
+wrap them in classes, which customise things like command-line and config file
+parsing.</p>
+<p>One nice way would be to generalise configuration file reading, integrate it
+with command-line parsing, and then allow the consumers (the adapters) to
+configure them, for instance, in the Salt adapter:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">config_proxy</span> <span class="o">=</span> <span class="n">ConfigProxy</span><span class="p">()</span>
+<span class="n">config_proxy</span><span class="o">.</span><span class="n">set_configfile_search_path</span><span class="p">([</span><span class="s">&#39;/etc/reclass&#39;</span><span class="p">,</span> <span class="s">&#39;/etc/salt&#39;</span><span class="p">])</span>
+<span class="n">config_proxy</span><span class="o">.</span><span class="n">lock_config_option</span><span class="p">(</span><span class="s">&#39;output&#39;</span><span class="p">,</span> <span class="s">&#39;yaml&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The last call would effectively remove the <tt class="docutils literal"><span class="pre">--output</span></tt> config option from the
+CLI, and yield an error (or warning) if the option was encountered while
+parsing the configuration file.</p>
+<p>Furthermore, the class instances could become long-lived and keep a reference
+to a storage proxy, e.g. to prevent having to reload storage on every request.</p>
+</div>
+<div class="section" id="node-lists">
+<h2>Node lists<a class="headerlink" href="#node-lists" title="Permalink to this headline">¶</a></h2>
+<p>Class mappings are still experimental, and one of the reasons I am not too
+happy with them right now is that one would still need to provide node files
+for all nodes for <tt class="docutils literal"><span class="pre">inventory</span></tt> invocations. This is because class mappings
+can assign classes based on patterns or regular expressions, but it is not
+possible to turn a pattern or regular expression into a list of valid nodes.</p>
+<p><a class="reference external" href="https://github.com/madduck/reclass/issues/9">Issue #9</a> contains a lengthy
+discussion on this. At the moment, I am unsure what the best way forward is.</p>
+</div>
+<div class="section" id="inventory-filters">
+<h2>Inventory filters<a class="headerlink" href="#inventory-filters" title="Permalink to this headline">¶</a></h2>
+<p>As described in <a class="reference external" href="https://github.com/madduck/reclass/issues/11">issue #11</a>:
+provide a means to limit the enumeration of the inventory, according to node
+name patterns, or using classes white-/blacklists.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">reclass to-do list</a><ul>
+<li><a class="reference internal" href="#common-set-of-classes">Common set of classes</a></li>
+<li><a class="reference internal" href="#testing-framework">Testing framework</a></li>
+<li><a class="reference internal" href="#configurable-file-extension">Configurable file extension</a></li>
+<li><a class="reference internal" href="#verbosity-debugging">Verbosity, debugging</a></li>
+<li><a class="reference internal" href="#data-from-cms-for-interpolation">Data from CMS for interpolation</a></li>
+<li><a class="reference internal" href="#membership-information">Membership information</a></li>
+<li><a class="reference internal" href="#configuration-file-lookup-improvements">Configuration file lookup improvements</a></li>
+<li><a class="reference internal" href="#adapter-class-hierarchy">Adapter class hierarchy</a></li>
+<li><a class="reference internal" href="#node-lists">Node lists</a></li>
+<li><a class="reference internal" href="#inventory-filters">Inventory filters</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="hacking.html"
+                        title="previous chapter">Hacking on reclass</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="changelog.html"
+                        title="next chapter">ChangeLog</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="changelog.html" title="ChangeLog"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="hacking.html" title="Hacking on reclass"
+             >previous</a> |</li>
+        <li><a href="index.html">reclass</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, martin f. krafft.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

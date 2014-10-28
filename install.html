@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation &mdash; reclass 1.4.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="reclass 1.4.1 documentation" href="index.html" />
+    <link rel="next" title="reclass concepts" href="concepts.html" />
+    <link rel="prev" title="reclass — Recursive external node classification" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="concepts.html" title="reclass concepts"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="reclass — Recursive external node classification"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">reclass</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="for-debian-users-including-ubuntu">
+<h2>For Debian users (including Ubuntu)<a class="headerlink" href="#for-debian-users-including-ubuntu" title="Permalink to this headline">¶</a></h2>
+<p><strong>reclass</strong> has been <a class="reference external" href="http://packages.debian.org/search?keywords=reclass">packaged for Debian</a>. To use it, just install it with
+APT:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ apt-get install reclass [reclass-doc]
+</pre></div>
+</div>
+</div>
+<div class="section" id="for-archlinux-users">
+<h2>For ArchLinux users<a class="headerlink" href="#for-archlinux-users" title="Permalink to this headline">¶</a></h2>
+<p><strong>reclass</strong> is <a class="reference external" href="https://aur.archlinux.org/packages/reclass-git/">available for ArchLinux</a>, thanks to Niels Abspoel.
+Dowload the <a class="reference external" href="https://aur.archlinux.org/packages/re/reclass-git/reclass-git.tar.gz">tarball</a> from <tt class="docutils literal"><span class="pre">aur</span></tt> or <tt class="docutils literal"><span class="pre">yaourt</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ yaourt -S reclass
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ tar xvzf reclass-git.tar.gz
+$ cd reclass-git; makepkg
+$ sudo pacman -U reclass-git-&lt;git-commit-hash&gt;.tar.gz
+</pre></div>
+</div>
+</div>
+<div class="section" id="other-distributions">
+<h2>Other distributions<a class="headerlink" href="#other-distributions" title="Permalink to this headline">¶</a></h2>
+<p>Developers of other distributions are cordially invited to package <strong>reclass</strong>
+themselves and <a class="reference external" href="mailto:reclass&#37;&#52;&#48;pantsfullofunix&#46;net">write to the mailing list</a> to have details included here. Or send
+a patch!</p>
+</div>
+<div class="section" id="from-source">
+<h2>From source<a class="headerlink" href="#from-source" title="Permalink to this headline">¶</a></h2>
+<p><strong>reclass</strong> is currently maintained <a class="reference external" href="http://github.com/madduck/reclass">on Github</a>, so to obtain the source, run:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ git clone https://github.com/madduck/reclass.git
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ git clone ssh://git@github.com:madduck/reclass.git
+</pre></div>
+</div>
+<p>If you want a tarball, please <a class="reference external" href="http://http.debian.net/debian/pool/main/r/reclass/">obtain it from the Debian archive</a>.</p>
+<p>Before you can use <strong>reclass</strong>, you need to install it into a place where Python
+can find it. The following step should install the package to <tt class="docutils literal"><span class="pre">/usr/local</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ python setup.py install
+</pre></div>
+</div>
+<p>If you want to install to a different location, use &#8211;prefix like so:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ python setup.py install --prefix=/opt/local
+</pre></div>
+</div>
+<p>Just make sure that the destination is in the Python module search path, which
+you can check like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ python -c &#39;import sys; print sys.path&#39;
+</pre></div>
+</div>
+<p>More options can be found in the output of</p>
+<div class="highlight-python"><div class="highlight"><pre>$ python setup.py install --help
+$ python setup.py --help
+$ python setup.py --help-commands
+$ python setup.py --help [cmd]
+</pre></div>
+</div>
+<p>If you just want to run <strong>reclass</strong> from source, e.g. because you are going to be
+making and testing changes, install it in &#8220;development mode&#8221;:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ python setup.py develop
+</pre></div>
+</div>
+<p>To uninstall (the rm call is necessary due to <a class="reference external" href="http://bugs.debian.org/714960">a bug in setuptools</a>):</p>
+<div class="highlight-python"><div class="highlight"><pre>$ python setup.py develop --uninstall
+$ rm /usr/local/bin/reclass*
+</pre></div>
+</div>
+<p><a class="reference external" href="http://bugs.python.org/issue4673">Uninstallation currently isn&#8217;t possible</a> for packages installed to
+/usr/local as per the above method, unfortunately. The following should do:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ rm -r /usr/local/lib/python*/dist-packages/reclass* /usr/local/bin/reclass*
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#for-debian-users-including-ubuntu">For Debian users (including Ubuntu)</a></li>
+<li><a class="reference internal" href="#for-archlinux-users">For ArchLinux users</a></li>
+<li><a class="reference internal" href="#other-distributions">Other distributions</a></li>
+<li><a class="reference internal" href="#from-source">From source</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">reclass — Recursive external node classification</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="concepts.html"
+                        title="next chapter">reclass concepts</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="concepts.html" title="reclass concepts"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="reclass — Recursive external node classification"
+             >previous</a> |</li>
+        <li><a href="index.html">reclass</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, martin f. krafft.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

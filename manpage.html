@@ -1,0 +1,243 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>reclass manpage &mdash; reclass 1.4.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="reclass 1.4.1 documentation" href="index.html" />
+    <link rel="next" title="reclass configuration file" href="configfile.html" />
+    <link rel="prev" title="External references" href="refs.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="configfile.html" title="reclass configuration file"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="refs.html" title="External references"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">reclass</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="reclass-manpage">
+<h1>reclass manpage<a class="headerlink" href="#reclass-manpage" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="synopsis">
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>reclass</strong> &#8211;help</div>
+<div class="line"><strong>reclass</strong> <em>[options]</em> &#8211;inventory</div>
+<div class="line"><strong>reclass</strong> <em>[options]</em> &#8211;nodeinfo=NODENAME</div>
+</div>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p><strong>reclass</strong> is an &#8220;external node classifier&#8221; (ENC) as can be used with
+automation tools, such as <a class="reference external" href="http://puppetlabs.com/puppet/puppet-open-source">Puppet</a>, <a class="reference external" href="http://saltstack.com/community">Salt</a>, and <a class="reference external" href="http://www.ansibleworks.com">Ansible</a>. It is also
+a stand-alone tool for merging data sources recursively.</p>
+<p>The purpose of an ENC is to allow a system administrator to maintain an
+inventory of nodes to be managed, completely separately from the configuration
+of the automation tool. Usually, the external node classifier completely
+replaces the tool-specific inventory (such as <tt class="docutils literal"><span class="pre">site.pp</span></tt> for Puppet,
+<tt class="docutils literal"><span class="pre">ext_pillar</span></tt>/<tt class="docutils literal"><span class="pre">master_tops</span></tt> for Salt, or <tt class="docutils literal"><span class="pre">/etc/ansible/hosts</span></tt>).</p>
+<p>With respect to the configuration management tool, the ENC then fulfills two
+jobs:</p>
+<ul class="simple">
+<li>it provides information about groups of nodes and group memberships</li>
+<li>it gives access to node-specific information, such as variables</li>
+</ul>
+<p><strong>reclass</strong> allows you to define your nodes through class inheritance, while
+always able to override details further up the tree (i.e. in more specific
+nodes). Think of classes as feature sets, as commonalities between nodes, or
+as tags. Add to that the ability to nest classes (multiple inheritance is
+allowed, well-defined, and encouraged), and you can assemble your
+infrastructure from smaller bits, eliminating duplication and exposing all
+important parameters to a single location, logically organised. And if that
+isn&#8217;t enough, <strong>reclass</strong> lets you reference other parameters in the very
+hierarchy you are currently assembling.</p>
+<p><strong>reclass</strong> will be used indirectly through adapters most of the time. However,
+there exists a command-line interface that allows querying the database. This
+manual page describes this interface.</p>
+</div>
+<div class="section" id="options">
+<h2>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h2>
+<p>Please see the output of <tt class="docutils literal"><span class="pre">reclass</span> <span class="pre">--help</span></tt> for the default values of these
+options:</p>
+<div class="section" id="database-options">
+<h3>Database options<a class="headerlink" href="#database-options" title="Permalink to this headline">¶</a></h3>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-s</span>, <span class="option">--storage-type</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>The type of storage backend to use</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-b</span>, <span class="option">--inventory-base-uri</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>The base URI to prepend to nodes and classes</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-u</span>, <span class="option">--nodes-uri</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>The URI to the nodes storage</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-c</span>, <span class="option">--classes-uri</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>The URI to the classes storage</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="output-options">
+<h3>Output options<a class="headerlink" href="#output-options" title="Permalink to this headline">¶</a></h3>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">-o</span>, <span class="option">--output</span></kbd></td>
+<td>The output format to use (yaml or json)</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-y</span>, <span class="option">--pretty-print</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>Try to make the output prettier</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="modes">
+<h3>Modes<a class="headerlink" href="#modes" title="Permalink to this headline">¶</a></h3>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-i</span>, <span class="option">--inventory</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>Output the entire inventory</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-n</span>, <span class="option">--nodeinfo</span></kbd></td>
+<td>Output information for a specific node</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="information">
+<h3>Information<a class="headerlink" href="#information" title="Permalink to this headline">¶</a></h3>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">-h</span>, <span class="option">--help</span></kbd></td>
+<td>Help output</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--version</span></kbd></td>
+<td>Display version number</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<p>Please visit <a class="reference external" href="http://reclass.pantsfullofunix.net/">http://reclass.pantsfullofunix.net/</a> for more information about
+<strong>reclass</strong>.</p>
+<p>The documentation is also available from the <tt class="docutils literal"><span class="pre">./doc</span></tt> subtree in the source
+checkout, or from <tt class="docutils literal"><span class="pre">/usr/share/doc/reclass-doc</span></tt>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">reclass manpage</a><ul>
+<li><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#options">Options</a><ul>
+<li><a class="reference internal" href="#database-options">Database options</a></li>
+<li><a class="reference internal" href="#output-options">Output options</a></li>
+<li><a class="reference internal" href="#modes">Modes</a></li>
+<li><a class="reference internal" href="#information">Information</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="refs.html"
+                        title="previous chapter">External references</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="configfile.html"
+                        title="next chapter">reclass configuration file</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="configfile.html" title="reclass configuration file"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="refs.html" title="External references"
+             >previous</a> |</li>
+        <li><a href="index.html">reclass</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, martin f. krafft.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

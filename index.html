@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>reclass — Recursive external node classification &mdash; reclass 1.4.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="reclass 1.4.1 documentation" href="#" />
+    <link rel="next" title="Installation" href="install.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="install.html" title="Installation"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">reclass</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="reclass-recursive-external-node-classification">
+<h1>reclass — Recursive external node classification<a class="headerlink" href="#reclass-recursive-external-node-classification" title="Permalink to this headline">¶</a></h1>
+<p><strong>reclass</strong> is an &#8220;external node classifier&#8221; (ENC) as can be used with
+automation tools, such as <a class="reference external" href="http://puppetlabs.com/puppet/puppet-open-source">Puppet</a>, <a class="reference external" href="http://saltstack.com/community">Salt</a>, and <a class="reference external" href="http://www.ansibleworks.com">Ansible</a>. It is also
+a stand-alone tool for merging data sources recursively.</p>
+<p>The purpose of an ENC is to allow a system administrator to maintain an
+inventory of nodes to be managed, completely separately from the configuration
+of the automation tool. Usually, the external node classifier completely
+replaces the tool-specific inventory (such as <tt class="docutils literal"><span class="pre">site.pp</span></tt> for Puppet,
+<tt class="docutils literal"><span class="pre">ext_pillar</span></tt>/<tt class="docutils literal"><span class="pre">master_tops</span></tt> for Salt, or <tt class="docutils literal"><span class="pre">/etc/ansible/hosts</span></tt>).</p>
+<p>With respect to the configuration management tool, the ENC then fulfills two
+jobs:</p>
+<ul class="simple">
+<li>it provides information about groups of nodes and group memberships</li>
+<li>it gives access to node-specific information, such as variables</li>
+</ul>
+<p><strong>reclass</strong> allows you to define your nodes through class inheritance, while
+always able to override details further up the tree (i.e. in more specific
+nodes). Think of classes as feature sets, as commonalities between nodes, or
+as tags. Add to that the ability to nest classes (multiple inheritance is
+allowed, well-defined, and encouraged), and you can assemble your
+infrastructure from smaller bits, eliminating duplication and exposing all
+important parameters to a single location, logically organised. And if that
+isn&#8217;t enough, <strong>reclass</strong> lets you reference other parameters in the very
+hierarchy you are currently assembling.</p>
+<div class="section" id="releases-and-source-code">
+<h2>Releases and source code<a class="headerlink" href="#releases-and-source-code" title="Permalink to this headline">¶</a></h2>
+<p>The latest released <strong>reclass</strong> version is 1.4.1. Please have a look at the
+<a class="reference internal" href="changelog.html"><em>change log</em></a> for information about recent changes.</p>
+<p>For now, <strong>reclass</strong> is hosted <a class="reference external" href="https://github.com/madduck/reclass">on Github</a>, and you may clone it with the
+following command:</p>
+<div class="highlight-python"><div class="highlight"><pre>git clone https://github.com/madduck/reclass.git
+</pre></div>
+</div>
+<p>Please see the <a class="reference internal" href="install.html"><em>install instructions</em></a> for information about
+distribution packages and tarballs.</p>
+</div>
+<div class="section" id="community">
+<h2>Community<a class="headerlink" href="#community" title="Permalink to this headline">¶</a></h2>
+<p>There is a <a class="reference external" href="http://lists.pantsfullofunix.net/listinfo/reclass">mailing list</a>, where you can bring up anything related to
+<strong>reclass</strong>.</p>
+<p>For real-time communication, please join the <tt class="docutils literal"><span class="pre">#reclass</span></tt> IRC channel on
+<tt class="docutils literal"><span class="pre">irc.oftc.net</span></tt>.</p>
+<p>If you&#8217;re using <a class="reference external" href="http://saltstack.com/community">Salt</a>, you can also ask your <strong>reclass</strong>-and-Salt-related
+questions on the mailing list, ideally specifying &#8220;reclass&#8221; in the subject of
+your message.</p>
+</div>
+<div class="section" id="licence">
+<h2>Licence<a class="headerlink" href="#licence" title="Permalink to this headline">¶</a></h2>
+<p><strong>reclass</strong> is © 2007–2014 by martin f. krafft and released under the terms of
+the <a class="reference external" href="http://opensource.org/licenses/Artistic-2.0">Artistic Licence 2.0</a>.</p>
+</div>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<p>These documents aim to get you started with <strong>reclass</strong>:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#for-debian-users-including-ubuntu">For Debian users (including Ubuntu)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#for-archlinux-users">For ArchLinux users</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#other-distributions">Other distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#from-source">From source</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">reclass concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="operations.html">reclass operations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="operations.html#yaml-fs-storage">YAML FS storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations.html#data-merging">Data merging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations.html#wildcard-regexp-mappings">Wildcard/Regexp mappings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations.html#parameter-interpolation">Parameter interpolation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Using reclass</a></li>
+<li class="toctree-l1"><a class="reference internal" href="refs.html">External references</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manpage.html">reclass manpage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="manpage.html#synopsis">Synopsis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manpage.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manpage.html#options">Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manpage.html#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configfile.html">reclass configuration file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="salt.html">Using reclass with Salt</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="salt.html#quick-start">Quick start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="salt.html#configuration-file-and-master-configuration">Configuration file and master configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="salt.html#integration-with-salt">Integration with Salt</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ansible.html">Using reclass with Ansible</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ansible.html#quick-start-with-ansible">Quick start with Ansible</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ansible.html#integration-with-ansible">Integration with Ansible</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ansible.html#variable-interpolation">Variable interpolation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="puppet.html">Using reclass with Puppet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hacking.html">Hacking on reclass</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hacking.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hacking.html#discussing-reclass">Discussing reclass</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hacking.html#contributing-to-reclass">Contributing to reclass</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">reclass to-do list</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#common-set-of-classes">Common set of classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#testing-framework">Testing framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#configurable-file-extension">Configurable file extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#verbosity-debugging">Verbosity, debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#data-from-cms-for-interpolation">Data from CMS for interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#membership-information">Membership information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#configuration-file-lookup-improvements">Configuration file lookup improvements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#adapter-class-hierarchy">Adapter class hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#node-lists">Node lists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#inventory-filters">Inventory filters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">ChangeLog</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="about-the-name">
+<h2>About the name<a class="headerlink" href="#about-the-name" title="Permalink to this headline">¶</a></h2>
+<p>&#8220;reclass&#8221; stands for <strong>r</strong>ecursive <strong>e</strong>xternal node <strong>class</strong>ifier,
+which is somewhat of a misnomer. I chose the name very early on, based on the
+recursive nature of the data merging. However, to the user, a better paradigm
+would be &#8220;hierarchical&#8221;, as s/he does not and should not care too much about
+the implementation internals. By the time that I realised this, unfortunately,
+<a class="reference external" href="http://projects.puppetlabs.com/projects/hiera">Hiera</a> (Puppet-specific) had already occupied this prefix. Oh well. Once you
+start using <strong>reclass</strong>, you&#8217;ll think recursively as well as hierarchically at
+the same time. It&#8217;s really quite simple.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">reclass — Recursive external node classification</a><ul>
+<li><a class="reference internal" href="#releases-and-source-code">Releases and source code</a></li>
+<li><a class="reference internal" href="#community">Community</a></li>
+<li><a class="reference internal" href="#licence">Licence</a></li>
+<li><a class="reference internal" href="#contents">Contents</a></li>
+<li><a class="reference internal" href="#about-the-name">About the name</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="next chapter">Installation</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="install.html" title="Installation"
+             >next</a> |</li>
+        <li><a href="#">reclass</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, martin f. krafft.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

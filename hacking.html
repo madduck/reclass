@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Hacking on reclass &mdash; reclass 1.4.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="reclass 1.4.1 documentation" href="index.html" />
+    <link rel="next" title="reclass to-do list" href="todo.html" />
+    <link rel="prev" title="Using reclass with Puppet" href="puppet.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="todo.html" title="reclass to-do list"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="puppet.html" title="Using reclass with Puppet"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">reclass</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="hacking-on-reclass">
+<h1>Hacking on reclass<a class="headerlink" href="#hacking-on-reclass" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>If you just want to run <strong>reclass</strong> from source, e.g. because you are going to be
+making and testing changes, install it in &#8220;development mode&#8221;:</p>
+<div class="highlight-python"><div class="highlight"><pre>python setup.py develop
+</pre></div>
+</div>
+<p>Now the <tt class="docutils literal"><span class="pre">reclass</span></tt> script, as well as the adapters, will be available in
+<tt class="docutils literal"><span class="pre">/usr/local/bin</span></tt>, and you can also invoke them directly from the source
+tree.</p>
+<p>To uninstall:</p>
+<div class="highlight-python"><div class="highlight"><pre>python setup.py develop --uninstall
+</pre></div>
+</div>
+</div>
+<div class="section" id="discussing-reclass">
+<h2>Discussing reclass<a class="headerlink" href="#discussing-reclass" title="Permalink to this headline">¶</a></h2>
+<p>If you want to talk about <strong>reclass</strong>, use the <a class="reference external" href="http://lists.pantsfullofunix.net/listinfo/reclass">mailing list</a> or to find me on
+IRC, in <tt class="docutils literal"><span class="pre">#reclass</span></tt> on <tt class="docutils literal"><span class="pre">irc.oftc.net</span></tt>.</p>
+</div>
+<div class="section" id="contributing-to-reclass">
+<h2>Contributing to reclass<a class="headerlink" href="#contributing-to-reclass" title="Permalink to this headline">¶</a></h2>
+<p><strong>reclass</strong> is currently maintained <a class="reference external" href="http://github.com/madduck/reclass">on Github</a>.</p>
+<p>Conttributions to <strong>reclass</strong> are very welcome. Since I prefer to keep a somewhat
+clean history, I will not just merge pull request.</p>
+<p>You can submit pull requests, of course, and I&#8217;ll rebase them onto <tt class="docutils literal"><span class="pre">HEAD</span></tt>
+before merging. Or send your patches using <tt class="docutils literal"><span class="pre">git-format-patch</span></tt> and
+<tt class="docutils literal"><span class="pre">git-send-e-mail</span></tt> to <a class="reference external" href="mailto:reclass&#37;&#52;&#48;lists&#46;pantsfullofunix&#46;net">the mailing list</a>.</p>
+<p>I have added rudimentary unit tests, and it would be nice if you could submit
+your changes with appropriate changes to the tests. To run tests, invoke</p>
+<div class="highlight-python"><div class="highlight"><pre>$ make tests
+</pre></div>
+</div>
+<p>in the top-level checkout directory. The tests are rather inconsistent, some
+using mock objects, and only the datatypes-related code is covered. If you are
+a testing expert, I could certainly use some help here to improve the
+consistency of the existing tests, as well as their coverage.</p>
+<p>Also, there is a Makefile giving access to PyLint and <tt class="docutils literal"><span class="pre">coverage.py</span></tt> (running
+tests). If you run that, you can see there is a lot of work to be done
+cleaning up the code. If this is the sort of stuff you want to do — by all
+means — be my guest! ;)</p>
+<p>There are a number of items on the <a class="reference internal" href="todo.html"><em>to-do list</em></a>, so if you are
+bored…</p>
+<p>If you have larger ideas, I&#8217;ll be looking forward to discuss them with you.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Hacking on reclass</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#discussing-reclass">Discussing reclass</a></li>
+<li><a class="reference internal" href="#contributing-to-reclass">Contributing to reclass</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="puppet.html"
+                        title="previous chapter">Using reclass with Puppet</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="todo.html"
+                        title="next chapter">reclass to-do list</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="todo.html" title="reclass to-do list"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="puppet.html" title="Using reclass with Puppet"
+             >previous</a> |</li>
+        <li><a href="index.html">reclass</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, martin f. krafft.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

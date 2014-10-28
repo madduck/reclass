@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>reclass operations &mdash; reclass 1.4.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="reclass 1.4.1 documentation" href="index.html" />
+    <link rel="next" title="Using reclass" href="usage.html" />
+    <link rel="prev" title="reclass concepts" href="concepts.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="usage.html" title="Using reclass"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="concepts.html" title="reclass concepts"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">reclass</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="reclass-operations">
+<h1>reclass operations<a class="headerlink" href="#reclass-operations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="yaml-fs-storage">
+<h2>YAML FS storage<a class="headerlink" href="#yaml-fs-storage" title="Permalink to this headline">¶</a></h2>
+<p>While <strong>reclass</strong> has been built to support different storage backends through
+plugins, currently only the <tt class="docutils literal"><span class="pre">yaml_fs</span></tt> storage backend exists. This is a very
+simple, yet powerful, YAML-based backend, using flat files on the filesystem
+(as suggested by the <tt class="docutils literal"><span class="pre">_fs</span></tt> postfix).</p>
+<p><tt class="docutils literal"><span class="pre">yaml_fs</span></tt> works with two directories, one for node definitions, and another
+for class definitions. The two directories must not be the same, nor can one
+be a parent of the other.</p>
+<p>Files in those directories are YAML-files, specifying key-value pairs. The
+following three keys are read by <strong>reclass</strong>:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="16%" />
+<col width="84%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Key</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>classes</td>
+<td>a list of parent classes</td>
+</tr>
+<tr class="row-odd"><td>appliations</td>
+<td>a list of applications to append to the applications defined by
+ancestors. If an application name starts with <tt class="docutils literal"><span class="pre">~</span></tt>, it would
+remove this application from the list, if it had already been
+added — but it does not prevent a future addition.
+E.g. <tt class="docutils literal"><span class="pre">~firewalled</span></tt></td>
+</tr>
+<tr class="row-even"><td>parameters</td>
+<td><p class="first">key-value pairs to set defaults in class definitions, override
+existing data, or provide node-specific information in node
+specifications.
+By convention, parameters corresponding to an application
+should be provided as subkey-value pairs, keyed by the name of
+the application, e.g.:</p>
+<div class="last highlight-python"><div class="highlight"><pre>applications:
+- ssh.server
+parameters:
+  ssh.server:
+    permit_root_login: no
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>environment</td>
+<td>only relevant for nodes, this allows to specify an &#8220;environment&#8221;
+into which the node definition is supposed to be place.</td>
+</tr>
+</tbody>
+</table>
+<p>Classes files may reside in subdirectories, which act as namespaces. For
+instance, a class <tt class="docutils literal"><span class="pre">ssh.server</span></tt> will result in the class definition to be
+read from <tt class="docutils literal"><span class="pre">ssh/server.yml</span></tt>. Specifying just <tt class="docutils literal"><span class="pre">ssh</span></tt> will cause the class
+data to be read from <tt class="docutils literal"><span class="pre">ssh/init.yml</span></tt> or <tt class="docutils literal"><span class="pre">ssh.yml</span></tt>. Note, however, that only
+one of those two may be present.</p>
+<p>Nodes may also be defined in subdirectories. However, node names (filename)
+must be unique across all subdirectories, and <strong>reclass</strong> will exit with an
+error if a node is defined multiple times. Subdirectories therefore really
+only exist for the administrator&#8217;s local data structuring. They may be used in
+mappings (see below) to tag additional classes onto nodes.</p>
+</div>
+<div class="section" id="data-merging">
+<h2>Data merging<a class="headerlink" href="#data-merging" title="Permalink to this headline">¶</a></h2>
+<p><strong>reclass</strong> has two modes of operation: node information retrieval and inventory
+listing. The second is really just a loop of the first across all defined
+nodes, and needs not be further described.</p>
+<p>When retrieving information about a node, <strong>reclass</strong> first obtains the node
+definition from the storage backend. Then, it iterates the list of classes
+defined for the node and recursively asks the storage backend for each class
+definition (unless already cached).</p>
+<p>Next, <strong>reclass</strong> recursively descends each class, looking at the classes it
+defines, and so on, until a leaf node is reached, i.e. a class that references
+no other classes.</p>
+<p>Now, the merging starts. At every step, the list of applications and the set
+of parameters at each level is merged into what has been accumulated so far.</p>
+<p>Merging of parameters is done &#8220;deeply&#8221;, meaning that lists and dictionaries
+are extended (recursively), rather than replaced. However, a scalar value
+<em>does</em> overwrite a dictionary or list value. While the scalar could be
+appended to an existing list, there is no sane default assumption in the
+context of a dictionary, so this behaviour seems the most logical. Plus, it
+allows for a dictionary to be erased by overwriting it with the null value.</p>
+<p>After all classes (and the classes they reference) have been visited,
+<strong>reclass</strong> finally merges the applications list and parameters defined for the
+node into what has been accumulated during the processing of the classes, and
+returns the final result.</p>
+</div>
+<div class="section" id="wildcard-regexp-mappings">
+<h2>Wildcard/Regexp mappings<a class="headerlink" href="#wildcard-regexp-mappings" title="Permalink to this headline">¶</a></h2>
+<p>Using the <a class="reference internal" href="configfile.html"><em>configuration file</em></a>, it is also possible to
+provide a list mappings between node names and classes. For instance:</p>
+<div class="highlight-python"><div class="highlight"><pre>class_mappings:
+  - \* default
+  - /^www\d+/ webserver
+  - \*.ch hosted@switzerland another_class_to_show_that_it_can_take_lists
+</pre></div>
+</div>
+<p>This will assign the <tt class="docutils literal"><span class="pre">default</span></tt> class to all nodes (make sure to escape
+a leading asterisk (*) to keep YAML happy), <tt class="docutils literal"><span class="pre">webserver</span></tt> to all nodes named
+<tt class="docutils literal"><span class="pre">www1</span></tt> or <tt class="docutils literal"><span class="pre">www999</span></tt>, and <tt class="docutils literal"><span class="pre">hosted-in-switzerland</span></tt> to all nodes whose names
+end with <tt class="docutils literal"><span class="pre">.ch</span></tt> (again, note the escaped leading asterisk). Multiple classes
+can be assigned to each mapping by providing a space-separated list (class
+names cannot contain spaces anyway).</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The class mappings do not really belong in the configuration file, as they
+are data, not configuration inmformation. Therefore, they are likely going
+to move elsewhere, but I have not quite figured out to where. Most likely,
+there will be an additional file, specified in the configuration file, which
+then lists the mappings.</p>
+</div>
+<p>Note that mappings are not designed to replace node definitions. Mappings can
+be used to pre-populate the classes of existing nodes, but you still need to
+define all nodes (and if only to allow them to be enumerated for the
+inventory).</p>
+<p>The mapped classes can also contain backreferences when regular expressions
+are used, although they need to be escaped, e.g.:</p>
+<div class="highlight-python"><div class="highlight"><pre>class_mappings:
+  - /\.(\S+)$/ tld-\\1
+</pre></div>
+</div>
+<p>Furthermore, since the outer slashes (&#8216;/&#8217;) are used to &#8220;quote&#8221; the regular
+expression, <em>any</em> slashes within the regular expression must be escaped. For
+instance, the following class mapping assigns a <tt class="docutils literal"><span class="pre">subdir-X</span></tt> class to all
+nodes that are defined in a subdirectory (using yaml_fs):</p>
+<div class="highlight-python"><div class="highlight"><pre>class_mappings:
+  - /^([^\/]+)\// subdir-\\1
+</pre></div>
+</div>
+</div>
+<div class="section" id="parameter-interpolation">
+<h2>Parameter interpolation<a class="headerlink" href="#parameter-interpolation" title="Permalink to this headline">¶</a></h2>
+<p>Parameters may reference each other, including deep references, e.g.:</p>
+<div class="highlight-python"><div class="highlight"><pre>parameters:
+  location: Munich, Germany
+  motd:
+    header: This node sits in ${location}
+  for_demonstration: ${motd:header}
+  dict_reference: ${motd}
+</pre></div>
+</div>
+<p>After merging and interpolation, which happens automatically inside the
+storage modules, the <tt class="docutils literal"><span class="pre">for_demonstration</span></tt> parameter will have a value of
+&#8220;This node sits in Munich, Germany&#8221;.</p>
+<p>Types are preserved if the value contains nothing but a reference. Hence, the
+value of <tt class="docutils literal"><span class="pre">dict_reference</span></tt> will actually be a dictionary.</p>
+<p>You should now be ready to <a class="reference internal" href="usage.html"><em>use reclass</em></a>!</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">reclass operations</a><ul>
+<li><a class="reference internal" href="#yaml-fs-storage">YAML FS storage</a></li>
+<li><a class="reference internal" href="#data-merging">Data merging</a></li>
+<li><a class="reference internal" href="#wildcard-regexp-mappings">Wildcard/Regexp mappings</a></li>
+<li><a class="reference internal" href="#parameter-interpolation">Parameter interpolation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="concepts.html"
+                        title="previous chapter">reclass concepts</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="usage.html"
+                        title="next chapter">Using reclass</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="usage.html" title="Using reclass"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="concepts.html" title="reclass concepts"
+             >previous</a> |</li>
+        <li><a href="index.html">reclass</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, martin f. krafft.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>reclass concepts &mdash; reclass 1.4.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="reclass 1.4.1 documentation" href="index.html" />
+    <link rel="next" title="reclass operations" href="operations.html" />
+    <link rel="prev" title="Installation" href="install.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="operations.html" title="reclass operations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">reclass</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="reclass-concepts">
+<h1>reclass concepts<a class="headerlink" href="#reclass-concepts" title="Permalink to this headline">¶</a></h1>
+<p><strong>reclass</strong> assumes a node-centric perspective into your inventory. This is
+obvious when you query <strong>reclass</strong> for node-specific information, but it might not
+be clear when you ask <strong>reclass</strong> to provide you with a list of groups. In that
+case, <strong>reclass</strong> loops over all nodes it can find in its database, reads all
+information it can find about the nodes, and finally reorders the result to
+provide a list of groups with the nodes they contain.</p>
+<p>Since the term &#8220;groups&#8221; is somewhat ambiguous, it helps to start off with
+a short glossary of <strong>reclass</strong>-specific terminology:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="16%" />
+<col width="84%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Concept</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>node</td>
+<td>A node, usually a computer in your infrastructure</td>
+</tr>
+<tr class="row-odd"><td>class</td>
+<td>A category, tag, feature, or role that applies to a node
+Classes may be nested, i.e. there can be a class hierarchy</td>
+</tr>
+<tr class="row-even"><td>application</td>
+<td>A specific set of behaviour to apply</td>
+</tr>
+<tr class="row-odd"><td>parameter</td>
+<td>Node-specific variables, with inheritance throughout the class
+hierarchy.</td>
+</tr>
+</tbody>
+</table>
+<p>A class consists of zero or more parent classes, zero or more applications,
+and any number of parameters.</p>
+<p>A class name must not contain spaces.</p>
+<p>A node is almost equivalent to a class, except that it usually does not (but
+can) specify applications.</p>
+<p>When <strong>reclass</strong> parses a node (or class) definition and encounters a parent
+class, it recurses to this parent class first before reading any data of the
+node (or class). When <strong>reclass</strong> returns from the recursive, depth first walk, it
+then merges all information of the current node (or class) into the
+information it obtained during the recursion.</p>
+<p>Furthermore, a node (or class) may define a list of classes it derives from,
+in which case classes defined further down the list will be able to override
+classes further up the list.</p>
+<p>Information in this context is essentially one of a list of applications or
+a list of parameters.</p>
+<p>The interaction between the depth-first walk and the delayed merging of data
+means that the node (and any class) may override any of the data defined by
+any of the parent classes (ancestors). This is in line with the assumption
+that more specific definitions (&#8220;this specific host&#8221;) should have a higher
+precedence than more general definitions (&#8220;all webservers&#8221;, which includes all
+webservers in Munich, which includes &#8220;this specific host&#8221;, for example).</p>
+<p>Here&#8217;s a quick example, showing how parameters accumulate and can get
+replaced.</p>
+<blockquote>
+<div><p>All &#8220;unixnodes&#8221; (i.e. nodes who have the <tt class="docutils literal"><span class="pre">unixnode</span></tt> class in their
+ancestry) have <tt class="docutils literal"><span class="pre">/etc/motd</span></tt> centrally-managed (through the <tt class="docutils literal"><span class="pre">motd</span></tt>
+application), and the <cite>unixnode</cite> class definition provides a generic
+message-of-the-day to be put into this file.</p>
+<p>All descendants of the class <tt class="docutils literal"><span class="pre">debiannode</span></tt>, a descendant of <tt class="docutils literal"><span class="pre">unixnode</span></tt>,
+should include the Debian codename in this message, so the
+message-of-the-day is overwritten in the <tt class="docutils literal"><span class="pre">debiannodes</span></tt> class.</p>
+<p>The node <tt class="docutils literal"><span class="pre">quantum.example.org</span></tt> (a <cite>debiannode</cite>) will have a scheduled
+downtime this weekend, so until Monday, an appropriate message-of-the-day is
+added to the node definition.</p>
+<p>When the <tt class="docutils literal"><span class="pre">motd</span></tt> application runs, it receives the appropriate
+message-of-the-day (from <tt class="docutils literal"><span class="pre">quantum.example.org</span></tt> when run on that node) and
+writes it into <tt class="docutils literal"><span class="pre">/etc/motd</span></tt>.</p>
+</div></blockquote>
+<p>At this point it should be noted that parameters whose values are lists or
+key-value pairs don&#8217;t get overwritten by children classes or node definitions,
+but the information gets merged (recursively) instead.</p>
+<p>Similarly to parameters, applications also accumulate during the recursive
+walk through the class ancestry. It is possible for a node or child class to
+<em>remove</em> an application added by a parent class, by prefixing the application
+with <cite>~</cite>.</p>
+<p>Finally, <strong>reclass</strong> happily lets you use multiple inheritance, and ensures that
+the resolution of parameters is still well-defined. Here&#8217;s another example
+building upon the one about <tt class="docutils literal"><span class="pre">/etc/motd</span></tt> above:</p>
+<blockquote>
+<div><p><tt class="docutils literal"><span class="pre">quantum.example.org</span></tt> (which is back up and therefore its node definition
+no longer contains a message-of-the-day) is at a site in Munich. Therefore,
+it is a child of the class <tt class="docutils literal"><span class="pre">hosted&#64;munich</span></tt>. This class is independent of
+the <tt class="docutils literal"><span class="pre">unixnode</span></tt> hierarchy, <tt class="docutils literal"><span class="pre">quantum.example.org</span></tt> derives from both.</p>
+<p>In this example infrastructure, <tt class="docutils literal"><span class="pre">hosted&#64;munich</span></tt> is more specific than
+<tt class="docutils literal"><span class="pre">debiannode</span></tt> because there are plenty of Debian nodes at other sites (and
+some non-Debian nodes in Munich). Therefore, <tt class="docutils literal"><span class="pre">quantum.example.org</span></tt> derives
+from <tt class="docutils literal"><span class="pre">hosted&#64;munich</span></tt> _after_ <tt class="docutils literal"><span class="pre">debiannodes</span></tt>.</p>
+<p>When an electricity outage is expected over the weekend in Munich, the admin
+can change the message-of-the-day in the <tt class="docutils literal"><span class="pre">hosted&#64;munich</span></tt> class, and it
+will apply to all hosts in Munich.</p>
+<p>However, not all hosts in Munich have <tt class="docutils literal"><span class="pre">/etc/motd</span></tt>, because some of them
+are of class <tt class="docutils literal"><span class="pre">windowsnode</span></tt>. Since the <tt class="docutils literal"><span class="pre">windowsnode</span></tt> ancestry does not
+specify the <tt class="docutils literal"><span class="pre">motd</span></tt> application, those hosts have access to the
+message-of-the-day in the node variables, but the message won&#8217;t get used…</p>
+<p>… unless, of course, <tt class="docutils literal"><span class="pre">windowsnode</span></tt> specified a Windows-specific
+application to bring such notices to the attention of the user.</p>
+</div></blockquote>
+<p>It&#8217;s also trivial to ensure a certain order of class evaluation. Here&#8217;s
+another example:</p>
+<blockquote>
+<div><p>The <tt class="docutils literal"><span class="pre">ssh.server</span></tt> class defines the <tt class="docutils literal"><span class="pre">permit_root_login</span></tt> parameter to <tt class="docutils literal"><span class="pre">no</span></tt>.</p>
+<p>The <tt class="docutils literal"><span class="pre">backuppc.client</span></tt> class defines the parameter to <tt class="docutils literal"><span class="pre">without-password</span></tt>,
+because the BackupPC server might need to log in to the host as root.</p>
+<p>Now, what happens if the admin accidentally provides the following two
+classes?</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">backuppc.client</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">ssh.server</span></tt></li>
+</ul>
+<p>Theoretically, this would mean <tt class="docutils literal"><span class="pre">permit_root_login</span></tt> gets set to <tt class="docutils literal"><span class="pre">no</span></tt>.</p>
+<p>However, since all <tt class="docutils literal"><span class="pre">backuppc.client</span></tt> nodes need <tt class="docutils literal"><span class="pre">ssh.server</span></tt> (at least
+in most setups), the class <tt class="docutils literal"><span class="pre">backuppc.client</span></tt> itself derives from
+<tt class="docutils literal"><span class="pre">ssh.server</span></tt>, ensuring that it gets parsed before <tt class="docutils literal"><span class="pre">backuppc.client</span></tt>.</p>
+<p>When <strong>reclass</strong> returns to the node and encounters the <tt class="docutils literal"><span class="pre">ssh.server</span></tt> class
+defined there, it simply skips it, as it&#8217;s already been processed.</p>
+</div></blockquote>
+<p>Now read about <a class="reference internal" href="operations.html"><em>reclass operations</em></a>!</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="previous chapter">Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="operations.html"
+                        title="next chapter">reclass operations</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="operations.html" title="reclass operations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installation"
+             >previous</a> |</li>
+        <li><a href="index.html">reclass</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, martin f. krafft.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

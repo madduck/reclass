@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ChangeLog &mdash; reclass 1.4.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="reclass 1.4.1 documentation" href="index.html" />
+    <link rel="prev" title="reclass to-do list" href="todo.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="todo.html" title="reclass to-do list"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">reclass</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="changelog">
+<h1>ChangeLog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
+<table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="13%" />
+<col width="75%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Version</th>
+<th class="head">Date</th>
+<th class="head">Changes</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1.4.1</td>
+<td>2014-10-28</td>
+<td><ul class="first last simple">
+<li>Revert debug logging, which wasn&#8217;t fault-free and so
+it needs more time to mature.</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>1.4</td>
+<td>2014-10-25</td>
+<td><ul class="first last simple">
+<li>Add rudimentary debug logging</li>
+<li>Prevent interpolate() from overwriting merged values</li>
+<li>Look for &#8220;init&#8221; instead of &#8220;index&#8221; when being fed
+a directory.</li>
+<li>Fix error reporting on node name collision across
+subdirectories.</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>1.3</td>
+<td>2014-03-01</td>
+<td><ul class="first last simple">
+<li>Salt: pillar data from previous pillars are now
+available to reclass parameter interpolation</li>
+<li>yaml_fs: classes may be defined in subdirectories
+(closes: #12, #19, #20)</li>
+<li>Migrate Salt adapter to new core API (closes: #18)</li>
+<li>Fix &#8211;nodeinfo invocation in docs (closes: #21)</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>1.2.2</td>
+<td>2013-12-27</td>
+<td><ul class="first last simple">
+<li>Recurse classes obtained from class mappings
+(closes: #16)</li>
+<li>Fix class mapping regexp rendering in docs
+(closes: #15)</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>1.2.1</td>
+<td>2013-12-26</td>
+<td><ul class="first last simple">
+<li>Fix Salt adapter wrt. class mappings
+(closes: #14)</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>1.2</td>
+<td>2013-12-10</td>
+<td><ul class="first last simple">
+<li>Introduce class mappings (see <a class="reference internal" href="operations.html"><em>reclass operations</em></a>)
+(closes: #5)</li>
+<li>Fix parameter interpolation across merged lists
+(closes: #13).</li>
+<li>Caching of classes for performance reasons, especially
+during the inventory runs</li>
+<li>yaml_fs: nodes may be defined in subdirectories
+(closes: #10).</li>
+<li>Classes and nodes URI must not overlap anymore</li>
+<li>Class names must not contain spaces</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>1.1</td>
+<td>2013-08-28</td>
+<td>Salt adapter: fix interface to include minion_id, filter
+output accordingly; fixes master_tops</td>
+</tr>
+<tr class="row-odd"><td>1.0.2</td>
+<td>2013-08-27</td>
+<td>Fix incorrect versioning in setuptools</td>
+</tr>
+<tr class="row-even"><td>1.0.1</td>
+<td>2013-08-27</td>
+<td>Documentation updates, new homepage</td>
+</tr>
+<tr class="row-odd"><td>1.0</td>
+<td>2013-08-26</td>
+<td>Initial release</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="todo.html"
+                        title="previous chapter">reclass to-do list</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="todo.html" title="reclass to-do list"
+             >previous</a> |</li>
+        <li><a href="index.html">reclass</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, martin f. krafft.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

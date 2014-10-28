@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using reclass &mdash; reclass 1.4.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="reclass 1.4.1 documentation" href="index.html" />
+    <link rel="next" title="External references" href="refs.html" />
+    <link rel="prev" title="reclass operations" href="operations.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="refs.html" title="External references"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="operations.html" title="reclass operations"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">reclass</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="using-reclass">
+<h1>Using reclass<a class="headerlink" href="#using-reclass" title="Permalink to this headline">¶</a></h1>
+<p>For information on how to use <strong>reclass</strong> directly, call <tt class="docutils literal"><span class="pre">reclass</span> <span class="pre">--help</span></tt>
+and study the output, or have a look at its <a class="reference internal" href="manpage.html"><em>manual page</em></a>.</p>
+<p>The three options, <tt class="docutils literal"><span class="pre">--inventory-base-uri</span></tt>, <tt class="docutils literal"><span class="pre">--nodes-uri</span></tt>, and
+<tt class="docutils literal"><span class="pre">--classes-uri</span></tt> together specify the location of the inventory. If the base
+URI is specified, then it is prepended to the other two URIs, unless they are
+absolute URIs. If these two URIs are not specified, they default to <tt class="docutils literal"><span class="pre">nodes</span></tt>
+and <tt class="docutils literal"><span class="pre">classes</span></tt>. Therefore, if your inventory is in <tt class="docutils literal"><span class="pre">/etc/reclass/nodes</span></tt> and
+<tt class="docutils literal"><span class="pre">/etc/reclass/classes</span></tt>, all you need to specify is the base URI as
+<tt class="docutils literal"><span class="pre">/etc/reclass</span></tt> — which is actually the default (specified in
+<tt class="docutils literal"><span class="pre">reclass/defaults.py</span></tt>).</p>
+<p>If you&#8217;ve installed <strong>reclass</strong> from source as per the <a class="reference internal" href="install.html"><em>installation
+instructions</em></a>, try to run it from the source directory like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ reclass -b examples/ --inventory
+$ reclass -b examples/ --nodeinfo localhost
+</pre></div>
+</div>
+<p>This will make it use the data from <tt class="docutils literal"><span class="pre">examples/nodes</span></tt> and
+<tt class="docutils literal"><span class="pre">examples/classes</span></tt>, and you can surely make your own way from here.</p>
+<p>On Debian-systems, use the following:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ reclass -b /usr/share/doc/reclass/examples/ --inventory
+$ reclass -b /usr/share/doc/reclass/examples/ --nodeinfo localhost
+</pre></div>
+</div>
+<p>More commonly, however, use of <strong>reclass</strong> will happen indirectly, and through
+so-called adapters. The job of an adapter is to translate between different
+invocation paradigms, provide a sane set of default options, and massage the
+data from <strong>reclass</strong> into the format expected by the automation tool in use.
+Please have a look at the respective README files for these adapters, i.e.
+for <a class="reference internal" href="salt.html"><em>Salt</em></a>, for <a class="reference internal" href="ansible.html"><em>Ansible</em></a>, and for <a class="reference internal" href="puppet.html"><em>Puppet</em></a>.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="operations.html"
+                        title="previous chapter">reclass operations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="refs.html"
+                        title="next chapter">External references</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="refs.html" title="External references"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="operations.html" title="reclass operations"
+             >previous</a> |</li>
+        <li><a href="index.html">reclass</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, martin f. krafft.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>
