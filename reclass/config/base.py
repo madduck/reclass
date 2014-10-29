@@ -123,7 +123,7 @@ class ConfigBase(UserDict.UserDict):
     _opts_list = []
     # a place to store defaults
     _defaults = {}
-    # list of files to load YAML config from
+    # list of files to search and load YAML/JSON config from
     _filelist = []
     # a place to stash a logging.logger instance we can rely on internally
     logger = None
@@ -201,10 +201,12 @@ class ConfigBase(UserDict.UserDict):
         is parsed as either YAML or JSON based on the file extension.
 
         '''
-        data = {}
         for config in self._filelist:
-            data = _merge(data, self._load_file(config))
-        return data
+            if os.path.exists(config):
+                # merge with {} to ensure we interpolate what we load from files
+                return _merge({}, self._load_file(config))
+	# return empty {} if no files are found/readable
+	return {}
 
 
     def _load_file(self, fpath):
