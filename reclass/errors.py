@@ -131,9 +131,11 @@ class UndefinedVariableError(InterpolationError):
         super(UndefinedVariableError, self).__init__(msg=None)
         self._var = var
         self._context = context
+    var = property(lambda self: self._var)
+    context = property(lambda self: self._context)
 
     def _get_message(self):
-        msg = "Cannot resolve " + var.join(PARAMETER_INTERPOLATION_SENTINELS)
+        msg = "Cannot resolve " + self._var.join(PARAMETER_INTERPOLATION_SENTINELS)
         if self._context:
             msg += ' in the context of %s' % self._context
         return msg
