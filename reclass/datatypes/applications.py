@@ -53,6 +53,7 @@ class Applications(Classes):
                     self._items.remove(negation)
                 except ValueError:
                     pass
+            self._negations.extend(iterable._negations)
             iterable = iterable.as_list()
         for i in iterable:
             self.append_if_new(i)
