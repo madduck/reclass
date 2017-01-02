@@ -188,6 +188,18 @@ class TestParametersNoMock(unittest.TestCase):
         goal.update(mergee)
         self.assertDictEqual(p.as_dict(), dict(dict=goal))
 
+    def test_merge_dicts_override(self):
+        """Validate that tilde merge overrides function properly."""
+        mergee = {'~one': {'a': 'alpha'},
+                  '~two': ['gamma']}
+        base = {'one': {'b': 'beta'},
+                'two': ['delta']}
+        goal = {'one': {'a': 'alpha'},
+                'two': ['gamma']}
+        p = Parameters(dict(dict=base))
+        p.merge(Parameters(dict(dict=mergee)))
+        self.assertDictEqual(p.as_dict(), dict(dict=goal))
+
     def test_merge_dict_into_scalar(self):
         p = Parameters(dict(base='foo'))
         with self.assertRaises(TypeError):
