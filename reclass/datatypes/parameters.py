@@ -48,7 +48,7 @@ class Parameters(object):
         if mapping is not None:
             # we initialise by merging, otherwise the list of references might
             # not be updated
-            self.merge(mapping)
+            self.merge(mapping, initmerge=True)
 
     delimiter = property(lambda self: self._delimiter)
 
@@ -198,7 +198,7 @@ class Parameters(object):
         else:
             return self._update_scalar(cur, new, path)
 
-    def merge(self, other):
+    def merge(self, other, initmerge=False):
         """Merge function (public edition).
 
         Call _merge_recurse on self with either another Parameter object or a
@@ -212,14 +212,13 @@ class Parameters(object):
 
         """
 
-        # If we're merging in a dict this is an initialization merge, so set
-        # the parameter accordingly
         if isinstance(other, dict):
-            self._base = self._merge_recurse(self._base, other, None, initmerge=True)
+            self._base = self._merge_recurse(self._base, other,
+                                             None, initmerge)
 
         elif isinstance(other, self.__class__):
             self._base = self._merge_recurse(self._base, other._base,
-                                             None)
+                                             None, initmerge)
 
         else:
             raise TypeError('Cannot merge %s objects into %s' % (type(other),
