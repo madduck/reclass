@@ -195,7 +195,7 @@ class InvalidClassnameError(NameError):
 
     def _get_message(self):
         msg = "Invalid character '{0}' in class name '{1}'."
-        return msg.format(self._char, classname)
+        return msg.format(self._char, self._classname)
 
 
 class DuplicateNodeNameError(NameError):
