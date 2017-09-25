@@ -3,7 +3,7 @@
 #
 # This file is part of reclass (http://github.com/madduck/reclass)
 #
-# Copyright © 2007–14 martin f. krafft <madduck@madduck.net>
+# Copyright © 2007–17 martin f. krafft <madduck@madduck.net>
 # Released under the terms of the Artistic Licence 2.0
 #
 
@@ -60,55 +60,17 @@ def make_modes_options_group(parser, inventory_shortopt, inventory_longopt,
             setattr(parser.values, 'mode', MODE_INVENTORY)
             setattr(parser.values, nodeinfo_dest, None)
 
-    ret = optparse.OptionGroup(parser, 'Modes',
-                               'Specify one of these to determine what to do.')
-    ret.add_option(inventory_shortopt, inventory_longopt,
-                   action='callback', callback=_mode_checker_cb,
-                   help=inventory_help)
-    ret.add_option(nodeinfo_shortopt, nodeinfo_longopt,
-                   default=None, dest=nodeinfo_dest, type='string',
-                   action='callback', callback=_mode_checker_cb,
-                   help=nodeinfo_help)
-    return ret
+    group = optparse.OptionGroup(parser, 'Modes',
+                                 'Specify one of these to determine what to do.')
+    group.add_option(inventory_shortopt, inventory_longopt,
+                     action='callback', callback=_mode_checker_cb,
+                     help=inventory_help)
+    group.add_option(nodeinfo_shortopt, nodeinfo_longopt,
+                     default=None, dest=nodeinfo_dest, type='string',
+                     action='callback', callback=_mode_checker_cb,
+                     help=nodeinfo_help)
 
-
-def make_parser_and_checker(name, version, description,
-                            inventory_shortopt='-i',
-                            inventory_longopt='--inventory',
-                            inventory_help='output the entire inventory',
-                            nodeinfo_shortopt='-n',
-                            nodeinfo_longopt='--nodeinfo',
-                            nodeinfo_dest='nodename',
-                            nodeinfo_help='output information for a specific node',
-                            add_options_cb=None,
-                            defaults={}):
-
-    parser = optparse.OptionParser(version=version)
-    parser.prog = name
-    parser.version = version
-    parser.description = description.capitalize()
-    parser.usage = '%prog [options] ( {0} | {1} {2} )'.format(inventory_longopt,
-                                                             nodeinfo_longopt,
-                                                             nodeinfo_dest.upper())
-    parser.epilog = 'Exactly one mode has to be specified.'
-
-    db_group = make_db_options_group(parser, defaults)
-    parser.add_option_group(db_group)
-
-    output_group = make_output_options_group(parser, defaults)
-    parser.add_option_group(output_group)
-
-    if callable(add_options_cb):
-        add_options_cb(parser, defaults)
-
-    modes_group = make_modes_options_group(parser, inventory_shortopt,
-                                           inventory_longopt, inventory_help,
-                                           nodeinfo_shortopt,
-                                           nodeinfo_longopt, nodeinfo_dest,
-                                           nodeinfo_help)
-    parser.add_option_group(modes_group)
-
-    def option_checker(options, args):
+    def mode_checker(options, args):
         if len(args) > 0:
             parser.error('No arguments allowed')
         elif not hasattr(options, 'mode') \
@@ -125,7 +87,7 @@ def make_parser_and_checker(name, version, description,
         elif options.inventory_base_uri is None and options.classes_uri is None:
             parser.error('Must specify --inventory-base-uri or --classes-uri')
 
-    return parser, option_checker
+    return group, mode_checker
 
 
 def path_mangler(inventory_base_uri, nodes_uri, classes_uri):
@@ -152,28 +114,26 @@ def path_mangler(inventory_base_uri, nodes_uri, classes_uri):
     return n, c
 
 
-def get_options(name, version, description,
-                            inventory_shortopt='-i',
-                            inventory_longopt='--inventory',
-                            inventory_help='output the entire inventory',
-                            nodeinfo_shortopt='-n',
-                            nodeinfo_longopt='--nodeinfo',
-                            nodeinfo_dest='nodename',
-                            nodeinfo_help='output information for a specific node',
-                            add_options_cb=None,
-                            defaults={}):
+def get_options(name, version, description, parser_cb, defaults=dict()):
 
-    parser, checker = make_parser_and_checker(name, version, description,
-                                              inventory_shortopt,
-                                              inventory_longopt,
-                                              inventory_help,
-                                              nodeinfo_shortopt,
-                                              nodeinfo_longopt, nodeinfo_dest,
-                                              nodeinfo_help,
-                                              add_options_cb,
-                                              defaults=defaults)
+    parser = optparse.OptionParser(version=version)
+    parser.prog = name
+    parser.version = version
+    parser.description = description.capitalize()
+
+    db_group = make_db_options_group(parser, defaults)
+    parser.add_option_group(db_group)
+
+    output_group = make_output_options_group(parser, defaults)
+    parser.add_option_group(output_group)
+
+    checker_fn = None
+    if callable(parser_cb):
+        checker_fn = parser_cb(parser, defaults)
+
     options, args = parser.parse_args()
-    checker(options, args)
+    if callable(checker_fn):
+        checker_fn(options, args)
 
     options.nodes_uri, options.classes_uri = \
             path_mangler(options.inventory_base_uri, options.nodes_uri,
