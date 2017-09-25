@@ -13,7 +13,7 @@ from reclass import get_storage, output
 from reclass.core import Core
 from reclass.errors import ReclassException
 from reclass.config import find_and_read_configfile, get_options, \
-        path_mangler, make_modes_options_group
+        make_modes_options_group
 from reclass.constants import MODE_NODEINFO
 from reclass.defaults import *
 from reclass.version import *
@@ -26,8 +26,6 @@ def ext_pillar(minion_id, pillar,
                class_mappings=None,
                propagate_pillar_data_to_reclass=False):
 
-    nodes_uri, classes_uri = path_mangler(inventory_base_uri,
-                                          nodes_uri, classes_uri)
     storage = get_storage(storage_type, nodes_uri, classes_uri,
                           default_environment='base')
     input_data = None
@@ -50,8 +48,6 @@ def top(minion_id, storage_type=OPT_STORAGE_TYPE,
         classes_uri=OPT_CLASSES_URI,
         class_mappings=None):
 
-    nodes_uri, classes_uri = path_mangler(inventory_base_uri,
-                                          nodes_uri, classes_uri)
     storage = get_storage(storage_type, nodes_uri, classes_uri,
                           default_environment='base')
     reclass = Core(storage, class_mappings, input_data=None)
