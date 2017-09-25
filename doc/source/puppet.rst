@@ -2,15 +2,22 @@
 Using reclass with Puppet
 =========================
 
-.. todo::
+Quick start
+-----------
+The following steps should get you up and running quickly with |reclass| and
+`Puppet`_. You will need to decide for yourself where to put your |reclass|
+inventory. This could be ``/etc/reclass`` (the default), or
+``/etc/puppet/reclass``. The following shall assume the latter.
 
-  The adapter between |reclass| and `Puppet`_ has not actually been written,
-  since I rage-quit using Puppet before the rewrite of |reclass|.
+Or you can also just look into ``./examples/puppet`` of your |reclass|
+checkout (``/usr/share/doc/examples/puppet`` on Debian-systems), where the
+following steps have already been prepared.
 
-  It should be trivial to do, and if you need it or are interested in working
-  on it, and you require assistance, please get in touch with me `on the
-  mailing list <mailto:reclass@pantsfullofunix.net>`_. Else just send the
-  patch!
+/…/reclass refers to the location of your |reclass| checkout.
 
-.. include:: extrefs.inc
+.. todo:
+
+  In progress…
+
 .. include:: substs.inc
+.. include:: extrefs.inc
