@@ -102,8 +102,8 @@ def cli():
             parser.add_option_group(g)
             return c
 
-        options = get_options(RECLASS_NAME, VERSION, DESCRIPTION,
-                              parser_cb, defaults=defaults)
+        options, args = get_options(RECLASS_NAME, VERSION, DESCRIPTION,
+                                    parser_cb, defaults=defaults)
         class_mappings = defaults.get('class_mappings')
 
         if options.mode == MODE_NODEINFO:

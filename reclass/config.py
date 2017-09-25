@@ -139,7 +139,7 @@ def get_options(name, version, description, parser_cb, defaults=dict()):
             path_mangler(options.inventory_base_uri, options.nodes_uri,
                          options.classes_uri)
 
-    return options
+    return options, args
 
 
 def vvv(msg):

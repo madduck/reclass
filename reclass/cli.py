@@ -45,8 +45,8 @@ def main():
             parser.add_option_group(g)
             return c
 
-        options = get_options(RECLASS_NAME, VERSION, DESCRIPTION,
-                              parser_cb, defaults=defaults)
+        options, args = get_options(RECLASS_NAME, VERSION, DESCRIPTION,
+                                    parser_cb, defaults=defaults)
 
         storage = get_storage(options.storage_type, options.nodes_uri,
                               options.classes_uri, default_environment='base')
