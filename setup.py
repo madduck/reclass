@@ -20,7 +20,7 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
-ADAPTERS = ['salt', 'ansible']
+ADAPTERS = ['salt', 'ansible', 'puppet']
 console_scripts = ['reclass = reclass.cli:main']
 console_scripts.extend('reclass-{0} = reclass.adapters.{0}:cli'.format(i)
                        for i in ADAPTERS)
