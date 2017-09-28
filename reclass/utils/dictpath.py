@@ -103,7 +103,7 @@ class DictPath(object):
             if isinstance(container, (list, tuple)):
                 container = container[int(i)]
             else:
-                container = container[i]
+                container = container[self._unescape_string(i)]
         return container
 
     def _split_string(self, string):
@@ -111,6 +111,9 @@ class DictPath(object):
 
     def _escape_string(self, string):
         return string.replace(self._delim, '\\' + self._delim)
+
+    def _unescape_string(self, string):
+        return string.replace('\\' + self._delim, self._delim)
 
     def new_subpath(self, key):
         try:
